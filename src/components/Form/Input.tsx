@@ -24,7 +24,8 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps>
                         bgColor: 'gray.50'
                     }}
                     _focus={{
-                        bg: "gray.50"
+                        bg: "gray.50",
+                        borderColor: !!error === false ? 'pink.500' : 'red.500',
                     }}
                     size='lg'
                     ref={ref}
