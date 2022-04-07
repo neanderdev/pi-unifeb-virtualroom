@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, ReactNode, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDisclosure, UseDisclosureReturn } from "@chakra-ui/react";
@@ -17,8 +16,12 @@ export function DrawerProvider({ children }: DrawerProviderProps) {
     const router = useRouter();
 
     useEffect(() => {
-        disclojure.onClose();
-    }, [router.asPath]);
+        router.events.on("routeChangeComplete", disclojure.onClose);
+
+        return () => {
+            router.events.off("routeChangeComplete", disclojure.onClose);
+        };
+    }, [router, disclojure.onClose]);
 
     return (
         <DrawerContext.Provider value={disclojure}>
