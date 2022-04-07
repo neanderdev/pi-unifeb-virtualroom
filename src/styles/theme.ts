@@ -28,11 +28,11 @@ export const theme = extendTheme({
     body: "Roboto",
   },
   styles: {
-    global: {
+    global: (props: any) => ({
       body: {
-        bg: mode("gray.50", "gray.900"),
-        color: mode("gray.900", "gray.50"),
+        bg: mode("gray.50", "gray.900")(props),
+        color: mode("gray.900", "gray.50")(props),
       },
-    },
+    }),
   },
 });
