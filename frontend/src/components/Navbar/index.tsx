@@ -7,7 +7,11 @@ import { Actions } from "./Actions";
 
 import { useDrawer } from "../../contexts/DrawerContext";
 
-export function Navbar() {
+interface NavbarProps {
+    title: string;
+}
+
+export function Navbar({ title }: NavbarProps) {
     const { onToggle, isOpen } = useDrawer();
 
     const icon = isOpen ? CgClose : CgMenu;
@@ -42,7 +46,7 @@ export function Navbar() {
                     fontFamily="cursive"
                     display={{ md: "none" }}
                 >
-                    Dashboard
+                    {title}
                 </Text>
 
                 <SearchBox />
