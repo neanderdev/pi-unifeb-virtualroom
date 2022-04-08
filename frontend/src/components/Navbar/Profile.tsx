@@ -11,6 +11,8 @@ import {
     PopoverContent,
     PopoverArrow,
     PopoverCloseButton,
+    Box,
+    Text,
 } from "@chakra-ui/react";
 import { IoIosArrowDown, IoIosSchool, } from "react-icons/io";
 import { GoGear, } from "react-icons/go";
@@ -18,6 +20,13 @@ import { GoGear, } from "react-icons/go";
 export function Profile() {
     return (
         <HStack alignItems="center">
+            <Box mr="4" textAlign="right">
+                <Text>Neander de Souza</Text>
+                <Text color="gray.500" fontSize="small">
+                    mcspipoca47@gmail.com
+                </Text>
+            </Box>
+
             <Avatar
                 name="Neander de Souza"
                 src=""

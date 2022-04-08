@@ -1,9 +1,9 @@
 import { Box, SimpleGrid, Stack, useMediaQuery } from "@chakra-ui/react";
 
-import { Navbar } from "../components/Navbar";
-import { Sidebar } from "../components/Sidebar";
-import { MobileSidebar } from "../components/Sidebar/MobileSidebar";
-import { ClassCard } from "../components/ClassCard";
+import { Navbar } from "../../components/Navbar";
+import { Sidebar } from "../../components/Sidebar";
+import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
+import { ClassCard } from "../../components/ClassCard";
 
 export default function Rooms() {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");

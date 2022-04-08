@@ -1,6 +1,5 @@
-import { useRouter } from "next/router";
 import { Stack, useColorModeValue } from "@chakra-ui/react";
-import { RiDashboardLine } from "react-icons/ri";
+import { RiDashboardLine, RiInboxArchiveLine } from "react-icons/ri";
 import { HiOutlineBookOpen } from "react-icons/hi";
 import { FiPower, FiSettings } from "react-icons/fi";
 
@@ -9,18 +8,20 @@ import { CollapsedItem } from "./CollapsedItem";
 
 import { useDrawer } from "../../contexts/DrawerContext";
 
-export function Sidebar() {
+interface SidebarProps {
+    isCollapseSidebar?: boolean;
+}
+
+export function Sidebar({ isCollapseSidebar = false }: SidebarProps) {
     const { isOpen } = useDrawer();
 
-    const { asPath } = useRouter();
-
-    const NavAction = isOpen ? CollapsedItem : NavItem;
+    const NavAction = !isOpen && isCollapseSidebar ? CollapsedItem : isOpen && !isCollapseSidebar ? CollapsedItem : NavItem;
 
     return (
         <Stack
             layerStyle="card"
             rounded="xl"
-            w={isOpen ? "60px" : "300px"}
+            w={!isOpen && isCollapseSidebar ? "60px" : isOpen && !isCollapseSidebar ? "60px" : "300px"}
             transition="width .4s ease-in-out"
             py={8}
             shadow="md"
@@ -28,7 +29,7 @@ export function Sidebar() {
             spacing={2}
             fontSize="sm"
             display={["none", , "initial"]}
-            overflowX={isOpen ? "initial" : "clip"}
+            overflowX={!isOpen && isCollapseSidebar ? "initial" : isOpen && !isCollapseSidebar ? "initial" : "clip"}
             whiteSpace="nowrap"
             bg={useColorModeValue("gray.200", "gray.800")}
         >
@@ -43,6 +44,12 @@ export function Sidebar() {
                 name="Trabalhos"
                 icon={HiOutlineBookOpen}
                 count={2}
+            />
+
+            <NavAction
+                href="/rooms-filed"
+                name="Turmas Arquivada"
+                icon={RiInboxArchiveLine}
             />
 
             <NavAction name="Settings" icon={FiSettings} href="/setting" />
