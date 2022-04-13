@@ -9,12 +9,12 @@ import { useDrawer } from "../../contexts/DrawerContext";
 
 interface NavbarProps {
     title: string;
-    isNameMatter?: string;
-    isNameClass?: string;
+    nameMatter?: string;
+    nameClass?: string;
     isRoom?: boolean
 }
 
-export function Navbar({ title, isRoom = false, isNameMatter, isNameClass }: NavbarProps) {
+export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarProps) {
     const { onToggle, isOpen } = useDrawer();
 
     const icon = isOpen ? CgClose : CgMenu;
@@ -57,7 +57,7 @@ export function Navbar({ title, isRoom = false, isNameMatter, isNameClass }: Nav
                             fontSize="sm"
                             fontWeight="normal"
                         >
-                            {isNameClass}
+                            {nameClass}
                         </Text>
                     </Text>
                 </HStack>
@@ -70,14 +70,14 @@ export function Navbar({ title, isRoom = false, isNameMatter, isNameClass }: Nav
                             fontWeight="semibold"
 
                         >
-                            {isNameMatter}
+                            {nameMatter}
 
                             <Text
                                 textStyle="default"
                                 fontSize="sm"
                                 fontWeight="normal"
                             >
-                                {isNameClass}
+                                {nameClass}
                             </Text>
                         </Text>
                     </HStack>

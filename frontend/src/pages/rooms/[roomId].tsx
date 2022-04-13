@@ -36,6 +36,7 @@ import { AiOutlineContacts } from "react-icons/ai";
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
+import { Wall } from "../../components/Wall";
 
 import { useDrawer } from "../../contexts/DrawerContext";
 
@@ -53,8 +54,8 @@ export default function RoomId() {
             <Navbar
                 title="Programação Orientada a Objeto"
                 isRoom
-                isNameClass="SIN.3.TU - 2022/1"
-                isNameMatter="Programação Orientada a Objeto"
+                nameClass="SIN.3.TU - 2022/1"
+                nameMatter="Programação Orientada a Objeto"
             />
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
@@ -81,7 +82,10 @@ export default function RoomId() {
 
                                 <TabPanels>
                                     <TabPanel>
-                                        Mural
+                                        <Wall 
+                                            nameClass="SIN.3.TU - 2022/1"
+                                            nameMatter="Programação Orientada a Objeto"
+                                        />
                                     </TabPanel>
 
                                     <TabPanel>
