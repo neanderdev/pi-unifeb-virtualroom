@@ -12,7 +12,7 @@ export function Actions() {
 
             <ActionsButton onClick={onToggle} isOpen={isOpen} />
 
-            <Box pos="absolute" insetX="5" top="5rem" zIndex="overlay">
+            <Box pos="absolute" insetX="5" top="5rem" zIndex={isOpen && "overlay"}>
                 <SlideFade in={isOpen} offsetY="90px">
                     <ActionsList
                         p={5}

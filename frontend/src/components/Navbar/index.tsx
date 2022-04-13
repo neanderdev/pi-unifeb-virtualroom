@@ -1,4 +1,4 @@
-import { Flex, Icon, IconButton, Spacer, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, HStack, Icon, IconButton, Spacer, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { CgClose, CgMenu } from "react-icons/cg";
 
 import { Logo } from "../Logo";
@@ -9,9 +9,12 @@ import { useDrawer } from "../../contexts/DrawerContext";
 
 interface NavbarProps {
     title: string;
+    isNameMatter?: string;
+    isNameClass?: string;
+    isRoom?: boolean
 }
 
-export function Navbar({ title }: NavbarProps) {
+export function Navbar({ title, isRoom = false, isNameMatter, isNameClass }: NavbarProps) {
     const { onToggle, isOpen } = useDrawer();
 
     const icon = isOpen ? CgClose : CgMenu;
@@ -39,22 +42,53 @@ export function Navbar({ title }: NavbarProps) {
 
                 <Spacer display={{ md: "none" }} />
 
-                <Text
-                    textStyle="default"
-                    fontSize="xl"
-                    fontWeight="semibold"
-                    fontFamily="cursive"
-                    display={{ md: "none" }}
-                >
-                    {title}
-                </Text>
 
-                <SearchBox />
+                <HStack display={{ md: "none" }}>
+                    <Text
+                        textStyle="default"
+                        fontSize="xl"
+                        fontWeight="semibold"
+                        fontFamily="cursive"
+                    >
+                        {title}
+
+                        <Text
+                            textStyle="default"
+                            fontSize="sm"
+                            fontWeight="normal"
+                        >
+                            {isNameClass}
+                        </Text>
+                    </Text>
+                </HStack>
+
+                {isRoom && (
+                    <HStack display={["none", , "flex"]}>
+                        <Text
+                            textStyle="default"
+                            fontSize="lg"
+                            fontWeight="semibold"
+
+                        >
+                            {isNameMatter}
+
+                            <Text
+                                textStyle="default"
+                                fontSize="sm"
+                                fontWeight="normal"
+                            >
+                                {isNameClass}
+                            </Text>
+                        </Text>
+                    </HStack>
+                )}
+
+                {!isRoom && <SearchBox />}
 
                 <Spacer />
 
                 <Actions />
             </Stack>
-        </Flex>
+        </Flex >
     );
 }
