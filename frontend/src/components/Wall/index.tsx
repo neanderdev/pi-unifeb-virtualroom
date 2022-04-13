@@ -5,12 +5,20 @@ import { HeaderWall } from "./HeaderWall";
 import { NextActivity } from "./NextActivity";
 import { NoticeClass } from "./NoticeClass";
 import { CardActivity } from "./CardActivity";
+import { CommentNotice } from "./CommentNotice";
 
 interface WallProps {
     nameMatter: string;
     nameClass: string;
     classNotice: string;
     setClassNotice: Dispatch<SetStateAction<string>>;
+    avatarTeacher: string;
+    nameTeacher: string;
+    publicDateComment: string;
+    avatarStudent: string;
+    nameStudent: string;
+    classComment: string;
+    setClassComment: Dispatch<SetStateAction<string>>;
 }
 
 interface FakeActivityProps {
@@ -41,7 +49,7 @@ const fakeActivity: Array<FakeActivityProps> = [
     },
 ];
 
-export function Wall({ nameMatter, nameClass, classNotice, setClassNotice }: WallProps) {
+export function Wall({ nameMatter, nameClass, classNotice, setClassNotice, avatarTeacher, nameTeacher, publicDateComment, avatarStudent, nameStudent, classComment, setClassComment }: WallProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     return (
@@ -67,6 +75,16 @@ export function Wall({ nameMatter, nameClass, classNotice, setClassNotice }: Wal
                             publicDateActivity={activity.publicDateActivity}
                         />
                     ))}
+
+                    <CommentNotice
+                        avatarTeacher={avatarTeacher}
+                        nameTeacher={nameTeacher}
+                        publicDateComment={publicDateComment}
+                        avatarStudent={avatarStudent}
+                        nameStudent={nameStudent}
+                        classComment={classComment}
+                        setClassComment={setClassComment}
+                    />
                 </VStack>
             </Flex>
         </Flex>

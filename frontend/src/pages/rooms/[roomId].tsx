@@ -86,6 +86,13 @@ export default function RoomId() {
                                             nameMatter="Programação Orientada a Objeto"
                                             classNotice={classNotice}
                                             setClassNotice={setClassNotice}
+                                            avatarTeacher=""
+                                            nameTeacher="Wendel Cortes"
+                                            publicDateComment="12 de abril de 2020"
+                                            avatarStudent="https://github.com/neanderdev.png"
+                                            nameStudent="Neander de Souza"
+                                            classComment={classComment}
+                                            setClassComment={setClassComment}
                                         />
                                     </TabPanel>
 
