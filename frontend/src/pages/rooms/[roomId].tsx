@@ -1,53 +1,26 @@
-import NextLink from "next/link";
 import { useState } from "react";
 import {
-    Avatar,
     Box,
-    Button,
-    Divider,
-    Flex,
-    Icon,
-    IconButton,
-    Input,
-    LinkOverlay,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-    Portal,
-    Select,
     Stack,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
-    Text,
-    Textarea,
-    useBreakpointValue,
-    useColorModeValue,
     useMediaQuery,
-    VStack
 } from "@chakra-ui/react";
-import { CgClose, CgMenu, CgNotes } from "react-icons/cg";
-import { IoEllipsisVertical } from "react-icons/io5";
-import { BiSend } from "react-icons/bi";
-import { AiOutlineContacts } from "react-icons/ai";
 
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { Wall } from "../../components/Wall";
-
-import { useDrawer } from "../../contexts/DrawerContext";
+import { Activity } from "../../components/Activity";
 
 export default function RoomId() {
-    const { onToggle, isOpen } = useDrawer();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const [classNotice, setClassNotice] = useState("");
     const [classComment, setClassComment] = useState("");
-
-    const icon = isOpen ? CgClose : CgMenu;
 
     return (
         <Box>
@@ -97,7 +70,7 @@ export default function RoomId() {
                                     </TabPanel>
 
                                     <TabPanel>
-                                        Atividades
+                                        <Activity isSmallScreen={isSmallScreen} />
                                     </TabPanel>
 
                                     <TabPanel>
