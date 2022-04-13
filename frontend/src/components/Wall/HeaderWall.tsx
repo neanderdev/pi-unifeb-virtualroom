@@ -28,6 +28,7 @@ export function HeaderWall({ nameClass, nameMatter }: HeaderWallProps) {
                     spacing={6}
                 >
                     <Text
+                        as="h1"
                         color="white"
                         textStyle="default"
                         fontSize="3xl"
@@ -36,6 +37,7 @@ export function HeaderWall({ nameClass, nameMatter }: HeaderWallProps) {
                         {nameMatter}
 
                         <Text
+                            as="p"
                             textStyle="default"
                             fontSize="xl"
                             fontWeight="normal"

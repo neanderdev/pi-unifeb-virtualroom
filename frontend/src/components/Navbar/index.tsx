@@ -42,9 +42,9 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
 
                 <Spacer display={{ md: "none" }} />
 
-
                 <HStack display={{ md: "none" }}>
                     <Text
+                        as="h1"
                         textStyle="default"
                         fontSize="xl"
                         fontWeight="semibold"
@@ -53,6 +53,7 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
                         {title}
 
                         <Text
+                            as="p"
                             textStyle="default"
                             fontSize="sm"
                             fontWeight="normal"
@@ -65,6 +66,7 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
                 {isRoom && (
                     <HStack display={["none", , "flex"]}>
                         <Text
+                            as="h1"
                             textStyle="default"
                             fontSize="lg"
                             fontWeight="semibold"
@@ -73,6 +75,7 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
                             {nameMatter}
 
                             <Text
+                                as="p"
                                 textStyle="default"
                                 fontSize="sm"
                                 fontWeight="normal"
