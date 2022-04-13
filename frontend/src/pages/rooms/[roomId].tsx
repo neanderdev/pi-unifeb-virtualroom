@@ -79,12 +79,13 @@ export default function RoomId() {
                                     </TabList>
                                 </Box>
 
-
                                 <TabPanels>
                                     <TabPanel>
-                                        <Wall 
+                                        <Wall
                                             nameClass="SIN.3.TU - 2022/1"
                                             nameMatter="Programação Orientada a Objeto"
+                                            classNotice={classNotice}
+                                            setClassNotice={setClassNotice}
                                         />
                                     </TabPanel>
 
