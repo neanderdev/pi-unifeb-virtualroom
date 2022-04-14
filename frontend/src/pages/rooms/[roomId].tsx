@@ -15,6 +15,7 @@ import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { Wall } from "../../components/Wall";
 import { Activity } from "../../components/Activity";
+import { Classmates } from "../../components/Classmates";
 
 export default function RoomId() {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -74,12 +75,11 @@ export default function RoomId() {
                                     </TabPanel>
 
                                     <TabPanel>
-                                        Pessoas
+                                        <Classmates />
                                     </TabPanel>
                                 </TabPanels>
                             </Tabs>
                         </Box>
-
                     </Box>
                 </Stack>
             </Box >
