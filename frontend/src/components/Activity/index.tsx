@@ -1,7 +1,8 @@
-import { Flex, VStack } from "@chakra-ui/react";
-import { SelectCategoriesAcitivity } from "./SelectCategoriesAcitivity";
+import { Box, Flex, VStack } from "@chakra-ui/react";
 
 import { SidebarActivity } from "./SidebarActivity";
+import { SelectCategoriesAcitivity } from "./SelectCategoriesAcitivity";
+import { ButtonViewActivity } from "./ButtonViewActivity";
 
 interface ActivityProps {
     isSmallScreen: boolean
@@ -18,6 +19,10 @@ export function Activity({ isSmallScreen }: ActivityProps) {
 
                 <VStack spacing={4} w="full">
                     {isSmallScreen && <SelectCategoriesAcitivity />}
+
+                    <Box mr="auto" ml={-4}>
+                        <ButtonViewActivity />
+                    </Box>
                 </VStack>
             </Flex>
         </Flex>
