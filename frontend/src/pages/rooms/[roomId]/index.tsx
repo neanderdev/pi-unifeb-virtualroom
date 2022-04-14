@@ -1,6 +1,8 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import {
     Box,
+    Progress,
     Stack,
     Tab,
     TabList,
@@ -10,18 +12,30 @@ import {
     useMediaQuery,
 } from "@chakra-ui/react";
 
-import { Navbar } from "../../components/Navbar";
-import { Sidebar } from "../../components/Sidebar";
-import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
-import { Wall } from "../../components/Wall";
-import { Activity } from "../../components/Activity";
-import { Classmates } from "../../components/Classmates";
+import { Navbar } from "../../../components/Navbar";
+import { Sidebar } from "../../../components/Sidebar";
+import { MobileSidebar } from "../../../components/Sidebar/MobileSidebar";
+import { Wall } from "../../../components/Wall";
+import { Activity } from "../../../components/Activity";
+import { Classmates } from "../../../components/Classmates";
 
 export default function RoomId() {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const [classNotice, setClassNotice] = useState("");
     const [classComment, setClassComment] = useState("");
+
+    const { isReady } = useRouter()
+
+    if (!isReady) {
+        return (
+            <Box w="100vw" h="100vh" display="flex" justifyContent="center" alignItems="center" bg="white">
+                <Box w="full">
+                    <Progress size='xs' isIndeterminate colorScheme="red" />
+                </Box>
+            </Box>
+        );
+    }
 
     return (
         <Box>
@@ -82,7 +96,7 @@ export default function RoomId() {
                         </Box>
                     </Box>
                 </Stack>
-            </Box >
-        </Box >
+            </Box>
+        </Box>
     );
 }

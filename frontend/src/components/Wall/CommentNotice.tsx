@@ -122,76 +122,78 @@ export function CommentNotice({ avatarTeacher, nameTeacher, publicDateComment, a
                 </Box>
             </Box>
 
-            <Box
-                my="6px"
-                ml="12px"
-            >
-                <Text>Bom dia pessoal, sejam bem vindos ao nosso ambiente virtual!</Text>
-
-            </Box>
-
-            <Divider orientation='horizontal' />
-
-            {fakeComment.map((comment) => (
-                <Comment
-                    key={comment.id}
-                    avatarStudent={comment.avatarStudent}
-                    nameStudent={comment.nameStudent}
-                    commentStudent={comment.commentStudent}
-                />
-            ))}
-
-            <Box
-                my="6px"
-                ml="12px"
-                display="flex"
-                alignItems="center"
-            >
-                <Avatar
-                    size="sm"
-                    src={avatarStudent}
-                    name={nameStudent}
-                    bg="pink.200"
-                />
-
-                <Flex
-                    as="label"
-                    flex="1"
-                    py="1"
-                    px="4"
-                    mx="6"
-                    w="full"
-                    alignSelf="center"
-                    color="gray.200"
-                    position="relative"
-                    bg="transparent"
-                    borderRadius="full"
-                    borderWidth="1px"
-                    borderColor="gray.100"
-                    _hover={{
-                        borderColor: "gray.400",
-                    }}
+            <Box>
+                <Box
+                    my="6px"
+                    ml="12px"
                 >
-                    <Input
-                        color="gray.900"
-                        variant="unstyled"
-                        px="4"
-                        mr="4"
-                        placeholder="Adicionar comentário para turma..."
-                        _placeholder={{ color: 'gray.500' }}
-                        value={classComment}
-                        onChange={(e) => setClassComment(e.target.value)}
+                    <Text>Bom dia pessoal, sejam bem vindos ao nosso ambiente virtual!</Text>
+
+                </Box>
+
+                <Divider orientation='horizontal' />
+
+                {fakeComment.map((comment) => (
+                    <Comment
+                        key={comment.id}
+                        avatarStudent={comment.avatarStudent}
+                        nameStudent={comment.nameStudent}
+                        commentStudent={comment.commentStudent}
+                    />
+                ))}
+
+                <Box
+                    my="6px"
+                    ml="12px"
+                    display="flex"
+                    alignItems="center"
+                >
+                    <Avatar
+                        size="sm"
+                        src={avatarStudent}
+                        name={nameStudent}
+                        bg="pink.200"
                     />
 
-                    <Icon
-                        as={BiSend}
-                        fontSize="28"
-                        color={classComment !== "" ? "gray.500" : "gray.200"}
-                        cursor={classComment !== "" ? "pointer" : "not-allowed"}
-                        title="Postar"
-                        onClick={() => classComment !== "" && alert(classComment)}
-                    />
-                </Flex>
+                    <Flex
+                        as="label"
+                        flex="1"
+                        py="1"
+                        px="4"
+                        mx="6"
+                        w="full"
+                        alignSelf="center"
+                        color="gray.200"
+                        position="relative"
+                        bg="transparent"
+                        borderRadius="full"
+                        borderWidth="1px"
+                        borderColor="gray.100"
+                        _hover={{
+                            borderColor: "gray.400",
+                        }}
+                    >
+                        <Input
+                            color="gray.900"
+                            variant="unstyled"
+                            px="4"
+                            mr="4"
+                            placeholder="Adicionar comentário para turma..."
+                            _placeholder={{ color: 'gray.500' }}
+                            value={classComment}
+                            onChange={(e) => setClassComment(e.target.value)}
+                        />
+
+                        <Icon
+                            as={BiSend}
+                            fontSize="28"
+                            color={classComment !== "" ? "gray.500" : "gray.200"}
+                            cursor={classComment !== "" ? "pointer" : "not-allowed"}
+                            title="Postar"
+                            onClick={() => classComment !== "" && alert(classComment)}
+                        />
+                    </Flex>
+                </Box>
             </Box>
         </Box>
     );

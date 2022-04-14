@@ -42,13 +42,14 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
 
                 <Spacer display={{ md: "none" }} />
 
-                <HStack display={{ md: "none" }}>
+                <HStack w="70vw" display={{ md: "none" }}>
                     <Text
                         as="h1"
                         textStyle="default"
                         fontSize="xl"
                         fontWeight="semibold"
                         fontFamily="cursive"
+                        isTruncated
                     >
                         {title}
 
@@ -57,6 +58,7 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
                             textStyle="default"
                             fontSize="sm"
                             fontWeight="normal"
+                            isTruncated
                         >
                             {nameClass}
                         </Text>
@@ -64,13 +66,13 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
                 </HStack>
 
                 {isRoom && (
-                    <HStack display={["none", , "flex"]}>
+                    <HStack w="70vw" display={["none", , "flex"]}>
                         <Text
                             as="h1"
                             textStyle="default"
                             fontSize="lg"
                             fontWeight="semibold"
-
+                            isTruncated
                         >
                             {nameMatter}
 
@@ -79,6 +81,7 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
                                 textStyle="default"
                                 fontSize="sm"
                                 fontWeight="normal"
+                                isTruncated
                             >
                                 {nameClass}
                             </Text>
