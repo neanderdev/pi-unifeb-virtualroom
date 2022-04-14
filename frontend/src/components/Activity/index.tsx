@@ -1,4 +1,5 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, VStack } from "@chakra-ui/react";
+import { SelectCategoriesAcitivity } from "./SelectCategoriesAcitivity";
 
 import { SidebarActivity } from "./SidebarActivity";
 
@@ -14,6 +15,10 @@ export function Activity({ isSmallScreen }: ActivityProps) {
         >
             <Flex direction="row" pt="1.5rem">
                 {!isSmallScreen && <SidebarActivity />}
+
+                <VStack spacing={4} w="full">
+                    {isSmallScreen && <SelectCategoriesAcitivity />}
+                </VStack>
             </Flex>
         </Flex>
     );
