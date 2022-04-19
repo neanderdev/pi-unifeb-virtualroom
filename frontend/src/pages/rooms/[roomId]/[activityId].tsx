@@ -1,11 +1,15 @@
-import { Box, SimpleGrid, Stack, Text, useMediaQuery } from "@chakra-ui/react";
+import { useState } from "react";
+import { Box, Stack, useMediaQuery } from "@chakra-ui/react";
 
 import { Navbar } from "../../../components/Navbar";
 import { Sidebar } from "../../../components/Sidebar";
 import { MobileSidebar } from "../../../components/Sidebar/MobileSidebar";
+import { DetailActivity } from "../../../components/DetailActivity";
 
 export default function ActivityId() {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
+
+    const [commentPrivate, setCommentPrivate] = useState("");
 
     return (
         <Box>
@@ -26,43 +30,12 @@ export default function ActivityId() {
                         <Box
                             h="3rem"
                         >
-                            <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
-                                <Box
-                                    w="full"
-                                    borderWidth="1px"
-                                    borderColor="gray.300"
-                                    borderStyle="dashed"
-                                >
-                                    <Text>Title da atividade</Text>
-                                    <Text>Nome professor</Text>
-                                    <Text>Data da Atividade</Text>
-                                    <Text>Comentários da atividade 1</Text>
-                                    <Text>Comentários da atividade 2</Text>
-                                    <Text>Comentários da atividade 3</Text>
-                                    <Text>Comentários da atividade 4</Text>
-                                    <Text>Input para comentários</Text>
-                                </Box>
-
-                                <Stack direction="column" spacing={4}>
-                                    <Box
-                                        w="full"
-                                        borderWidth="1px"
-                                        borderColor="gray.300"
-                                        borderStyle="dashed"
-                                    >
-                                        <Text>Box para envios da atividade</Text>
-                                    </Box>
-
-                                    <Box
-                                        w="full"
-                                        borderWidth="1px"
-                                        borderColor="gray.300"
-                                        borderStyle="dashed"
-                                    >
-                                        <Text>Comentários particulares para o professor</Text>
-                                    </Box>
-                                </Stack>
-                            </SimpleGrid>
+                            <DetailActivity
+                                avatarPrivateComment="https://github.com/neanderdev.png"
+                                namePrivateComment="Neander de Souza"
+                                commentPrivate={commentPrivate}
+                                setCommentPrivate={setCommentPrivate}
+                            />
                         </Box>
                     </Box>
                 </Stack>
