@@ -2,6 +2,8 @@ import { Stack, useColorModeValue } from "@chakra-ui/react";
 import { RiDashboardLine, RiInboxArchiveLine } from "react-icons/ri";
 import { HiOutlineBookOpen } from "react-icons/hi";
 import { FiPower, FiSettings } from "react-icons/fi";
+import { GiTeacher } from "react-icons/gi";
+import { IoSchoolOutline } from "react-icons/io5";
 
 import { NavItem } from "./NavItem";
 import { CollapsedItem } from "./CollapsedItem";
@@ -37,6 +39,18 @@ export function Sidebar({ isCollapseSidebar = false }: SidebarProps) {
                 href="/rooms"
                 name="Sala de Aulas"
                 icon={RiDashboardLine}
+            />
+
+            <NavAction
+                href="/teachers"
+                name="Professores"
+                icon={GiTeacher}
+            />
+
+            <NavAction
+                href="/students"
+                name="Alunos"
+                icon={IoSchoolOutline}
             />
 
             <NavAction

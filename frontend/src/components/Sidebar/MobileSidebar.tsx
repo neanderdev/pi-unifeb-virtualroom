@@ -1,7 +1,9 @@
 import { Drawer, DrawerCloseButton, DrawerContent, DrawerOverlay, Stack, useColorModeValue } from "@chakra-ui/react";
-import { RiDashboardLine } from "react-icons/ri";
+import { RiDashboardLine, RiInboxArchiveLine } from "react-icons/ri";
 import { HiOutlineBookOpen } from "react-icons/hi";
 import { FiPower, FiSettings } from "react-icons/fi";
+import { GiTeacher } from "react-icons/gi";
+import { IoSchoolOutline } from "react-icons/io5";
 
 import { SearchBox } from "../Navbar/SearchBox";
 import { NavItem } from "./NavItem";
@@ -27,10 +29,28 @@ export function MobileSidebar() {
                         />
 
                         <NavItem
+                            href="/teachers"
+                            name="Professores"
+                            icon={GiTeacher}
+                        />
+
+                        <NavItem
+                            href="/students"
+                            name="Alunos"
+                            icon={IoSchoolOutline}
+                        />
+
+                        <NavItem
                             href="/works"
                             name="Trabalhos"
                             icon={HiOutlineBookOpen}
                             count={2}
+                        />
+
+                        <NavItem
+                            href="/rooms-filed"
+                            name="Turmas Arquivada"
+                            icon={RiInboxArchiveLine}
                         />
 
                         <NavItem name="Settings" icon={FiSettings} href="/setting" />
