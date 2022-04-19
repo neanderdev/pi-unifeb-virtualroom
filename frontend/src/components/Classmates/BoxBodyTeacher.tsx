@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Avatar, Box, Stack, Text } from "@chakra-ui/react";
 
 interface BoxBodyTeacherProps {
@@ -5,7 +6,7 @@ interface BoxBodyTeacherProps {
     nameTeacher: string;
 }
 
-export function BoxBodyTeacher({ avatarTeacher, nameTeacher }: BoxBodyTeacherProps) {
+function BoxBodyTeacherComponent({ avatarTeacher, nameTeacher }: BoxBodyTeacherProps) {
     return (
         <Stack spacing={4} mt={4}>
             <Box display="flex" alignItems="center">
@@ -30,3 +31,7 @@ export function BoxBodyTeacher({ avatarTeacher, nameTeacher }: BoxBodyTeacherPro
         </Stack>
     );
 }
+
+export const BoxBodyTeacher = memo(BoxBodyTeacherComponent, (prevProps, nextProps) => {
+    return Object.is(prevProps, nextProps);
+})

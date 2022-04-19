@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Avatar, Box, Text } from "@chakra-ui/react";
 
 interface PrivateCommentProps {
@@ -6,7 +7,7 @@ interface PrivateCommentProps {
     privateComment: string;
 }
 
-export function PrivateComment({ avatarStudent, nameStudent, privateComment }: PrivateCommentProps) {
+function PrivateCommentComponent({ avatarStudent, nameStudent, privateComment }: PrivateCommentProps) {
     return (
         <Box
             my="6px"
@@ -25,3 +26,7 @@ export function PrivateComment({ avatarStudent, nameStudent, privateComment }: P
         </Box>
     );
 }
+
+export const PrivateComment = memo(PrivateCommentComponent, (prevProps, nextProps) => {
+    return Object.is(prevProps, nextProps);
+})

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Avatar, Box, Text } from "@chakra-ui/react";
 
 interface BoxBodyStudentProps {
@@ -5,7 +6,7 @@ interface BoxBodyStudentProps {
     nameStudent: string;
 }
 
-export function BoxBodyStudent({ avatarStudent, nameStudent }: BoxBodyStudentProps) {
+function BoxBodyStudentComponent({ avatarStudent, nameStudent }: BoxBodyStudentProps) {
     return (
         <Box display="flex" alignItems="center">
             <Avatar
@@ -28,3 +29,7 @@ export function BoxBodyStudent({ avatarStudent, nameStudent }: BoxBodyStudentPro
         </Box>
     );
 }
+
+export const BoxBodyStudent = memo(BoxBodyStudentComponent, (prevProps, nextProps) => {
+    return Object.is(prevProps, nextProps);
+})

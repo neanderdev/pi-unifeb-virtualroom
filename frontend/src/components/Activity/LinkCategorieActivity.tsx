@@ -1,4 +1,5 @@
 import NextLink from "next/link";
+import { memo } from "react";
 import { Box, Text } from "@chakra-ui/react";
 
 interface LinkCategorieActivityProps {
@@ -7,7 +8,7 @@ interface LinkCategorieActivityProps {
     isActive?: boolean;
 }
 
-export function LinkCategorieActivity({ href, nameCategorieActivity, isActive = false }: LinkCategorieActivityProps) {
+function LinkCategorieActivityComponent({ href, nameCategorieActivity, isActive = false }: LinkCategorieActivityProps) {
     return (
         <NextLink href={href} passHref>
             <Box
@@ -35,3 +36,7 @@ export function LinkCategorieActivity({ href, nameCategorieActivity, isActive = 
         </NextLink>
     );
 }
+
+export const LinkCategorieActivity = memo(LinkCategorieActivityComponent, (prevProps, nextProps) => {
+    return Object.is(prevProps, nextProps);
+})

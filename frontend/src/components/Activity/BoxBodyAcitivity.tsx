@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { CgNotes } from "react-icons/cg";
 
@@ -8,7 +9,7 @@ interface BoxBodyAcitivityProps {
     dataUpdatedPosted?: string;
 }
 
-export function BoxBodyAcitivity({ titleBodyActivity, dateFinalized, datePosted, dataUpdatedPosted }: BoxBodyAcitivityProps) {
+function BoxBodyAcitivityComponent({ titleBodyActivity, dateFinalized, datePosted, dataUpdatedPosted }: BoxBodyAcitivityProps) {
     return (
         <Box
             w="full"
@@ -61,3 +62,7 @@ export function BoxBodyAcitivity({ titleBodyActivity, dateFinalized, datePosted,
         </Box>
     );
 }
+
+export const BoxBodyAcitivity = memo(BoxBodyAcitivityComponent, (prevProps, nextProps) => {
+    return Object.is(prevProps, nextProps);
+})

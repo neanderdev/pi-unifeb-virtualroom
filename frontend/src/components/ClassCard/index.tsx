@@ -1,4 +1,5 @@
 import NextLink from "next/link";
+import { memo } from "react";
 import { Avatar, Box, Flex, Heading, Stack, Text, Image, useColorModeValue, IconButton } from "@chakra-ui/react";
 import { FaTasks } from "react-icons/fa";
 
@@ -11,7 +12,7 @@ interface ClassCardProps {
     imageStudent: string;
 }
 
-export function ClassCard({ imageClass, hrefClass, nameClass, nameTeacherClass, nameStudent, imageStudent }: ClassCardProps) {
+function ClassCardComponent({ imageClass, hrefClass, nameClass, nameTeacherClass, nameStudent, imageStudent }: ClassCardProps) {
     return (
         <NextLink href={hrefClass} passHref>
             <Box
@@ -77,3 +78,7 @@ export function ClassCard({ imageClass, hrefClass, nameClass, nameTeacherClass, 
         </NextLink>
     );
 }
+
+export const ClassCard = memo(ClassCardComponent, (prevProps, nextProps) => {
+    return Object.is(prevProps, nextProps);
+});
