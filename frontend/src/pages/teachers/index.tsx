@@ -1,10 +1,12 @@
 import NextLink from "next/link";
+import { useState } from "react";
 import { Box, Button, Checkbox, Flex, Heading, Icon, Link, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, useColorModeValue, useMediaQuery } from "@chakra-ui/react";
 import { RiAddLine, RiEditLine, RiEraserLine } from "react-icons/ri";
 
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
+import { Pagination } from "../../components/Pagination";
 
 interface fakeTeachersProps {
     idTeacher: number;
@@ -52,6 +54,8 @@ export default function Teachers() {
         base: false,
         lg: true,
     });
+
+    const [page, setPage] = useState(1);
 
     return (
         <Box>
@@ -157,11 +161,11 @@ export default function Teachers() {
                                 </Tbody>
                             </Table >
 
-                            {/* <Pagination
-                                totalCountOfRegisters={data.totalCount}
+                            <Pagination
+                                totalCountOfRegisters={fakeTeachers.length}
                                 currentPage={page}
                                 onPageChange={setPage}
-                            /> */}
+                            />
                         </Box >
                     </Box>
                 </Stack>
