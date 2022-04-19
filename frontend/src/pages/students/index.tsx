@@ -8,46 +8,46 @@ import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { Pagination } from "../../components/Pagination";
 
-interface fakeTeachersProps {
-    idTeacher: number;
-    nameTeacher: string;
-    emailTeacher: string;
-    avatarTeacher?: string;
-    cpfOrCnpjTeacher: string;
-    generoTeacher: string;
+interface fakeStudentsProps {
+    idStudent: number;
+    nameStudent: string;
+    emailStudent: string;
+    avatarStudent?: string;
+    cpfOrCnpjStudent: string;
+    generoStudent: string;
     createdAt: string;
     updatedAt?: string;
 };
 
-const fakeTeachers: Array<fakeTeachersProps> = [
+const fakeStudents: Array<fakeStudentsProps> = [
     {
-        idTeacher: 1,
-        nameTeacher: 'Salvitierra Bombadão',
-        emailTeacher: 'salvitierra.bombadao@email.com',
-        cpfOrCnpjTeacher: '11.111.111/0001-11',
-        generoTeacher: 'Masculino',
+        idStudent: 1,
+        nameStudent: 'Salvitierra Bombadão',
+        emailStudent: 'salvitierra.bombadao@email.com',
+        cpfOrCnpjStudent: '11.111.111/0001-11',
+        generoStudent: 'Masculino',
         createdAt: '18/04/2022',
         updatedAt: '19/04/2022',
     },
     {
-        idTeacher: 2,
-        nameTeacher: 'Wendel Cortes',
-        emailTeacher: 'wendel.bombadao@email.com',
-        cpfOrCnpjTeacher: '22.222.222/0001-22',
-        generoTeacher: 'Feminino',
+        idStudent: 2,
+        nameStudent: 'Wendel Cortes',
+        emailStudent: 'wendel.bombadao@email.com',
+        cpfOrCnpjStudent: '22.222.222/0001-22',
+        generoStudent: 'Feminino',
         createdAt: '19/04/2022',
     },
     {
-        idTeacher: 3,
-        nameTeacher: 'Fábio Teste',
-        emailTeacher: 'fabio.bombadao@email.com',
-        cpfOrCnpjTeacher: '33.333.333/0001-33',
-        generoTeacher: 'Masculino',
+        idStudent: 3,
+        nameStudent: 'Fábio Teste',
+        emailStudent: 'fabio.bombadao@email.com',
+        cpfOrCnpjStudent: '33.333.333/0001-33',
+        generoStudent: 'Masculino',
         createdAt: '19/04/2022',
     },
 ];
 
-export default function Teachers() {
+export default function Students() {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const isWideVersion = useBreakpointValue({
@@ -59,7 +59,7 @@ export default function Teachers() {
 
     return (
         <Box>
-            <Navbar title="Professores" />
+            <Navbar title="Alunos" />
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
@@ -71,10 +71,10 @@ export default function Teachers() {
                         <Box flex='1' borderRadius={8} bg={useColorModeValue('gray.200', 'gray.800')} p='8'>
                             <Flex mb='8' justify='space-between' align='center'>
                                 <Heading size='lg' fontWeight='normal'>
-                                    Professores
+                                    Alunos
                                 </Heading>
 
-                                <NextLink href='/teachers/create' passHref>
+                                <NextLink href='/Students/create' passHref>
                                     <Button
                                         as='a'
                                         size='sm'
@@ -94,7 +94,7 @@ export default function Teachers() {
                                             <Checkbox colorScheme='pink' borderColor="gray" />
                                         </Th>
 
-                                        <Th>Professor</Th>
+                                        <Th>Aluno</Th>
 
                                         {isWideVersion && <Th>CPF/CNPJ</Th>}
 
@@ -106,9 +106,9 @@ export default function Teachers() {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {fakeTeachers.map((teacher) => {
+                                    {fakeStudents.map((student) => {
                                         return (
-                                            <Tr key={teacher.idTeacher}>
+                                            <Tr key={student.idStudent}>
                                                 <Td px={['4', '4', '6']}>
                                                     <Checkbox colorScheme='pink' borderColor="gray" />
                                                 </Td>
@@ -118,15 +118,15 @@ export default function Teachers() {
                                                         <Link
                                                             color='purple.400'
                                                         >
-                                                            <Text fontWeight='bold'>{teacher.nameTeacher}</Text>
+                                                            <Text fontWeight='bold'>{student.nameStudent}</Text>
                                                         </Link>
-                                                        <Text fontSize='sm' color='gray.400'>{teacher.emailTeacher}</Text>
+                                                        <Text fontSize='sm' color='gray.400'>{student.emailStudent}</Text>
                                                     </Box>
                                                 </Td>
 
-                                                {isWideVersion && <Td>{teacher.cpfOrCnpjTeacher}</Td>}
+                                                {isWideVersion && <Td>{student.cpfOrCnpjStudent}</Td>}
 
-                                                {isWideVersion && <Td>{teacher.createdAt}</Td>}
+                                                {isWideVersion && <Td>{student.createdAt}</Td>}
 
                                                 {isWideVersion && (
                                                     <>
@@ -162,7 +162,7 @@ export default function Teachers() {
                             </Table >
 
                             <Pagination
-                                totalCountOfRegisters={fakeTeachers.length}
+                                totalCountOfRegisters={fakeStudents.length}
                                 currentPage={page}
                                 onPageChange={setPage}
                             />
