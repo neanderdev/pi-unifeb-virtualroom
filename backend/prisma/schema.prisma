@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id_user   Int    @id @default(autoincrement())
+  ra        Float  @unique @db.Real
+  email     String @unique @db.VarChar(100)
+  senha     String @db.Char(20)
+  tipo_user String @default("S") @db.Char(1)
+  role      Role   @default(student)
+
+  Student        Student[]
+  Teacher        Teacher[]
+  ClassUser      ClassUser[]
+  DetailActivity DetailActivity[]
+
+  @@map("user")
+}
+
+enum Role {
+  student
+  teacher
+  admin
+}
+
+model Student {
+  uid_student           String   @id @default(uuid())
+  ra_student            Float    @unique @db.Real
+  name_student          String   @db.VarChar(150)
+  gender_student        String   @db.Char(1)
+  cpf_student           String   @unique @db.Char(14)
+  tel_cel_student       String   @db.Char(15)
+  tel_res_student       String   @db.Char(14)
+  endereco_student      String   @db.VarChar(80)
+  numero_student        String   @db.VarChar(10)
+  bairro_student        String   @db.VarChar(40)
+  complemento_student   String   @db.VarChar(50)
+  cep_student           String   @db.VarChar(9)
+  cidade_student        String   @db.VarChar(50)
+  uf_student            String   @db.Char(2)
+  email_student         String   @unique @db.VarChar(100)
+  dt_nascimento_student DateTime @db.Date
+  dt_matricula_student  DateTime @db.Date
+  situacao_student      Boolean  @default(true) @db.Boolean
+  user_id               Int
+  user                  User     @relation(fields: [user_id], references: [id_user])
+
+  @@map("student")
+}
+
+model Teacher {
+  uid_teacher           String   @id @default(uuid())
+  ra_teacher            Float    @unique @db.Real
+  name_teacher          String   @db.VarChar(150)
+  gender_teacher        String   @db.Char(1)
+  cpf_cnpj_teacher      String   @unique @db.Char(14)
+  tel_cel_teacher       String   @db.Char(15)
+  tel_res_teacher       String   @db.Char(14)
+  endereco_teacher      String   @db.VarChar(80)
+  numero_teacher        String   @db.VarChar(10)
+  bairro_teacher        String   @db.VarChar(40)
+  complemento_teacher   String   @db.VarChar(50)
+  cep_teacher           String   @db.VarChar(9)
+  cidade_teacher        String   @db.VarChar(50)
+  uf_teacher            String   @db.Char(2)
+  email_teacher         String   @unique @db.VarChar(100)
+  dt_nascimento_teacher DateTime @db.Date
+  dt_matricula_teacher  DateTime @db.Date
+  situacao_teacher      Boolean  @default(true) @db.Boolean
+  user_id               Int
+  user                  User     @relation(fields: [user_id], references: [id_user])
+
+  @@map("teacher")
+}
+
+model Class {
+  uid_class        String   @id @default(uuid())
+  name_class       String   @db.VarChar(150)
+  background_class String   @db.VarChar(180)
+  createdAt_class  DateTime @default(now())
+  updatedAt_class  DateTime @updatedAt
+
+  ClassUser        ClassUser[]
+  CategoryActivity CategoryActivity[]
+  Activity         Activity[]
+
+  @@map("class")
+}
+
+model ClassUser {
+  id_class_user Int    @id @default(autoincrement())
+  class_uid     String
+  class         Class  @relation(fields: [class_uid], references: [uid_class])
+  user_id       Int
+  user          User   @relation(fields: [user_id], references: [id_user])
+
+  @@map("class_user")
+}
+
+model CategoryActivity {
+  id_category_activity   Int    @id @default(autoincrement())
+  name_category_activity String @db.VarChar(100)
+  class_uid              String
+  class                  Class  @relation(fields: [class_uid], references: [uid_class])
+
+  Activity Activity[]
+
+  @@map("category_activity")
+}
+
+model Activity {
+  uid_activity               String           @id @default(uuid())
+  name_activity              String           @db.VarChar(100)
+  content_activity           String
+  dt_entrega_activity        DateTime         @db.Date
+  isAcceptWithDelay_Activity Boolean          @default(true) @db.Boolean
+  nota_max_activity          Decimal          @db.Decimal(2, 2)
+  isEntregue_activity        Boolean          @default(false) @db.Boolean
+  createdAt_activity         DateTime         @default(now())
+  updatedAt_activity         DateTime         @updatedAt
+  class_uid                  String
+  class                      Class            @relation(fields: [class_uid], references: [uid_class])
+  category_activity_id       Int
+  category_activity          CategoryActivity @relation(fields: [category_activity_id], references: [id_category_activity])
+
+  MaterialActivity MaterialActivity[]
+  DetailActivity   DetailActivity[]
+
+  @@map("activity")
+}
+
+model MaterialActivity {
+  id_material_activity   Int      @id @default(autoincrement())
+  link_material_activity String   @db.VarChar(180)
+  tipo_material_activity String   @default("M") @db.Char(1)
+  activity_uid           String
+  activity               Activity @relation(fields: [activity_uid], references: [uid_activity])
+
+  @@map("material_activity")
+}
+
+model DetailActivity {
+  id_detail_activity            Int      @id @default(autoincrement())
+  dt_isEntrega_detail_acitivity DateTime @db.Date
+  activity_uid                  String
+  activity                      Activity @relation(fields: [activity_uid], references: [uid_activity])
+  user_id                       Int
+  user                          User     @relation(fields: [user_id], references: [id_user])
+
+  MaterialDetailActivity MaterialDetailActivity[]
+
+  @@map("detail_activity")
+}
+
+model MaterialDetailActivity {
+  id_material_detail_activity   Int            @id @default(autoincrement())
+  link_material_detail_activity String         @db.VarChar(180)
+  detail_activity_id            Int
+  detail_activity               DetailActivity @relation(fields: [detail_activity_id], references: [id_detail_activity])
+
+  @@map("material_detail_activity")
+}
