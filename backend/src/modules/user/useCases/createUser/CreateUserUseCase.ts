@@ -11,7 +11,7 @@ interface ICreateUser {
 
 export class CreateUserUseCase {
   async execute({ ra, email, senha, tipo_user, role }: ICreateUser) {
-    // Validar se o usuário existe
+    // Validar se o RA do usuário existe
     const userIsRAExist = await prisma.user.findUnique({
       where: {
         ra,
@@ -22,11 +22,10 @@ export class CreateUserUseCase {
       throw new Error("RA already exists");
     }
 
-    const userIsEmailExist = await prisma.user.findFirst({
+    // Validar se o email do usuário existe
+    const userIsEmailExist = await prisma.user.findUnique({
       where: {
-        email: {
-          mode: "insensitive",
-        },
+        email,
       },
     });
 
