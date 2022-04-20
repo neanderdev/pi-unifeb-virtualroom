@@ -14,7 +14,7 @@ model User {
   id_user   Int    @id @default(autoincrement())
   ra        Float  @unique @db.Real
   email     String @unique @db.VarChar(100)
-  senha     String @db.Char(20)
+  senha     String
   tipo_user String @default("S") @db.Char(1)
   role      Role   @default(student)
 
