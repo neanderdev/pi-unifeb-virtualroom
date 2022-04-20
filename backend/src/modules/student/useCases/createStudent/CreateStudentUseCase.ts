@@ -15,8 +15,8 @@ interface ICreateStudent {
   cidade_student: string;
   uf_student: string;
   email_student: string;
-  dt_nascimento_student: string;
-  dt_matricula_student: string;
+  dt_nascimento_student: Date;
+  dt_matricula_student: Date;
   situacao_student: boolean;
   user_id: number;
 }
