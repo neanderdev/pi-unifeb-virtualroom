@@ -47,6 +47,6 @@ export class CreateStudentController {
       user_id,
     });
 
-    return response.json(result);
+    return response.status(201).json(result);
   }
 }
