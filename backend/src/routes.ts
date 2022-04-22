@@ -8,6 +8,7 @@ import { CreateUserController } from "./modules/user/useCases/createUser/CreateU
 import { CreateStudentController } from "./modules/student/useCases/createStudent/CreateStudentController";
 import { ListStudentController } from "./modules/student/useCases/listStudent/ListStudentController";
 import { CreateTeacherController } from "./modules/teacher/useCases/createTeacher/CreateTeacherController";
+import { ListTeacherController } from "./modules/teacher/useCases/listTeacher/ListTeacherController";
 
 const routes = Router();
 
@@ -17,6 +18,7 @@ const createUserController = new CreateUserController();
 const createStudentController = new CreateStudentController();
 const listStudentController = new ListStudentController();
 const createTeacherController = new CreateTeacherController();
+const listTeacherController = new ListTeacherController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/logout/", logoutController.handle);
@@ -24,5 +26,6 @@ routes.post("/user/", ensureAuthenticated, createUserController.handle);
 routes.post("/student/", ensureAuthenticated, createStudentController.handle);
 routes.get("/student/", ensureAuthenticated, listStudentController.handle);
 routes.post("/teacher/", ensureAuthenticated, createTeacherController.handle);
+routes.get("/teacher/", ensureAuthenticated, listTeacherController.handle);
 
 export { routes };
