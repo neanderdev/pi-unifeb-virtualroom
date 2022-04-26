@@ -3,11 +3,11 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../database/prismaClient";
 
 interface IResultPayload {
-  id_user: number;
-  ra: number;
-  email: string;
+  uid_user: string;
+  ra_user: number;
+  email_user: string;
   tipo_user: string;
-  role: any;
+  roles: any;
 }
 
 export async function ensureAuthenticated(
@@ -22,11 +22,11 @@ export async function ensureAuthenticated(
   }
 
   try {
-    const data = jwt.verify(token.token, "febroom2022") as IResultPayload;
+    const data = jwt.verify(token, "febroom2022") as IResultPayload;
 
     const loginExist = await prisma.user.findUnique({
       where: {
-        id_user: data.id_user,
+        uid_user: data.uid_user,
       },
     });
 
@@ -34,11 +34,11 @@ export async function ensureAuthenticated(
       throw new Error("User does not exists!");
     }
 
-    request.id_user = data.id_user;
-    request.ra = data.ra;
-    request.email = data.email;
+    request.uid_user = data.uid_user;
+    request.ra_user = data.ra_user;
+    request.email_user = data.email_user;
     request.tipo_user = data.tipo_user;
-    request.role = data.role;
+    request.roles = data.roles;
 
     next();
   } catch {

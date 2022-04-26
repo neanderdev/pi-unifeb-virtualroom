@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 
-import { CreateUserUseCase } from "./CreateUserUseCase";
+import { UpdateUserUseCase } from "./updateUserUseCase";
 
-export class CreateUserController {
+export class UpdateUserController {
   async handle(request: Request, response: Response) {
     const {
+      uid_user,
       ra_user,
       name_user,
       gender_user,
@@ -23,12 +24,12 @@ export class CreateUserController {
       dt_matricula_user,
       situacao_user,
       senha,
-      tipo_user,
-      roles,
     } = request.body;
 
-    const createUserUseCase = new CreateUserUseCase();
-    const result = await createUserUseCase.execute({
+    const updateUserUseCase = new UpdateUserUseCase();
+
+    await updateUserUseCase.execute({
+      uid_user,
       ra_user,
       name_user,
       gender_user,
@@ -47,10 +48,8 @@ export class CreateUserController {
       dt_matricula_user,
       situacao_user,
       senha,
-      tipo_user,
-      roles,
     });
 
-    return response.status(201).json(result);
+    return response.status(204).send();
   }
 }

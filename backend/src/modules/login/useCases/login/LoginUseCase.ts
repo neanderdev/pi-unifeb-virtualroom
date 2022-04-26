@@ -4,25 +4,25 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../../../../database/prismaClient";
 
 interface ILogin {
-  ra: number;
+  ra_user: number;
   senha: string;
 }
 
 interface IReturn {
-  id_user: number;
-  ra: number;
-  email: string;
+  uid_user: string;
+  ra_user: number;
+  email_user: string;
   tipo_user: string;
-  role: any;
+  roles: any;
   token: string;
 }
 
 export class LoginUseCase {
-  async execute({ ra, senha }: ILogin) {
+  async execute({ ra_user, senha }: ILogin) {
     // Validar se o RA do usuário existe
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
-        ra,
+        ra_user,
       },
     });
 
@@ -39,11 +39,11 @@ export class LoginUseCase {
 
     const token = jwt.sign(
       {
-        id_user: user.id_user,
-        ra: user.ra,
-        email: user.email,
+        uid_user: user.uid_user,
+        ra_user: user.ra_user,
+        email_user: user.email_user,
         tipo_user: user.tipo_user,
-        role: user.role,
+        roles: user.roles,
       },
       "febroom2022"
       // {
@@ -52,11 +52,11 @@ export class LoginUseCase {
     );
 
     const returnUser: IReturn = Object.assign({
-      id_user: user.id_user,
-      ra: user.ra,
-      email: user.email,
-      tipo_user: user.tipo_user,
-      role: user.role,
+      uid_user: user.uid_user,
+      ra_user: user.ra_user,
+      email: user.email_user,
+      email_user: user.tipo_user,
+      roles: user.roles,
       token,
     });
 

@@ -1,8 +1,9 @@
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 
 import { prisma } from "../../../../database/prismaClient";
 
-interface ICreateUser {
+interface IUpdateUser {
+  uid_user: string;
   ra_user: number;
   name_user: string;
   gender_user: string;
@@ -21,12 +22,11 @@ interface ICreateUser {
   dt_matricula_user: Date;
   situacao_user: boolean;
   senha: string;
-  tipo_user: string;
-  roles: any;
 }
 
-export class CreateUserUseCase {
+export class UpdateUserUseCase {
   async execute({
+    uid_user,
     ra_user,
     name_user,
     gender_user,
@@ -45,47 +45,58 @@ export class CreateUserUseCase {
     dt_matricula_user,
     situacao_user,
     senha,
-    tipo_user,
-    roles,
-  }: ICreateUser) {
-    // Validar se o RA do usuário existe
-    const userIsRAExist = await prisma.user.findUnique({
+  }: IUpdateUser) {
+    const user = await prisma.user.findUnique({
+      where: {
+        uid_user,
+      },
+    });
+
+    // Verificar se RA do usuário já existe
+    const userIsRAExists = await prisma.user.findUnique({
       where: {
         ra_user,
       },
     });
 
-    if (userIsRAExist) {
-      throw new Error("RA already exists");
+    if (userIsRAExists && ra_user !== user?.ra_user) {
+      throw new Error("RA already exists!");
     }
 
-    // Validar se o email do usuário existe
-    const userIsEmailExist = await prisma.user.findUnique({
+    // Verificar se e-mail do usuário já existe
+    const userIsEmailExists = await prisma.user.findUnique({
       where: {
         email_user,
       },
     });
 
-    if (userIsEmailExist) {
-      throw new Error("Email already exists");
+    if (userIsEmailExists && email_user !== user?.email_user) {
+      throw new Error("E-mail already exists!");
     }
 
-    // Validar se o email do usuário existe
-    const userIsCPFOrCNPJExist = await prisma.user.findUnique({
+    // Verificar se CPF/CNPJ do usuário já existe
+    const userIsCPFOrCNPJExists = await prisma.user.findUnique({
       where: {
         cpf_cnpj_user,
       },
     });
 
-    if (userIsCPFOrCNPJExist) {
-      throw new Error("CPF/CNPJ already exists");
+    if (userIsCPFOrCNPJExists && cpf_cnpj_user !== user?.cpf_cnpj_user) {
+      throw new Error("CPF/CPNJ already exists!");
     }
 
-    // Criptografar a senha
-    const hashPassword = await hash(senha, 10);
+    // Comparar senha do usário
+    const comparePasswordUser = await compare(senha, user?.senha ?? "");
 
-    // Salvar o usuário
-    const user = await prisma.user.create({
+    let hashPassword = user?.senha;
+
+    if (!comparePasswordUser) {
+      // Criptografar a senha
+      hashPassword = await hash(senha, 10);
+    }
+
+    // Atualizar usuário
+    await prisma.user.update({
       data: {
         ra_user,
         name_user,
@@ -105,11 +116,10 @@ export class CreateUserUseCase {
         dt_matricula_user,
         situacao_user,
         senha: hashPassword,
-        tipo_user,
-        roles,
+      },
+      where: {
+        uid_user,
       },
     });
-
-    return user;
   }
 }
