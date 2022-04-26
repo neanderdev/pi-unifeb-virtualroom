@@ -6,13 +6,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '../components/Form/Input';
 
 type SignInFormData = {
-    email: string;
-    password: string;
+    ra_user: number;
+    senha: string;
 }
 
 const signInFormSchema = yup.object().shape({
-    email: yup.string().required('E-mail obrigatório').email('E-mail inválido'),
-    password: yup.string().required('Senha obrigatória'),
+    ra_user: yup.number().required('RA obrigatório'),
+    senha: yup.string().required('Senha obrigatória'),
 });
 
 export default function SignIn() {
@@ -23,7 +23,7 @@ export default function SignIn() {
     const { errors } = formState;
 
     const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         console.log(values);
     }
@@ -62,19 +62,19 @@ export default function SignIn() {
             >
                 <Stack spacing='4'>
                     <Input
-                        name='email'
-                        type='email'
-                        label='E-mail'
-                        {...register('email')}
-                        error={errors.email}
+                        name='ra_user'
+                        type='number'
+                        label='RA'
+                        {...register('ra_user')}
+                        error={errors.ra_user}
                     />
 
                     <Input
-                        name='password'
+                        name='senha'
                         type='password'
                         label='Senha'
-                        {...register('password')}
-                        error={errors.password}
+                        {...register('senha')}
+                        error={errors.senha}
                     />
                 </Stack>
 
