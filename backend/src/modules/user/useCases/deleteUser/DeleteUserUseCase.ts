@@ -1,5 +1,7 @@
 import { prisma } from "../../../../database/prismaClient";
 
+import { AppError } from "../../../../errors/AppError";
+
 export class DeleteUserUseCase {
   async execute(uid_user: string) {
     // Verificar se o usuário existe
@@ -10,7 +12,7 @@ export class DeleteUserUseCase {
     });
 
     if (!user) {
-      throw new Error("User does not exists!");
+      throw new AppError("User does not exists!");
     }
 
     // Apagar usuário

@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+
 import { prisma } from "../database/prismaClient";
+
+import { AppError } from "../errors/AppError";
 
 interface IResultPayload {
   uid_user: string;
@@ -18,7 +21,7 @@ export async function ensureAuthenticated(
   const token = request.cookies.access_token;
 
   if (!token) {
-    throw new Error("Token missing");
+    throw new AppError("Token missing", 401);
   }
 
   try {
@@ -31,7 +34,7 @@ export async function ensureAuthenticated(
     });
 
     if (!loginExist) {
-      throw new Error("User does not exists!");
+      throw new AppError("User does not exists!", 401);
     }
 
     request.uid_user = data.uid_user;
@@ -42,6 +45,6 @@ export async function ensureAuthenticated(
 
     next();
   } catch {
-    throw new Error("Invalid token!");
+    throw new AppError("Invalid token!", 401);
   }
 }

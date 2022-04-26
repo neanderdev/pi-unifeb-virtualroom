@@ -2,6 +2,8 @@ import { compare, hash } from "bcrypt";
 
 import { prisma } from "../../../../database/prismaClient";
 
+import { AppError } from "../../../../errors/AppError";
+
 interface IUpdateUser {
   uid_user: string;
   ra_user: number;
@@ -60,7 +62,7 @@ export class UpdateUserUseCase {
     });
 
     if (userIsRAExists && ra_user !== user?.ra_user) {
-      throw new Error("RA already exists!");
+      throw new AppError("RA already exists!");
     }
 
     // Verificar se e-mail do usuário já existe
@@ -71,7 +73,7 @@ export class UpdateUserUseCase {
     });
 
     if (userIsEmailExists && email_user !== user?.email_user) {
-      throw new Error("E-mail already exists!");
+      throw new AppError("E-mail already exists!");
     }
 
     // Verificar se CPF/CNPJ do usuário já existe
@@ -82,7 +84,7 @@ export class UpdateUserUseCase {
     });
 
     if (userIsCPFOrCNPJExists && cpf_cnpj_user !== user?.cpf_cnpj_user) {
-      throw new Error("CPF/CPNJ already exists!");
+      throw new AppError("CPF/CPNJ already exists!");
     }
 
     // Comparar senha do usário

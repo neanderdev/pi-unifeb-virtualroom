@@ -2,6 +2,8 @@ import { hash } from "bcrypt";
 
 import { prisma } from "../../../../database/prismaClient";
 
+import { AppError } from "../../../../errors/AppError";
+
 interface ICreateUser {
   ra_user: number;
   name_user: string;
@@ -56,7 +58,7 @@ export class CreateUserUseCase {
     });
 
     if (userIsRAExist) {
-      throw new Error("RA already exists");
+      throw new AppError("RA already exists");
     }
 
     // Validar se o email do usuário existe
@@ -67,7 +69,7 @@ export class CreateUserUseCase {
     });
 
     if (userIsEmailExist) {
-      throw new Error("Email already exists");
+      throw new AppError("Email already exists");
     }
 
     // Validar se o email do usuário existe
@@ -78,7 +80,7 @@ export class CreateUserUseCase {
     });
 
     if (userIsCPFOrCNPJExist) {
-      throw new Error("CPF/CNPJ already exists");
+      throw new AppError("CPF/CNPJ already exists");
     }
 
     // Criptografar a senha

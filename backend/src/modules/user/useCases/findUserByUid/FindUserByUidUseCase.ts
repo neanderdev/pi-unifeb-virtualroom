@@ -1,5 +1,7 @@
 import { prisma } from "../../../../database/prismaClient";
 
+import { AppError } from "../../../../errors/AppError";
+
 export class FindUserByUidUseCase {
   async execute(uid_user: string) {
     // Verificar se o usuário existe
@@ -10,7 +12,7 @@ export class FindUserByUidUseCase {
     });
 
     if (!user) {
-      throw new Error("User does not exists!");
+      throw new AppError("User does not exists!", 401);
     }
 
     // Retornar o usuário, caso exista

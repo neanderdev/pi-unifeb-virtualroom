@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 
 import { prisma } from "../../../../database/prismaClient";
 
+import { AppError } from "../../../../errors/AppError";
+
 interface ILogin {
   ra_user: number;
   senha: string;
@@ -27,14 +29,14 @@ export class LoginUseCase {
     });
 
     if (!user) {
-      throw new Error("RA already not exists");
+      throw new AppError("RA already not exists", 401);
     }
 
     // Comparar senha do usário
     const comparePasswordUser = await compare(senha, user.senha);
 
     if (!comparePasswordUser) {
-      throw new Error("RA ou senha incorreto");
+      throw new AppError("RA ou senha incorreto", 401);
     }
 
     const token = jwt.sign(
