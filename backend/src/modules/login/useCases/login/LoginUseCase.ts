@@ -17,6 +17,7 @@ interface IReturn {
   tipo_user: string;
   roles: any;
   token: string;
+  refresh_token: string;
 }
 
 export class LoginUseCase {
@@ -47,11 +48,38 @@ export class LoginUseCase {
         tipo_user: user.tipo_user,
         roles: user.roles,
       },
-      "febroom2022"
-      // {
-      //     expiresIn: "1d"
-      // }
+      "febroom2022",
+      {
+        subject: user.uid_user,
+        expiresIn: "15h",
+      }
     );
+
+    const refresh_token = jwt.sign(
+      {
+        uid_user: user.uid_user,
+        ra_user: user.ra_user,
+        email_user: user.email_user,
+        tipo_user: user.tipo_user,
+        roles: user.roles,
+      },
+      "febroom2022",
+      {
+        subject: user.uid_user,
+        expiresIn: "30d",
+      }
+    );
+
+    let dateAtual = new Date();
+    dateAtual.setDate(dateAtual.getDate() + 30);
+
+    await prisma.userToken.create({
+      data: {
+        refresh_token,
+        expires_date: dateAtual,
+        user_uid: user.uid_user,
+      },
+    });
 
     const returnUser: IReturn = Object.assign({
       uid_user: user.uid_user,
@@ -60,6 +88,7 @@ export class LoginUseCase {
       email_user: user.tipo_user,
       roles: user.roles,
       token,
+      refresh_token,
     });
 
     return returnUser;

@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 
-import { LoginUseCase } from "./LoginUseCase";
+import { RefreshTokenUseCase } from "./RefreshTokenUseCase";
 
-export class LoginController {
+export class RefreshTokenController {
   async handle(request: Request, response: Response) {
-    const { ra_user, senha } = request.body;
+    const { token } = request.body;
 
-    const loginUseCase = new LoginUseCase();
-    const result = await loginUseCase.execute({ ra_user, senha });
+    const refreshTokenUseCase = new RefreshTokenUseCase();
+    const result = await refreshTokenUseCase.execute(token);
 
-    response.cookie("access_token", result.token, {
+    response.cookie("access_token", result.token_atual, {
       sameSite: "strict",
       path: "/",
       httpOnly: true,

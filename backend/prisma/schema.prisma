@@ -33,6 +33,7 @@ model User {
   tipo_user          String   @default("S") @db.Char(1)
   roles              Roles    @default(student)
 
+  UserToken      UserToken[]
   ClassUser      ClassUser[]
   DetailActivity DetailActivity[]
 
@@ -43,6 +44,17 @@ enum Roles {
   student
   teacher
   admin
+}
+
+model UserToken {
+  uid_user_token String   @id @default(uuid())
+  refresh_token  String
+  expires_date   DateTime
+  created_at     DateTime @default(now())
+  user_uid       String
+  user           User     @relation(fields: [user_uid], references: [uid_user])
+
+  @@map("user_token")
 }
 
 model Class {
