@@ -10,6 +10,7 @@ import { CreateUserController } from "./modules/user/useCases/createUser/CreateU
 import { FindUserByUidController } from "./modules/user/useCases/findUserByUid/FindUserByUidController";
 import { UpdateUserController } from "./modules/user/useCases/updateUser/UpdateUserController";
 import { DeleteUserController } from "./modules/user/useCases/deleteUser/DeleteUserController";
+import { FindMeByIdController } from "./modules/me/useCases/FindMeByIdController";
 
 const routes = Router();
 
@@ -21,6 +22,7 @@ const createUserController = new CreateUserController();
 const findUserByUidController = new FindUserByUidController();
 const updateUserController = new UpdateUserController();
 const deleteUserController = new DeleteUserController();
+const findMeByIdController = new FindMeByIdController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/logout/", logoutController.handle);
@@ -38,5 +40,6 @@ routes.delete(
   ensureAuthenticated,
   deleteUserController.handle
 );
+routes.get("/me", ensureAuthenticated, findMeByIdController.handle);
 
 export { routes };

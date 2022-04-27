@@ -4,10 +4,10 @@ import { LoginUseCase } from "./LoginUseCase";
 
 export class LoginController {
   async handle(request: Request, response: Response) {
-    const { ra_user, senha } = request.body;
+    const { ra, senha } = request.body;
 
     const loginUseCase = new LoginUseCase();
-    const result = await loginUseCase.execute({ ra_user, senha });
+    const result = await loginUseCase.execute({ ra, senha });
 
     response.cookie("access_token", result.token, {
       sameSite: "strict",

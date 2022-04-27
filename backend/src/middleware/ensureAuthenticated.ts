@@ -21,7 +21,7 @@ export async function ensureAuthenticated(
   const token = request.cookies.access_token;
 
   if (!token) {
-    throw new AppError("Token missing", 401);
+    throw new AppError("Token missing", 401, "token.invalid");
   }
 
   try {
@@ -45,6 +45,6 @@ export async function ensureAuthenticated(
 
     next();
   } catch {
-    throw new AppError("Invalid token!", 401);
+    throw new AppError("Invalid token!", 401, "token.expired");
   }
 }

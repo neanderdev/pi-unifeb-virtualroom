@@ -6,7 +6,7 @@ import { prisma } from "../../../../database/prismaClient";
 import { AppError } from "../../../../errors/AppError";
 
 interface ILogin {
-  ra_user: number;
+  ra: number;
   senha: string;
 }
 
@@ -21,11 +21,11 @@ interface IReturn {
 }
 
 export class LoginUseCase {
-  async execute({ ra_user, senha }: ILogin) {
+  async execute({ ra, senha }: ILogin) {
     // Validar se o RA do usuário existe
     const user = await prisma.user.findFirst({
       where: {
-        ra_user,
+        ra_user: ra,
       },
     });
 
@@ -84,8 +84,9 @@ export class LoginUseCase {
     const returnUser: IReturn = Object.assign({
       uid_user: user.uid_user,
       ra_user: user.ra_user,
-      email: user.email_user,
-      email_user: user.tipo_user,
+      email_user: user.email_user,
+      cpf_cnpj_user: user.cpf_cnpj_user,
+      tipo_user: user.tipo_user,
       roles: user.roles,
       token,
       refresh_token,
