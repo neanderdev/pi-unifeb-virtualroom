@@ -8,6 +8,11 @@ import { AuthTokenError } from "./errors/AuthTokenError";
 let isRefreshing = false;
 let failedRequestQueue = [];
 
+interface IResponseData {
+  message: string;
+  code: string;
+}
+
 export function setupAPIClient(ctx = undefined) {
   let cookies = parseCookies(ctx);
 
@@ -23,7 +28,9 @@ export function setupAPIClient(ctx = undefined) {
     (error: AxiosError) => {
       if (error.response.status === 401) {
         // refresh token
-        if (error.response.data?.code === "token.expired") {
+        const data = error.response.data as IResponseData;
+
+        if (data?.code === "token.expired") {
           cookies = parseCookies(ctx);
 
           const { "nextauth.refreshToken": token } = cookies;
