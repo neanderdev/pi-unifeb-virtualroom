@@ -18,7 +18,13 @@ export async function ensureAuthenticated(
   response: Response,
   next: NextFunction
 ) {
-  const token = request.cookies.access_token;
+  const { authorization } = request.headers;
+
+  if (!authorization) {
+    throw new AppError("Token not present", 401, "token.invalid");
+  }
+
+  const [, token] = authorization?.split(" ");
 
   if (!token) {
     throw new AppError("Token missing", 401, "token.invalid");
