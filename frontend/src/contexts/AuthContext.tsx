@@ -35,8 +35,6 @@ let authChannel: BroadcastChannel;
 export function signOut() {
     destroyCookie(undefined, 'nextauth.token');
     destroyCookie(undefined, 'nextauth.refreshToken');
-    destroyCookie(undefined, 'access_token');
-    destroyCookie(undefined, 'refresh_token');
 
     authChannel.postMessage('signOut');
 
@@ -63,8 +61,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }, []);
 
     useEffect(() => {
-        const { 'nextauth.token': token } = parseCookies();
-        // const { 'nextauth.refreshToken': token } = parseCookies();
+        // const { 'nextauth.token': token } = parseCookies();
+        const { 'nextauth.refreshToken': token } = parseCookies();
 
         if (token) {
             api.get('/me').then(response => {
@@ -107,6 +105,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setUser({
                 ra_user, email_user, cpf_cnpj_user, roles
             });
+
+            api.defaults.headers['Authorization'] = `Beared ${token}`;
 
             await toast({
                 title: 'Sucesso ao fazer o login',

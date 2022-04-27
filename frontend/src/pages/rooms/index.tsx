@@ -1,5 +1,9 @@
 import { Box, SimpleGrid, Stack, useMediaQuery } from "@chakra-ui/react";
 
+import { withSSRAuth } from "../../utils/withSSRAuth";
+
+import { setupAPIClient } from "../../services/api";
+
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
@@ -53,3 +57,13 @@ export default function Rooms() {
         </Box>
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const apiClient = setupAPIClient(ctx);
+    const response = await apiClient.get('me');
+    console.log(response.data);
+
+    return {
+        props: {}
+    };
+})
