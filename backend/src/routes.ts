@@ -3,7 +3,6 @@ import { Router } from "express";
 import { ensureAuthenticated } from "./middleware/ensureAuthenticated";
 
 import { LoginController } from "./modules/login/useCases/login/LoginController";
-import { LogoutController } from "./modules/logout/useCases/logout/LogoutController";
 import { RefreshTokenController } from "./modules/refreshToken/useCases/RefreshTokenController";
 import { ListUsersController } from "./modules/user/useCases/listUsers/ListUsersController";
 import { CreateUserController } from "./modules/user/useCases/createUser/CreateUserController";
@@ -15,7 +14,6 @@ import { FindMeByIdController } from "./modules/me/useCases/FindMeByIdController
 const routes = Router();
 
 const loginController = new LoginController();
-const logoutController = new LogoutController();
 const refreshTokenController = new RefreshTokenController();
 const listUsersController = new ListUsersController();
 const createUserController = new CreateUserController();
@@ -25,7 +23,6 @@ const deleteUserController = new DeleteUserController();
 const findMeByIdController = new FindMeByIdController();
 
 routes.post("/login/", loginController.handle);
-routes.post("/logout/", logoutController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
 routes.get("/user/", ensureAuthenticated, listUsersController.handle);
 routes.post("/user/", ensureAuthenticated, createUserController.handle);
