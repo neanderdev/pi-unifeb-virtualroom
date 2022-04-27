@@ -6,6 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { AuthContext } from '../contexts/AuthContext';
 
+import { withSSRGuest } from '../utils/withSSRGuest';
+
 import { Input } from '../components/Form/Input';
 
 type SignInFormData = {
@@ -14,9 +16,10 @@ type SignInFormData = {
 }
 
 const signInFormSchema = yup.object().shape({
-    ra: yup.number().required('RA obrigatório'),
+    ra: yup.number().typeError("RA é somente número").required('RA obrigatório'),
     senha: yup.string().required('Senha obrigatória'),
 });
+
 
 export default function SignIn() {
     const { register, handleSubmit, formState } = useForm({
@@ -95,3 +98,9 @@ export default function SignIn() {
         </Flex>
     )
 }
+
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+    return {
+        props: {}
+    };
+});

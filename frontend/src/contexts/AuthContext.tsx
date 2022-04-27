@@ -108,11 +108,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 ra_user, email_user, cpf_cnpj_user, roles
             });
 
-            toast({
+            await toast({
                 title: 'Sucesso ao fazer o login',
                 description: `Você será redirecionado para salas de aulas virtuais`,
                 status: 'success',
-                duration: 2000,
+                duration: 1500,
                 isClosable: true,
                 position: "top-right",
             });
@@ -123,7 +123,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 title: 'Falha ao fazer o login',
                 description: `${error.response.data?.message}`,
                 status: 'error',
-                duration: 2000,
+                duration: 1500,
                 isClosable: true,
                 position: "top-right",
             });
