@@ -3,7 +3,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { useToast } from '@chakra-ui/react';
 
-import { api } from '../services/api';
+import { api } from '../services/apiClient';
 
 type User = {
     ra_user: number;
@@ -35,6 +35,8 @@ let authChannel: BroadcastChannel;
 export function signOut() {
     destroyCookie(undefined, 'nextauth.token');
     destroyCookie(undefined, 'nextauth.refreshToken');
+    destroyCookie(undefined, 'access_token');
+    destroyCookie(undefined, 'refresh_token');
 
     authChannel.postMessage('signOut');
 
@@ -61,7 +63,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }, []);
 
     useEffect(() => {
-        const { 'nextauth.refreshToken': token } = parseCookies();
+        const { 'nextauth.token': token } = parseCookies();
+        // const { 'nextauth.refreshToken': token } = parseCookies();
 
         if (token) {
             api.get('/me').then(response => {
