@@ -5,10 +5,11 @@ import { FiPower, FiSettings } from "react-icons/fi";
 import { GiTeacher } from "react-icons/gi";
 import { IoSchoolOutline } from "react-icons/io5";
 
+import { useDrawer } from "../../contexts/DrawerContext";
+
 import { NavItem } from "./NavItem";
 import { CollapsedItem } from "./CollapsedItem";
-
-import { useDrawer } from "../../contexts/DrawerContext";
+import { Can } from "../Can";
 
 interface SidebarProps {
     isCollapseSidebar?: boolean;
@@ -41,17 +42,20 @@ export function Sidebar({ isCollapseSidebar = false }: SidebarProps) {
                 icon={RiDashboardLine}
             />
 
-            <NavAction
-                href="/teachers"
-                name="Professores"
-                icon={GiTeacher}
-            />
+            <Can roles="admin">
+                <NavAction
+                    href="/teachers"
+                    name="Professores"
+                    icon={GiTeacher}
+                />
 
-            <NavAction
-                href="/students"
-                name="Alunos"
-                icon={IoSchoolOutline}
-            />
+                <NavAction
+                    href="/students"
+                    name="Alunos"
+                    icon={IoSchoolOutline}
+                />
+            </Can>
+
 
             <NavAction
                 href="/works"

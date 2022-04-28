@@ -3,51 +3,44 @@ import { useState } from "react";
 import { Box, Button, Checkbox, Flex, Heading, Icon, Link, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, useColorModeValue, useMediaQuery } from "@chakra-ui/react";
 import { RiAddLine, RiEditLine, RiEraserLine } from "react-icons/ri";
 
+import { setupAPIClient } from "../../services/api";
+
+import { withSSRAuth } from "../../utils/withSSRAuth";
+
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { Pagination } from "../../components/Pagination";
 
-interface fakeStudentsProps {
-    idStudent: number;
-    nameStudent: string;
-    emailStudent: string;
-    avatarStudent?: string;
-    cpfOrCnpjStudent: string;
-    generoStudent: string;
-    createdAt: string;
-    updatedAt?: string;
+interface Student {
+    uid_user: string;
+    ra_user: number;
+    name_user: string;
+    gender_user: string;
+    cpf_cnpj_user: string;
+    tel_cel_user: string;
+    tel_res_user: string;
+    endereco_user: string;
+    numero_user: string;
+    bairro_user: string;
+    complemento_user: string;
+    cep_user: string;
+    cidade_user: string;
+    uf_user: string;
+    email_user: string;
+    dt_nascimento_user: Date;
+    dt_matricula_user: Date;
+    situacao_user: boolean;
+    senha: string;
+    tipo_user: string;
+    roles: string;
 };
 
-const fakeStudents: Array<fakeStudentsProps> = [
-    {
-        idStudent: 1,
-        nameStudent: 'Salvitierra Bombadão',
-        emailStudent: 'salvitierra.bombadao@email.com',
-        cpfOrCnpjStudent: '11.111.111/0001-11',
-        generoStudent: 'Masculino',
-        createdAt: '18/04/2022',
-        updatedAt: '19/04/2022',
-    },
-    {
-        idStudent: 2,
-        nameStudent: 'Wendel Cortes',
-        emailStudent: 'wendel.bombadao@email.com',
-        cpfOrCnpjStudent: '22.222.222/0001-22',
-        generoStudent: 'Feminino',
-        createdAt: '19/04/2022',
-    },
-    {
-        idStudent: 3,
-        nameStudent: 'Fábio Teste',
-        emailStudent: 'fabio.bombadao@email.com',
-        cpfOrCnpjStudent: '33.333.333/0001-33',
-        generoStudent: 'Masculino',
-        createdAt: '19/04/2022',
-    },
-];
+interface StudentsProps {
+    students: Array<Student>;
+}
 
-export default function Students() {
+export default function Students({ students }: StudentsProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const isWideVersion = useBreakpointValue({
@@ -74,7 +67,7 @@ export default function Students() {
                                     Alunos
                                 </Heading>
 
-                                <NextLink href='/Students/create' passHref>
+                                <NextLink href='/students/create' passHref>
                                     <Button
                                         as='a'
                                         size='sm'
@@ -87,89 +80,118 @@ export default function Students() {
                                 </NextLink>
                             </Flex>
 
-                            <Table colorScheme='linkedin'>
-                                <Thead>
-                                    <Tr>
-                                        <Th px={['4', '4', '6']} color='gray.300' width='8'>
-                                            <Checkbox colorScheme='pink' borderColor="gray" />
-                                        </Th>
-
-                                        <Th>Aluno</Th>
-
-                                        {isWideVersion && <Th>CPF/CNPJ</Th>}
-
-                                        {isWideVersion && <Th>Data de cadastro</Th>}
-
-                                        {isWideVersion && <Th width='8'></Th>}
-
-                                        {isWideVersion && <Th width='8'></Th>}
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {fakeStudents.map((student) => {
-                                        return (
-                                            <Tr key={student.idStudent}>
-                                                <Td px={['4', '4', '6']}>
+                            {students.length > 0 ? (
+                                <>
+                                    <Table colorScheme='linkedin'>
+                                        <Thead>
+                                            <Tr>
+                                                <Th px={['4', '4', '6']} color='gray.300' width='8'>
                                                     <Checkbox colorScheme='pink' borderColor="gray" />
-                                                </Td>
+                                                </Th>
 
-                                                <Td>
-                                                    <Box>
-                                                        <Link
-                                                            color='purple.400'
-                                                        >
-                                                            <Text fontWeight='bold'>{student.nameStudent}</Text>
-                                                        </Link>
-                                                        <Text fontSize='sm' color='gray.400'>{student.emailStudent}</Text>
-                                                    </Box>
-                                                </Td>
+                                                <Th>Aluno</Th>
 
-                                                {isWideVersion && <Td>{student.cpfOrCnpjStudent}</Td>}
+                                                {isWideVersion && <Th>CPF/CNPJ</Th>}
 
-                                                {isWideVersion && <Td>{student.createdAt}</Td>}
+                                                <Th>RA</Th>
 
-                                                {isWideVersion && (
-                                                    <>
-                                                        <Td>
-                                                            <Button
-                                                                as='a'
-                                                                size='sm'
-                                                                fontSize='sm'
-                                                                colorScheme='purple'
-                                                                leftIcon={<Icon as={RiEditLine} fontSize='16' />}
-                                                            >
-                                                                Editar
-                                                            </Button>
-                                                        </Td>
+                                                {isWideVersion && <Th>Data de cadastro</Th>}
 
-                                                        <Td>
-                                                            <Button
-                                                                as='a'
-                                                                size='sm'
-                                                                fontSize='sm'
-                                                                colorScheme='red'
-                                                                leftIcon={<Icon as={RiEraserLine} fontSize='16' />}
-                                                            >
-                                                                Excluir
-                                                            </Button>
-                                                        </Td>
-                                                    </>
-                                                )}
+                                                {isWideVersion && <Th width='8'></Th>}
+
+                                                {isWideVersion && <Th width='8'></Th>}
                                             </Tr>
-                                        );
-                                    })}
-                                </Tbody>
-                            </Table >
+                                        </Thead>
+                                        <Tbody>
+                                            {students.map((student) => {
+                                                return (
+                                                    <Tr key={student.uid_user}>
+                                                        <Td px={['4', '4', '6']}>
+                                                            <Checkbox colorScheme='pink' borderColor="gray" />
+                                                        </Td>
 
-                            <Pagination
-                                totalCountOfRegisters={fakeStudents.length}
-                                currentPage={page}
-                                onPageChange={setPage}
-                            />
-                        </Box >
+                                                        <Td>
+                                                            <Box>
+                                                                <Link
+                                                                    color='purple.400'
+                                                                >
+                                                                    <Text fontWeight='bold'>{student.name_user}</Text>
+                                                                </Link>
+
+                                                                <Text fontSize='sm' color='gray.400'>{student.email_user}</Text>
+                                                            </Box>
+                                                        </Td>
+
+                                                        {isWideVersion && <Td>{student.cpf_cnpj_user}</Td>}
+
+                                                        <Td>{student.ra_user}</Td>
+
+                                                        {isWideVersion && <Td>{new Date(student.dt_matricula_user)
+                                                            .toLocaleDateString('pt-BR', {
+                                                                day: '2-digit',
+                                                                month: 'long',
+                                                                year: 'numeric',
+                                                            })}</Td>}
+
+                                                        {isWideVersion && (
+                                                            <>
+                                                                <Td>
+                                                                    <Button
+                                                                        as='a'
+                                                                        size='sm'
+                                                                        fontSize='sm'
+                                                                        colorScheme='purple'
+                                                                        leftIcon={<Icon as={RiEditLine} fontSize='16' />}
+                                                                    >
+                                                                        Editar
+                                                                    </Button>
+                                                                </Td>
+
+                                                                <Td>
+                                                                    <Button
+                                                                        as='a'
+                                                                        size='sm'
+                                                                        fontSize='sm'
+                                                                        colorScheme='red'
+                                                                        leftIcon={<Icon as={RiEraserLine} fontSize='16' />}
+                                                                    >
+                                                                        Excluir
+                                                                    </Button>
+                                                                </Td>
+                                                            </>
+                                                        )}
+                                                    </Tr>
+                                                );
+                                            })}
+                                        </Tbody>
+                                    </Table>
+
+                                    <Pagination
+                                        totalCountOfRegisters={students.length}
+                                        currentPage={page}
+                                        onPageChange={setPage}
+                                    />
+                                </>
+                            ) : (
+                                <Text>Nenhum aluno cadastrado 😪</Text>
+                            )}
+                        </Box>
                     </Box>
                 </Stack>
             </Box >
         </Box >
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const apiClient = setupAPIClient(ctx);
+    const response = await apiClient.get('/user?tipo_user=S');
+
+    return {
+        props: {
+            students: response.data,
+        }
+    };
+}, {
+    roles: 'admin'
+})

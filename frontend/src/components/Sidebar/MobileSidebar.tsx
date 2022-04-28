@@ -5,10 +5,11 @@ import { FiPower, FiSettings } from "react-icons/fi";
 import { GiTeacher } from "react-icons/gi";
 import { IoSchoolOutline } from "react-icons/io5";
 
+import { useDrawer } from "../../contexts/DrawerContext";
+
 import { SearchBox } from "../Navbar/SearchBox";
 import { NavItem } from "./NavItem";
-
-import { useDrawer } from "../../contexts/DrawerContext";
+import { Can } from "../Can";
 
 export function MobileSidebar() {
     const { isOpen, onClose } = useDrawer();
@@ -28,17 +29,20 @@ export function MobileSidebar() {
                             icon={RiDashboardLine}
                         />
 
-                        <NavItem
-                            href="/teachers"
-                            name="Professores"
-                            icon={GiTeacher}
-                        />
+                        <Can roles="admin">
+                            <NavItem
+                                href="/teachers"
+                                name="Professores"
+                                icon={GiTeacher}
+                            />
 
-                        <NavItem
-                            href="/students"
-                            name="Alunos"
-                            icon={IoSchoolOutline}
-                        />
+                            <NavItem
+                                href="/students"
+                                name="Alunos"
+                                icon={IoSchoolOutline}
+                            />
+                        </Can>
+
 
                         <NavItem
                             href="/works"
