@@ -178,8 +178,8 @@ export default function Students({ students }: StudentsProps) {
                         </Box>
                     </Box>
                 </Stack>
-            </Box >
-        </Box >
+            </Box>
+        </Box>
     );
 }
 
