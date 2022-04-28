@@ -26,8 +26,8 @@ model User {
   cidade_user        String   @db.VarChar(50)
   uf_user            String   @db.Char(2)
   email_user         String   @unique @db.VarChar(100)
-  dt_nascimento_user DateTime @db.Date
-  dt_matricula_user  DateTime @db.Date
+  dt_nascimento_user DateTime
+  dt_matricula_user  DateTime
   situacao_user      Boolean  @default(true) @db.Boolean
   senha              String
   tipo_user          String   @default("S") @db.Char(1)
@@ -96,7 +96,7 @@ model Activity {
   uid_activity               String           @id @default(uuid())
   name_activity              String           @db.VarChar(100)
   content_activity           String
-  dt_entrega_activity        DateTime         @db.Date
+  dt_entrega_activity        DateTime
   isAcceptWithDelay_Activity Boolean          @default(true) @db.Boolean
   nota_max_activity          Decimal          @db.Decimal(2, 2)
   isEntregue_activity        Boolean          @default(false) @db.Boolean
@@ -125,7 +125,7 @@ model MaterialActivity {
 
 model DetailActivity {
   id_detail_activity            Int      @id @default(autoincrement())
-  dt_isEntrega_detail_acitivity DateTime @db.Date
+  dt_isEntrega_detail_acitivity DateTime
   activity_uid                  String
   activity                      Activity @relation(fields: [activity_uid], references: [uid_activity])
   user_uid                      String
