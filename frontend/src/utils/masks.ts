@@ -32,3 +32,11 @@ export const maskWhatsApp = (value: string) => {
 
   return value;
 };
+
+export const maskCEP = (value: string) => {
+  value = value.replace(/\D/g, "");
+
+  value = value.replace(/^(\d{5})(\d)/g, "$1-$2");
+
+  return value;
+};

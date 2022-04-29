@@ -1,11 +1,16 @@
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
 import { Box, Button, Flex, Heading, HStack, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue, useMediaQuery, VStack } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from 'react-query';
 
-import { maskWhatsApp, maskCPFOrCNPJ, maskPhone } from "../../utils/masks";
+import { setupAPIClient } from "../../services/api";
+import { queryClient } from '../../services/queryClient';
+
+import { maskWhatsApp, maskCPFOrCNPJ, maskPhone, maskCEP } from "../../utils/masks";
 
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
@@ -61,8 +66,20 @@ const createUserFormSchema = yup.object().shape({
 });
 
 export default function CreateStudent() {
+    const router = useRouter();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
     const [tabIndex, setTabIndex] = useState(0);
+
+    const createUser = useMutation(async (user: CreateUserFormData) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.post('user', user);
+
+        return response.data.user;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('user')
+        },
+    });
 
     const { register, handleSubmit, formState, getValues } = useForm({
         resolver: yupResolver(createUserFormSchema),
@@ -71,7 +88,15 @@ export default function CreateStudent() {
     const { errors } = formState;
 
     const handleCreateUser: SubmitHandler<CreateUserFormData> = async (values) => {
-        console.log(values);
+        const user = {
+            ...values,
+            tipo_user: "S",
+            roles: "student"
+        };
+
+        await createUser.mutateAsync(user);
+
+        router.push('/students');
     }
 
     return (
@@ -309,6 +334,10 @@ export default function CreateStudent() {
                                                     _focus={{
                                                         bg: useColorModeValue('gray.100', 'gray.500'),
                                                     }}
+                                                    onChange={(e) => {
+                                                        e.target.value = maskCEP(e.target.value);
+                                                    }}
+                                                    maxLength={9}
                                                 />
                                                 <Input
                                                     name='uf_user'

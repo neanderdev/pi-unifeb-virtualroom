@@ -58,8 +58,6 @@ export function withSSRAuth<P>(
       if (err instanceof AuthTokenError) {
         destroyCookie(ctx, "nextauth.token");
         destroyCookie(ctx, "nextauth.refreshToken");
-        destroyCookie(ctx, "access_token");
-        destroyCookie(ctx, "refresh_token");
 
         return {
           redirect: {

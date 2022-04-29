@@ -1,9 +1,14 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { Box, Button, Flex, Heading, HStack, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue, useMediaQuery, VStack } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from 'react-query';
+
+import { setupAPIClient } from "../../services/api";
+import { queryClient } from '../../services/queryClient';
 
 import { maskWhatsApp, maskCPFOrCNPJ, maskPhone } from "../../utils/masks";
 
@@ -61,8 +66,20 @@ const createUserFormSchema = yup.object().shape({
 });
 
 export default function CreateTeacher() {
+    const router = useRouter();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
     const [tabIndex, setTabIndex] = useState(0);
+
+    const createUser = useMutation(async (user: CreateUserFormData) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.post('user', user);
+
+        return response.data.user;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('user')
+        },
+    });
 
     const { register, handleSubmit, formState, getValues } = useForm({
         resolver: yupResolver(createUserFormSchema),
@@ -71,7 +88,15 @@ export default function CreateTeacher() {
     const { errors } = formState;
 
     const handleCreateUser: SubmitHandler<CreateUserFormData> = async (values) => {
-        console.log(values);
+        const user = {
+            ...values,
+            tipo_user: "T",
+            roles: "teacher"
+        };
+
+        await createUser.mutateAsync(user);
+
+        router.push('/teachers');
     }
 
     return (
@@ -399,7 +424,7 @@ export default function CreateTeacher() {
 
                             <Flex mt='8' justify='flex-end'>
                                 <HStack spacing='4'>
-                                    <Link href='/students' passHref>
+                                    <Link href='/teachers' passHref>
                                         <Button colorScheme='whiteAlpha'>Cancelar</Button>
                                     </Link>
 
