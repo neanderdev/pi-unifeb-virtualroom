@@ -200,6 +200,7 @@ export default function Students() {
 
                                         <Pagination
                                             totalCountOfRegisters={data.totalCount}
+                                            totalCountOfRegistersNow={data.users.length}
                                             currentPage={page}
                                             onPageChange={setPage}
                                         />

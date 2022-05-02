@@ -198,6 +198,7 @@ export default function Teachers() {
 
                                         <Pagination
                                             totalCountOfRegisters={data.totalCount}
+                                            totalCountOfRegistersNow={data.users.length}
                                             currentPage={page}
                                             onPageChange={setPage}
                                         />

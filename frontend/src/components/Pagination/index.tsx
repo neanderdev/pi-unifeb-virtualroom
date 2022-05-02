@@ -4,6 +4,7 @@ import { PaginationItem } from './PaginationItem';
 
 interface PaginationProps {
     totalCountOfRegisters: number;
+    totalCountOfRegistersNow: number;
     registerPerPage?: number;
     currentPage?: number;
     onPageChange: (page: number) => void;
@@ -21,6 +22,7 @@ function generatePagesArray(from: number, to: number) {
 
 export function Pagination({
     totalCountOfRegisters,
+    totalCountOfRegistersNow,
     registerPerPage = 10,
     currentPage = 1,
     onPageChange
@@ -35,6 +37,9 @@ export function Pagination({
         ? generatePagesArray(currentPage, Math.min(currentPage + siblingsCount, lastPage))
         : [];
 
+    const pageStart = ((Number(currentPage) - 1) * Number(registerPerPage)) + 1;
+    const pageEnd = (pageStart + (Number(registerPerPage) - 1)) === totalCountOfRegistersNow ? (pageStart + (Number(registerPerPage) - 1)) : ((pageStart + totalCountOfRegistersNow) - 1);
+
     return (
         <Stack
             direction={['column', 'row']}
@@ -44,7 +49,7 @@ export function Pagination({
             align="center"
         >
             <Box>
-                <strong>0</strong> - <strong>10</strong> de <strong>100</strong>
+                <strong>{pageStart}</strong> - <strong>{pageEnd}</strong> de <strong>{totalCountOfRegisters}</strong>
             </Box>
 
             <Stack direction="row" spacing="2">
