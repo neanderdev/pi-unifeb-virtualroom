@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
     Avatar,
     AvatarBadge,
@@ -13,17 +14,36 @@ import {
     PopoverCloseButton,
     Box,
     Text,
+    Spinner,
 } from "@chakra-ui/react";
 import { IoIosArrowDown, IoIosSchool, } from "react-icons/io";
 import { GoGear, } from "react-icons/go";
 
+import { useMe } from "../../services/hooks/useMe";
+
 export function Profile() {
+    const { data, isLoading, isFetching, error } = useMe();
+
+    if (isLoading) {
+        return <Spinner />;
+    }
+
+    if (isFetching) {
+        return <Spinner />;
+    }
+
+    if (error) {
+        return (
+            <Text>Falha ao obter dados do usuários.</Text>
+        );
+    }
+
     return (
         <HStack alignItems="center">
             <Box mr="4" textAlign="right">
-                <Text>Neander de Souza</Text>
+                <Text>{data.me.ra_user}</Text>
                 <Text color="gray.500" fontSize="small">
-                    mcspipoca47@gmail.com
+                    {data.me.email_user}
                 </Text>
             </Box>
 

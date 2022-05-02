@@ -147,6 +147,7 @@ export default function Teachers() {
                                                                 <Box>
                                                                     <Link
                                                                         color='purple.400'
+                                                                        href={`/teachers/${teacher.uid_user}`}
                                                                         onMouseEnter={() => handlePrefetchUser(teacher.uid_user)}
                                                                     >
                                                                         <Text fontWeight='bold'>{teacher.name_user}</Text>
@@ -171,6 +172,7 @@ export default function Teachers() {
                                                                             fontSize='sm'
                                                                             colorScheme='purple'
                                                                             leftIcon={<Icon as={RiEditLine} fontSize='16' />}
+                                                                            href={`/teachers/${teacher.uid_user}`}
                                                                         >
                                                                             Editar
                                                                         </Button>
