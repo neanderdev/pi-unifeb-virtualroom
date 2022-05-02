@@ -82,7 +82,7 @@ export default function Student({ user }: IStudent) {
         const apiClient = setupAPIClient();
         const response = await apiClient.put('user', user);
 
-        return response.data.user;
+        return response;
     }, {
         onSuccess: () => {
             queryClient.invalidateQueries('userUid')

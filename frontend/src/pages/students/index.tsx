@@ -1,7 +1,8 @@
 import NextLink from "next/link";
 import { useState } from "react";
-import { Box, Button, Checkbox, Flex, Heading, Icon, Link, Spinner, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, useColorModeValue, useMediaQuery } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Flex, Heading, Icon, Link, Spinner, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, useColorModeValue, useMediaQuery, useToast } from "@chakra-ui/react";
 import { RiAddLine, RiEditLine, RiEraserLine } from "react-icons/ri";
+import { useMutation } from "react-query";
 
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
@@ -16,12 +17,24 @@ import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { Pagination } from "../../components/Pagination";
 
 export default function Students() {
+    const toast = useToast();
     const [page, setPage] = useState(1);
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const isWideVersion = useBreakpointValue({
         base: false,
         lg: true,
+    });
+
+    const deleteUser = useMutation(async (uid_user: string) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.delete(`user/${uid_user}`);
+
+        return response.data.user;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('user')
+        },
     });
 
     const { data, isLoading, isFetching, error } = useUsers(page, 'S');
@@ -35,6 +48,28 @@ export default function Students() {
         }, {
             staleTime: 1000 * 60 * 10, // 10 minutes
         });
+    }
+
+    async function handleDeleteStudent(uid_user: string) {
+        try {
+            await deleteUser.mutateAsync(uid_user);
+
+            await toast({
+                title: 'Aluno excluído',
+                description: "Aluno excluído com sucesso",
+                status: 'success',
+                duration: 1500,
+                isClosable: true,
+            })
+        } catch (err) {
+            toast({
+                title: 'Erro ao excluir aluno',
+                description: `Erro: ${err.message}`,
+                status: 'error',
+                duration: 1500,
+                isClosable: true,
+            })
+        }
     }
 
     return (
@@ -150,6 +185,7 @@ export default function Students() {
                                                                             fontSize='sm'
                                                                             colorScheme='red'
                                                                             leftIcon={<Icon as={RiEraserLine} fontSize='16' />}
+                                                                            onClick={() => handleDeleteStudent(student.uid_user)}
                                                                         >
                                                                             Excluir
                                                                         </Button>
