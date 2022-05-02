@@ -58,11 +58,12 @@ model UserToken {
 }
 
 model Class {
-  uid_class        String   @id @default(uuid())
-  name_class       String   @db.VarChar(150)
-  background_class String   @db.VarChar(180)
-  createdAt_class  DateTime @default(now())
-  updatedAt_class  DateTime @updatedAt
+  uid_class         String   @id @default(uuid())
+  name_class        String   @db.VarChar(150)
+  name_matter_class String   @db.VarChar(150)
+  background_class  String   @db.VarChar(180)
+  createdAt_class   DateTime @default(now())
+  updatedAt_class   DateTime @updatedAt
 
   ClassUser        ClassUser[]
   CategoryActivity CategoryActivity[]

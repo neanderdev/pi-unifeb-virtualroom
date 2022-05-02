@@ -1,6 +1,9 @@
 import { Router } from "express";
+import multer from "multer";
 
 import { ensureAuthenticated } from "./middleware/ensureAuthenticated";
+
+import upload from "./config/upload";
 
 import { LoginController } from "./modules/login/useCases/login/LoginController";
 import { RefreshTokenController } from "./modules/refreshToken/useCases/RefreshTokenController";
@@ -10,8 +13,12 @@ import { FindUserByUidController } from "./modules/user/useCases/findUserByUid/F
 import { UpdateUserController } from "./modules/user/useCases/updateUser/UpdateUserController";
 import { DeleteUserController } from "./modules/user/useCases/deleteUser/DeleteUserController";
 import { FindMeByIdController } from "./modules/me/useCases/FindMeByIdController";
+import { CreateClassController } from "./modules/class/useCases/createClass/CreateClassController";
+import { UploadBackgroundClassController } from "./modules/class/useCases/uploadBackgroundClass/UploadBackgroundClassController";
 
 const routes = Router();
+
+const uploadClass = multer(upload.upload("./tmp/class"));
 
 const loginController = new LoginController();
 const refreshTokenController = new RefreshTokenController();
@@ -21,6 +28,8 @@ const findUserByUidController = new FindUserByUidController();
 const updateUserController = new UpdateUserController();
 const deleteUserController = new DeleteUserController();
 const findMeByIdController = new FindMeByIdController();
+const createClassController = new CreateClassController();
+const uploadBackgroundController = new UploadBackgroundClassController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -37,6 +46,13 @@ routes.delete(
   ensureAuthenticated,
   deleteUserController.handle
 );
-routes.get("/me", ensureAuthenticated, findMeByIdController.handle);
+routes.get("/me/", ensureAuthenticated, findMeByIdController.handle);
+routes.post("/class/", ensureAuthenticated, createClassController.handle);
+routes.patch(
+  "/upload-background-class/:uid_class",
+  ensureAuthenticated,
+  uploadClass.single("class"),
+  uploadBackgroundController.handle
+);
 
 export { routes };
