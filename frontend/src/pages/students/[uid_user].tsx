@@ -7,9 +7,12 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
 
+import { getUserUid } from "../../services/hooks/useUserUid";
+
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from '../../services/queryClient';
 
+import { withSSRAuth } from "../../utils/withSSRAuth";
 import { maskWhatsApp, maskCPFOrCNPJ, maskPhone, maskCEP } from "../../utils/masks";
 
 import { Navbar } from "../../components/Navbar";
@@ -19,7 +22,7 @@ import { Input } from "../../components/Form/Input";
 import { RadioButton } from "../../components/Form/RadioButton";
 import { Switch } from "../../components/Form/Switch";
 
-type CreateUserFormData = {
+type User = {
     ra_user: number;
     email_user: string;
     name_user: string;
@@ -41,7 +44,7 @@ type CreateUserFormData = {
     confirmacao_senha: string;
 }
 
-const createUserFormSchema = yup.object().shape({
+const updateUserFormSchema = yup.object().shape({
     ra_user: yup.number().typeError("RA é somente número").required('RA obrigatório'),
     email_user: yup.string().required('E-mail obrigatório').email('E-mail inválido'),
     name_user: yup.string().required('Nome obrigatório'),
@@ -65,30 +68,35 @@ const createUserFormSchema = yup.object().shape({
     ], 'As senhas precisam ser iguais'),
 });
 
-export default function CreateStudent() {
+interface IStudent {
+    user: User;
+}
+
+export default function Student({ user }: IStudent) {
     const router = useRouter();
     const toast = useToast();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
     const [tabIndex, setTabIndex] = useState(0);
 
-    const createUser = useMutation(async (user: CreateUserFormData) => {
+    const updateUser = useMutation(async (user: User) => {
         const apiClient = setupAPIClient();
-        const response = await apiClient.post('user', user);
+        const response = await apiClient.put('user', user);
 
         return response.data.user;
     }, {
         onSuccess: () => {
-            queryClient.invalidateQueries('user')
+            queryClient.invalidateQueries('userUid')
         },
     });
 
     const { register, handleSubmit, formState, getValues } = useForm({
-        resolver: yupResolver(createUserFormSchema),
+        resolver: yupResolver(updateUserFormSchema),
+        defaultValues: user,
     });
 
     const { errors } = formState;
 
-    const handleCreateUser: SubmitHandler<CreateUserFormData> = async (values) => {
+    const handleUpdateUser: SubmitHandler<User> = async (values) => {
         const user = {
             ...values,
             tipo_user: "S",
@@ -96,11 +104,11 @@ export default function CreateStudent() {
         };
 
         try {
-            await createUser.mutateAsync(user);
+            await updateUser.mutateAsync(user);
 
             await toast({
-                title: 'Aluno criado',
-                description: "Aluno criado com sucesso",
+                title: 'Aluno atualizado',
+                description: "Dados do aluno atualizado com sucesso",
                 status: 'success',
                 duration: 1500,
                 isClosable: true,
@@ -109,7 +117,7 @@ export default function CreateStudent() {
             router.push('/students');
         } catch (err) {
             toast({
-                title: 'Erro ao criar aluno',
+                title: 'Erro ao atualizar aluno',
                 description: `Erro: ${err.message}`,
                 status: 'error',
                 duration: 1500,
@@ -120,7 +128,7 @@ export default function CreateStudent() {
 
     return (
         <Box>
-            <Navbar title="Criar Aluno" />
+            <Navbar title="Editar Aluno" />
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
@@ -135,9 +143,9 @@ export default function CreateStudent() {
                             borderRadius={8}
                             bg={useColorModeValue('gray.200', 'gray.800')}
                             p={['6', '8']}
-                            onSubmit={handleSubmit(handleCreateUser)}
+                            onSubmit={handleSubmit(handleUpdateUser)}
                         >
-                            <Heading size='lg' fontWeight='normal'>Criar aluno</Heading>
+                            <Heading size='lg' fontWeight='normal'>Editar aluno</Heading>
 
                             <Tabs isLazy index={tabIndex} my='6' onChange={(index) => setTabIndex(index)}>
                                 <TabList>
@@ -461,3 +469,17 @@ export default function CreateStudent() {
         </Box>
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const uid_user = ctx.params.uid_user as string;
+
+    const { user } = await getUserUid(uid_user, ctx);
+
+    return {
+        props: {
+            user,
+        }
+    };
+}, {
+    roles: 'admin'
+})

@@ -22,7 +22,6 @@ const SwitchBase: ForwardRefRenderFunction<HTMLInputElement, SwitchProps>
                     _focus={{
                         borderColor: !!error === false ? 'pink.500' : 'red.500',
                     }}
-                    defaultChecked
                     size='lg'
                     ref={ref}
                     {...rest}

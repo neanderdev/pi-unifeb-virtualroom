@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Box, Button, Flex, Heading, HStack, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue, useMediaQuery, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, HStack, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue, useMediaQuery, useToast, VStack } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -67,6 +67,7 @@ const createUserFormSchema = yup.object().shape({
 
 export default function CreateTeacher() {
     const router = useRouter();
+    const toast = useToast();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
     const [tabIndex, setTabIndex] = useState(0);
 
@@ -94,9 +95,27 @@ export default function CreateTeacher() {
             roles: "teacher"
         };
 
-        await createUser.mutateAsync(user);
+        try {
+            await createUser.mutateAsync(user);
 
-        router.push('/teachers');
+            await toast({
+                title: 'Professor criado',
+                description: "Professor criado com sucesso",
+                status: 'success',
+                duration: 1500,
+                isClosable: true,
+            })
+
+            router.push('/teachers');
+        } catch (err) {
+            toast({
+                title: 'Erro ao criar professor',
+                description: `Erro: ${err.message}`,
+                status: 'error',
+                duration: 1500,
+                isClosable: true,
+            })
+        }
     }
 
     return (
