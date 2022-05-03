@@ -13,6 +13,7 @@ import { FindUserByUidController } from "./modules/user/useCases/findUserByUid/F
 import { UpdateUserController } from "./modules/user/useCases/updateUser/UpdateUserController";
 import { DeleteUserController } from "./modules/user/useCases/deleteUser/DeleteUserController";
 import { FindMeByIdController } from "./modules/me/useCases/FindMeByIdController";
+import { ListAllClassController } from "./modules/class/useCases/listAllClass/ListAllClassController";
 import { CreateClassController } from "./modules/class/useCases/createClass/CreateClassController";
 import { UploadBackgroundClassController } from "./modules/class/useCases/uploadBackgroundClass/UploadBackgroundClassController";
 
@@ -28,6 +29,7 @@ const findUserByUidController = new FindUserByUidController();
 const updateUserController = new UpdateUserController();
 const deleteUserController = new DeleteUserController();
 const findMeByIdController = new FindMeByIdController();
+const listAllClassController = new ListAllClassController();
 const createClassController = new CreateClassController();
 const uploadBackgroundController = new UploadBackgroundClassController();
 
@@ -47,6 +49,7 @@ routes.delete(
   deleteUserController.handle
 );
 routes.get("/me/", ensureAuthenticated, findMeByIdController.handle);
+routes.get("/class/", ensureAuthenticated, listAllClassController.handle);
 routes.post("/class/", ensureAuthenticated, createClassController.handle);
 routes.patch(
   "/upload-background-class/:uid_class",
