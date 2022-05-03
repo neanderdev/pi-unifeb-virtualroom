@@ -62,6 +62,7 @@ model Class {
   name_class        String   @db.VarChar(150)
   name_matter_class String   @db.VarChar(150)
   background_class  String   @db.VarChar(180)
+  isArchive         Boolean  @default(false) @db.Boolean
   createdAt_class   DateTime @default(now())
   updatedAt_class   DateTime @updatedAt
 

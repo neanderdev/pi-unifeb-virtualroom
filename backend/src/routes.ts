@@ -17,6 +17,7 @@ import { ListAllClassController } from "./modules/class/useCases/listAllClass/Li
 import { CreateClassController } from "./modules/class/useCases/createClass/CreateClassController";
 import { UploadBackgroundClassController } from "./modules/class/useCases/uploadBackgroundClass/UploadBackgroundClassController";
 import { UpdateClassController } from "./modules/class/useCases/updateClass/UpdateClassController";
+import { ClassArchiveController } from "./modules/class/useCases/classArchive/ClassArchiveController";
 
 const routes = Router();
 
@@ -34,6 +35,7 @@ const listAllClassController = new ListAllClassController();
 const createClassController = new CreateClassController();
 const uploadBackgroundController = new UploadBackgroundClassController();
 const updateClassController = new UpdateClassController();
+const classArchiveController = new ClassArchiveController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -60,5 +62,10 @@ routes.patch(
   uploadBackgroundController.handle
 );
 routes.put("/class/", ensureAuthenticated, updateClassController.handle);
+routes.patch(
+  "/class/:uid_class",
+  ensureAuthenticated,
+  classArchiveController.handle
+);
 
 export { routes };
