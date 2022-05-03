@@ -21,6 +21,20 @@ export class ListAllClassUseCase {
           },
         },
       },
+      include: {
+        ClassUser: {
+          select: {
+            user: {
+              select: {
+                ra_user: true,
+                name_user: true,
+                email_user: true,
+                tipo_user: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     return allClassUser;
