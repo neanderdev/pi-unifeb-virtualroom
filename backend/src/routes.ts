@@ -16,6 +16,7 @@ import { FindMeByIdController } from "./modules/me/useCases/FindMeByIdController
 import { ListAllClassController } from "./modules/class/useCases/listAllClass/ListAllClassController";
 import { CreateClassController } from "./modules/class/useCases/createClass/CreateClassController";
 import { UploadBackgroundClassController } from "./modules/class/useCases/uploadBackgroundClass/UploadBackgroundClassController";
+import { UpdateClassController } from "./modules/class/useCases/updateClass/UpdateClassController";
 
 const routes = Router();
 
@@ -32,6 +33,7 @@ const findMeByIdController = new FindMeByIdController();
 const listAllClassController = new ListAllClassController();
 const createClassController = new CreateClassController();
 const uploadBackgroundController = new UploadBackgroundClassController();
+const updateClassController = new UpdateClassController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -57,5 +59,6 @@ routes.patch(
   uploadClass.single("class"),
   uploadBackgroundController.handle
 );
+routes.put("/class/", ensureAuthenticated, updateClassController.handle);
 
 export { routes };
