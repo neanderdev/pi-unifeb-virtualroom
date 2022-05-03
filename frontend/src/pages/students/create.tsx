@@ -102,7 +102,7 @@ export default function CreateStudent() {
                 title: 'Aluno criado',
                 description: "Aluno criado com sucesso",
                 status: 'success',
-                duration: 1500,
+                duration: 2000,
                 isClosable: true,
             })
 
@@ -112,7 +112,7 @@ export default function CreateStudent() {
                 title: 'Erro ao criar aluno',
                 description: `Erro: ${err.message}`,
                 status: 'error',
-                duration: 1500,
+                duration: 2000,
                 isClosable: true,
             })
         }

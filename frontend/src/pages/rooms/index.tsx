@@ -1,5 +1,8 @@
-import { Box, Button, Icon, SimpleGrid, Stack, useMediaQuery } from "@chakra-ui/react";
+import { Box, Button, Flex, Icon, SimpleGrid, Spinner, Stack, Text, useMediaQuery } from "@chakra-ui/react";
 import { RiAddLine } from "react-icons/ri";
+
+import { getMe } from "../../services/hooks/useMe";
+import { useAllClass } from "../../services/hooks/useAllClass";
 
 import { withSSRAuth } from "../../utils/withSSRAuth";
 
@@ -9,8 +12,21 @@ import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { ClassCard } from "../../components/ClassCard";
 import { Can } from "../../components/Can";
 
-export default function Rooms() {
+interface Me {
+    cpf_cnpj_user: string;
+    email_user: string;
+    ra_user: number;
+    roles: string;
+};
+
+interface RoomsProps {
+    me: Me;
+};
+
+export default function Rooms({ me }: RoomsProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
+
+    const { data, isLoading, error } = useAllClass();
 
     return (
         <Box>
@@ -38,32 +54,32 @@ export default function Rooms() {
                         </Can>
 
                         <SimpleGrid flex='1' gap='4' minChildWidth='320px' alignItems='flex-start'>
-                            <ClassCard
-                                imageClass="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=100"
-                                nameClass="Projeto Integrador"
-                                hrefClass="#"
-                                nameTeacherClass="Prof. Wendel Cortes"
-                                nameStudent="Neander Souza"
-                                imageStudent="https://github.com/neanderdev.png"
-                            />
-
-                            <ClassCard
-                                imageClass="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=100"
-                                nameClass="Arquitetura Computacional"
-                                hrefClass="#"
-                                nameTeacherClass="Prof. Fábio"
-                                nameStudent="Neander Souza"
-                                imageStudent="https://github.com/neanderdev.png"
-                            />
-
-                            <ClassCard
-                                imageClass="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=100"
-                                nameClass="Programação Orientada a Objetos"
-                                hrefClass="#"
-                                nameTeacherClass="Prof. Salvitierra Bombadão"
-                                nameStudent="Neander Souza"
-                                imageStudent="https://github.com/neanderdev.png"
-                            />
+                            {isLoading ? (
+                                <Flex justify='center' align="center">
+                                    <Spinner size="xl" color='gray.500' ml='4' />
+                                </Flex>
+                            ) : error ? (
+                                <Flex justify='center'>
+                                    <Text>Falha ao obter dados do usuários.</Text>
+                                </Flex>
+                            ) : (
+                                data.length === 0 ? (
+                                    <Flex justify='center'>
+                                        <Text>Você ainda não está em nenhuma turma.</Text>
+                                    </Flex>
+                                ) : data.map((turma) => (
+                                    <ClassCard
+                                        key={turma.uid_class}
+                                        imageClass={`http://localhost:8000/files${turma.background_class}`}
+                                        nameClass={turma.name_matter_class}
+                                        hrefClass={`/rooms/${turma.uid_class}`}
+                                        nameTeacherClass={turma.ClassUser.filter((user) => user.user.tipo_user === 'T')[0]?.user.name_user}
+                                        nameStudent={turma.ClassUser.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.name_user}
+                                        imageStudent=""
+                                    />
+                                ))
+                            )
+                            }
                         </SimpleGrid>
                     </Box>
                 </Stack>
@@ -73,7 +89,11 @@ export default function Rooms() {
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const { me } = await getMe(ctx);
+
     return {
-        props: {}
+        props: {
+            me,
+        }
     };
 })

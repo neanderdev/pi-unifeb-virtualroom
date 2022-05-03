@@ -10,7 +10,7 @@ import { useMutation } from 'react-query';
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from '../../services/queryClient';
 
-import { maskWhatsApp, maskCPFOrCNPJ, maskPhone } from "../../utils/masks";
+import { maskWhatsApp, maskCPFOrCNPJ, maskPhone, maskCEP } from "../../utils/masks";
 
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
@@ -102,7 +102,7 @@ export default function CreateTeacher() {
                 title: 'Professor criado',
                 description: "Professor criado com sucesso",
                 status: 'success',
-                duration: 1500,
+                duration: 2000,
                 isClosable: true,
             })
 
@@ -112,7 +112,7 @@ export default function CreateTeacher() {
                 title: 'Erro ao criar professor',
                 description: `Erro: ${err.message}`,
                 status: 'error',
-                duration: 1500,
+                duration: 2000,
                 isClosable: true,
             })
         }
@@ -353,6 +353,10 @@ export default function CreateTeacher() {
                                                     _focus={{
                                                         bg: useColorModeValue('gray.100', 'gray.500'),
                                                     }}
+                                                    onChange={(e) => {
+                                                        e.target.value = maskCEP(e.target.value);
+                                                    }}
+                                                    maxLength={9}
                                                 />
                                                 <Input
                                                     name='uf_user'

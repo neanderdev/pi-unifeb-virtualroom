@@ -42,6 +42,12 @@ function ClassCardComponent({ imageClass, hrefClass, nameClass, nameTeacherClass
                     />
                 </Flex>
 
+                <Stack px={6} pt={2} align="center">
+                    <Text color="gray.500">
+                        {nameStudent}
+                    </Text>
+                </Stack>
+
                 <Stack p={6}>
                     <Heading
                         color={useColorModeValue('gray.700', 'white')}
