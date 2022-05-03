@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import cookieParser from "cookie-parser";
 import express, { NextFunction, Request, Response } from "express";
+import path from "path";
 import cors from "cors";
 import "express-async-errors";
 
@@ -18,6 +19,8 @@ app.use(
   })
 );
 app.use(cookieParser());
+
+app.use("/files", express.static(path.resolve(__dirname, "..", "tmp")));
 
 app.use(routes);
 
