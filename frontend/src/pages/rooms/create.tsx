@@ -62,7 +62,17 @@ export default function CreateRoom() {
 
     const uploadBackgroundClass = useMutation(async ({ uid_class, data }: UploadBackgroundClassFormData) => {
         const apiClient = setupAPIClient();
-        const response = await apiClient.patch(`upload-background-class/${uid_class}`, data);
+        const response = await apiClient.patch(`upload-background-class/${uid_class}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            transformRequest: (data) => {
+                return data;
+            },
+            onUploadProgress: (e) => {
+                const progress = Math.round((e.loaded * 100) / e.total);
+            }
+        });
 
         return response;
     }, {
@@ -102,7 +112,7 @@ export default function CreateRoom() {
                 await uploadBackgroundClass.mutateAsync({ uid_class: responseCreateClass.uid_class, data });
             }
 
-            router.push('/rooms');
+            // router.push('/rooms');
         } catch (err) {
             console.log(err);
             toast({

@@ -73,8 +73,8 @@ export default function Rooms({ me }: RoomsProps) {
                                         imageClass={`http://localhost:8000/files${turma.background_class}`}
                                         nameClass={turma.name_matter_class}
                                         hrefClass={`/rooms/${turma.uid_class}`}
-                                        nameTeacherClass={turma.ClassUser.filter((user) => user.user.tipo_user === 'T')[0]?.user.name_user}
-                                        nameStudent={turma.ClassUser.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.name_user}
+                                        nameTeacherClass={turma.ClassUser?.filter((user) => user.user.tipo_user === 'T')[0].user.name_user}
+                                        nameStudent={turma.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0].user.name_user}
                                         imageStudent=""
                                     />
                                 ))
