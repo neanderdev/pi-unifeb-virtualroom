@@ -16,6 +16,7 @@ import { FindMeByIdController } from "./modules/me/useCases/FindMeByIdController
 import { ListAllClassController } from "./modules/class/useCases/listAllClass/ListAllClassController";
 import { CreateClassController } from "./modules/class/useCases/createClass/CreateClassController";
 import { UploadBackgroundClassController } from "./modules/class/useCases/uploadBackgroundClass/UploadBackgroundClassController";
+import { FindClassByUidController } from "./modules/class/useCases/findClassByUid/FindClassByUidController";
 import { UpdateClassController } from "./modules/class/useCases/updateClass/UpdateClassController";
 import { ClassArchiveController } from "./modules/class/useCases/classArchive/ClassArchiveController";
 
@@ -34,6 +35,7 @@ const findMeByIdController = new FindMeByIdController();
 const listAllClassController = new ListAllClassController();
 const createClassController = new CreateClassController();
 const uploadBackgroundController = new UploadBackgroundClassController();
+const findClassByUidController = new FindClassByUidController();
 const updateClassController = new UpdateClassController();
 const classArchiveController = new ClassArchiveController();
 
@@ -60,6 +62,11 @@ routes.patch(
   ensureAuthenticated,
   uploadClass.single("class"),
   uploadBackgroundController.handle
+);
+routes.get(
+  "/class/:uid_class",
+  ensureAuthenticated,
+  findClassByUidController.handle
 );
 routes.put("/class/", ensureAuthenticated, updateClassController.handle);
 routes.patch(
