@@ -8,6 +8,7 @@ import { CardActivity } from "./CardActivity";
 import { CommentNotice } from "./CommentNotice";
 
 interface WallProps {
+    backgroundClass: string;
     nameMatter: string;
     nameClass: string;
     classNotice: string;
@@ -49,7 +50,7 @@ const fakeActivity: Array<FakeActivityProps> = [
     },
 ];
 
-export function Wall({ nameMatter, nameClass, classNotice, setClassNotice, avatarTeacher, nameTeacher, publicDateComment, avatarStudent, nameStudent, classComment, setClassComment }: WallProps) {
+export function Wall({ backgroundClass, nameMatter, nameClass, classNotice, setClassNotice, avatarTeacher, nameTeacher, publicDateComment, avatarStudent, nameStudent, classComment, setClassComment }: WallProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     return (
@@ -57,7 +58,7 @@ export function Wall({ nameMatter, nameClass, classNotice, setClassNotice, avata
             p={5}
             direction="column"
         >
-            <HeaderWall nameMatter={nameMatter} nameClass={nameClass} />
+            <HeaderWall backgroundClass={backgroundClass} nameMatter={nameMatter} nameClass={nameClass} />
 
             <Flex direction="row" pt="1.5rem">
                 {!isSmallScreen && (

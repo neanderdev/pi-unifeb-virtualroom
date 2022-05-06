@@ -1,16 +1,17 @@
 import { Flex, Stack, Text, useBreakpointValue, VStack } from "@chakra-ui/react";
 
 interface HeaderWallProps {
+    backgroundClass: string;
     nameMatter: string;
     nameClass: string;
 }
 
-export function HeaderWall({ nameClass, nameMatter }: HeaderWallProps) {
+export function HeaderWall({ nameClass, nameMatter, backgroundClass }: HeaderWallProps) {
     return (
         <Flex
             w="full"
             h="240px"
-            backgroundImage="url(https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=100)"
+            backgroundImage={`url(${backgroundClass})`}
             backgroundSize="cover"
             backgroundPosition="center"
             rounded="xl"
@@ -29,7 +30,7 @@ export function HeaderWall({ nameClass, nameMatter }: HeaderWallProps) {
                 >
                     <Text
                         as="h1"
-                        color="white"
+                        color="black"
                         textStyle="default"
                         fontSize="3xl"
                         fontWeight="bold"
@@ -38,6 +39,7 @@ export function HeaderWall({ nameClass, nameMatter }: HeaderWallProps) {
 
                         <Text
                             as="p"
+                            color="black"
                             textStyle="default"
                             fontSize="xl"
                             fontWeight="normal"

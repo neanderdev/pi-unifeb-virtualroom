@@ -3,64 +3,29 @@ import { Flex } from "@chakra-ui/react";
 import { BoxTeacher } from "./BoxTeacher";
 import { BoxStudent } from "./BoxStudent";
 
-interface Teacher {
-    id: number;
-    avatarTeacher: string;
-    nameTeacher: string;
+interface User {
+    user: {
+        ra_user: number;
+        name_user: string;
+        email_user: string;
+        tipo_user: string;
+    }
 }
 
-interface Student {
-    id: number;
-    avatarStudent: string;
-    nameStudent: string;
+interface ClassmatesProps {
+    teachers: User[];
+    students: User[];
 }
 
-
-const fakeTeachers: Array<Teacher> = [
-    {
-        id: 1,
-        avatarTeacher: "",
-        nameTeacher: "Wendel Martins"
-    },
-];
-
-const fakeStudents: Array<Student> = [
-    {
-        id: 1,
-        avatarStudent: "https://github.com/neanderdev.png",
-        nameStudent: "Neander Souza"
-    },
-    {
-        id: 2,
-        avatarStudent: "",
-        nameStudent: "Vinicius Cardoso"
-    },
-    {
-        id: 3,
-        avatarStudent: "",
-        nameStudent: "Luis Eduardo Buch"
-    },
-    {
-        id: 4,
-        avatarStudent: "",
-        nameStudent: "Jorge Stundis"
-    },
-    {
-        id: 5,
-        avatarStudent: "",
-        nameStudent: "Eduardo Celestrino"
-    },
-];
-
-export function Classmates() {
+export function Classmates({ teachers, students }: ClassmatesProps) {
     return (
         <Flex
             p={5}
             direction="column"
         >
-            <BoxTeacher teachers={fakeTeachers} />
+            <BoxTeacher teachers={teachers} />
 
-            <BoxStudent students={fakeStudents} />
+            <BoxStudent students={students} />
         </Flex>
     );
 }

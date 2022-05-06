@@ -12,20 +12,50 @@ import {
     useMediaQuery,
 } from "@chakra-ui/react";
 
+import { getClassUid } from "../../../services/hooks/useClassUid";
+
+import { withSSRAuth } from "../../../utils/withSSRAuth";
+
 import { Navbar } from "../../../components/Navbar";
 import { Sidebar } from "../../../components/Sidebar";
 import { MobileSidebar } from "../../../components/Sidebar/MobileSidebar";
 import { Wall } from "../../../components/Wall";
 import { Activity } from "../../../components/Activity";
 import { Classmates } from "../../../components/Classmates";
+import { Can } from "../../../components/Can";
 
-export default function RoomId() {
+interface ClassUser {
+    user: {
+        ra_user: number;
+        name_user: string;
+        email_user: string;
+        tipo_user: string;
+    };
+};
+
+interface ClassResponse {
+    uid_class: string;
+    name_class: string;
+    name_matter_class: string;
+    background_class: string;
+    isArchive: boolean;
+    createdAt_class: Date;
+    updatedAt_class: Date;
+    ClassUser: ClassUser[];
+};
+
+interface RoomIdProps {
+    classes: ClassResponse;
+};
+
+
+export default function RoomId({ classes }: RoomIdProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const [classNotice, setClassNotice] = useState("");
     const [classComment, setClassComment] = useState("");
 
-    const { isReady } = useRouter()
+    const { isReady } = useRouter();
 
     if (!isReady) {
         return (
@@ -40,10 +70,10 @@ export default function RoomId() {
     return (
         <Box>
             <Navbar
-                title="Programação Orientada a Objeto"
+                title={classes.name_matter_class}
                 isRoom
-                nameClass="SIN.3.TU - 2022/1"
-                nameMatter="Programação Orientada a Objeto"
+                nameClass={classes.name_class}
+                nameMatter={classes.name_matter_class}
             />
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
@@ -64,14 +94,19 @@ export default function RoomId() {
                                         <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Atividades</Tab>
 
                                         <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Pessoas</Tab>
+
+                                        <Can roles="admin">
+                                            <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Configuração</Tab>
+                                        </Can>
                                     </TabList>
                                 </Box>
 
                                 <TabPanels>
                                     <TabPanel>
                                         <Wall
-                                            nameClass="SIN.3.TU - 2022/1"
-                                            nameMatter="Programação Orientada a Objeto"
+                                            backgroundClass={`http://localhost:8000/files${classes.background_class}`}
+                                            nameClass={classes.name_class}
+                                            nameMatter={classes.name_matter_class}
                                             classNotice={classNotice}
                                             setClassNotice={setClassNotice}
                                             avatarTeacher=""
@@ -89,7 +124,16 @@ export default function RoomId() {
                                     </TabPanel>
 
                                     <TabPanel>
-                                        <Classmates />
+                                        <Classmates
+                                            teachers={classes.ClassUser.filter((classe) => classe.user.tipo_user === "T")}
+                                            students={classes.ClassUser.filter((classe) => classe.user.tipo_user === "S")}
+                                        />
+                                    </TabPanel>
+
+                                    <TabPanel>
+                                        <Can roles="admin">
+                                            <h1 style={{ color: "black" }}>Editar sala de aula</h1>
+                                        </Can>
                                     </TabPanel>
                                 </TabPanels>
                             </Tabs>
@@ -100,3 +144,15 @@ export default function RoomId() {
         </Box>
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const uid_class = ctx.params.roomId as string;
+
+    const { classes } = await getClassUid(uid_class, ctx);
+
+    return {
+        props: {
+            classes,
+        }
+    };
+})

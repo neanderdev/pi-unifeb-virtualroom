@@ -112,7 +112,7 @@ export default function CreateRoom() {
                 await uploadBackgroundClass.mutateAsync({ uid_class: responseCreateClass.uid_class, data });
             }
 
-            // router.push('/rooms');
+            router.push('/rooms');
         } catch (err) {
             console.log(err);
             toast({

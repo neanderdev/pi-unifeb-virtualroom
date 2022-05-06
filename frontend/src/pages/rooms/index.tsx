@@ -78,8 +78,7 @@ export default function Rooms({ me }: RoomsProps) {
                                         imageStudent=""
                                     />
                                 ))
-                            )
-                            }
+                            )}
                         </SimpleGrid>
                     </Box>
                 </Stack>

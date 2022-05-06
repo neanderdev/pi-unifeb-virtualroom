@@ -1,14 +1,20 @@
-import { Box, Divider, Stack } from "@chakra-ui/react";
+import { Box, Divider, Flex, Stack, Text } from "@chakra-ui/react";
 
 import { BoxHeaderStudent } from "./BoxHeaderStudent";
 import { BoxBodyStudent } from "./BoxBodyStudent";
 
+interface User {
+    user: {
+        ra_user: number;
+        name_user: string;
+        email_user: string;
+        tipo_user: string;
+    }
+}
+
+
 interface BoxStudentProps {
-    students: Array<{
-        id: number;
-        avatarStudent: string;
-        nameStudent: string;
-    }>;
+    students: User[];
 }
 
 export function BoxStudent({ students }: BoxStudentProps) {
@@ -21,13 +27,21 @@ export function BoxStudent({ students }: BoxStudentProps) {
             <Divider orientation='horizontal' />
 
             <Stack spacing={4} mt={4}>
-                {students.map((student) => (
-                    <BoxBodyStudent
-                        key={student.id}
-                        avatarStudent={student.avatarStudent}
-                        nameStudent={student.nameStudent}
-                    />
-                ))}
+                {students.length === 0 ? (
+                    <Flex justify="center" alignItems="center">
+                        <Text>Nenhum estudante vinculado a esta turma</Text>
+                    </Flex>
+                ) : (
+                    <>
+                        {students.map((student) => (
+                            <BoxBodyStudent
+                                key={student.user.ra_user}
+                                avatarStudent=""
+                                nameStudent={student.user.name_user}
+                            />
+                        ))}
+                    </>
+                )}
             </Stack>
         </Box>
     );
