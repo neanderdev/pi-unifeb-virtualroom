@@ -97,8 +97,8 @@ export default function CreateRoom() {
             const responseCreateClass = await createClass.mutateAsync(newClass);
 
             await toast({
-                title: 'Sala de aula criado',
-                description: "Sala de aula criado com sucesso",
+                title: 'Turma criado',
+                description: "Turma criado com sucesso",
                 status: 'success',
                 duration: 1500,
                 isClosable: true,
@@ -116,7 +116,7 @@ export default function CreateRoom() {
         } catch (err) {
             console.log(err);
             toast({
-                title: 'Erro ao criar sala de aula',
+                title: 'Erro ao criar turma',
                 description: `Erro: ${err.message}`,
                 status: 'error',
                 duration: 1500,
@@ -127,7 +127,7 @@ export default function CreateRoom() {
 
     return (
         <Box>
-            <Navbar title="Criar sala de aula" />
+            <Navbar title="Criar turma" />
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
@@ -144,7 +144,7 @@ export default function CreateRoom() {
                             p={['6', '8']}
                             onSubmit={handleSubmit(handleCreateClass)}
                         >
-                            <Heading size='lg' fontWeight='normal'>Criar sala de aula</Heading>
+                            <Heading size='lg' fontWeight='normal'>Criar turma</Heading>
 
                             <Divider my='6' borderColor='gray.700' />
 

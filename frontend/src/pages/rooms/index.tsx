@@ -60,7 +60,7 @@ export default function Rooms({ me }: RoomsProps) {
                                 </Flex>
                             ) : error ? (
                                 <Flex justify='center'>
-                                    <Text>Falha ao obter dados do usuários.</Text>
+                                    <Text>Falha ao obter dados da turmas.</Text>
                                 </Flex>
                             ) : (
                                 data.length === 0 ? (
