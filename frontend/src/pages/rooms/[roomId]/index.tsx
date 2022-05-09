@@ -9,6 +9,13 @@ import {
     Heading,
     HStack,
     Image,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
     SimpleGrid,
     Spinner,
     Stack,
@@ -32,6 +39,8 @@ import { setupAPIClient } from "../../../services/api";
 import { queryClient } from "../../../services/queryClient";
 import { useClassUid } from "../../../services/hooks/useClassUid";
 
+import { useModal } from "../../../contexts/ModalContext";
+
 import { Navbar } from "../../../components/Navbar";
 import { Sidebar } from "../../../components/Sidebar";
 import { MobileSidebar } from "../../../components/Sidebar/MobileSidebar";
@@ -52,26 +61,6 @@ type UploadBackgroundClassFormData = {
     formData: any;
 };
 
-type ClassUser = {
-    user: {
-        ra_user: number;
-        name_user: string;
-        email_user: string;
-        tipo_user: string;
-    };
-};
-
-type ClassResponse = {
-    uid_class: string;
-    name_class: string;
-    name_matter_class: string;
-    background_class: string;
-    isArchive: boolean;
-    createdAt_class: Date;
-    updatedAt_class: Date;
-    ClassUser: ClassUser[];
-};
-
 const createClassFormSchema = yup.object().shape({
     name_class: yup.string().required('Nome da classe obrigatório'),
     name_matter_class: yup.string().required('Nome da matéria obrigatório'),
@@ -85,6 +74,7 @@ const createClassFormSchema = yup.object().shape({
 export default function RoomId() {
     const router = useRouter();
     const toast = useToast();
+    const { isOpen, onClose } = useModal();
 
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
@@ -260,6 +250,33 @@ export default function RoomId() {
 
                                             <TabPanel>
                                                 <Activity isSmallScreen={isSmallScreen} />
+
+                                                <Modal
+                                                    isCentered
+                                                    onClose={onClose}
+                                                    isOpen={isOpen}
+                                                    motionPreset='slideInBottom'
+                                                >
+                                                    <ModalOverlay />
+
+                                                    <ModalContent>
+                                                        <ModalHeader>Modal Title</ModalHeader>
+
+                                                        <ModalCloseButton />
+
+                                                        <ModalBody>
+                                                            <h1>Modal body</h1>
+                                                        </ModalBody>
+
+                                                        <ModalFooter>
+                                                            <Button colorScheme='pink' mr={3}>
+                                                                Salvar
+                                                            </Button>
+
+                                                            <Button variant='ghost' onClick={onClose}>Fechar</Button>
+                                                        </ModalFooter>
+                                                    </ModalContent>
+                                                </Modal>
                                             </TabPanel>
 
                                             <TabPanel>

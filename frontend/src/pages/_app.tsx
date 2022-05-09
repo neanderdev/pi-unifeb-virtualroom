@@ -4,6 +4,7 @@ import { QueryClientProvider } from 'react-query';
 
 import { AuthProvider } from '../contexts/AuthContext';
 import { DrawerProvider } from '../contexts/DrawerContext';
+import { ModalProvider } from '../contexts/ModalContext';
 
 import { queryClient } from '../services/queryClient';
 
@@ -15,7 +16,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ChakraProvider resetCSS theme={theme}>
         <AuthProvider>
           <DrawerProvider>
-            <Component {...pageProps} />
+            <ModalProvider>
+              <Component {...pageProps} />
+            </ModalProvider>
           </DrawerProvider>
         </AuthProvider>
       </ChakraProvider>
