@@ -19,6 +19,10 @@ import { UploadBackgroundClassController } from "./modules/class/useCases/upload
 import { FindClassByUidController } from "./modules/class/useCases/findClassByUid/FindClassByUidController";
 import { UpdateClassController } from "./modules/class/useCases/updateClass/UpdateClassController";
 import { ClassArchiveController } from "./modules/class/useCases/classArchive/ClassArchiveController";
+import { ListAllCategoryActivityController } from "./modules/categoryActivity/useCases/listAllCategoryActivity/ListAllCategoryActivityController";
+import { CreateCategoryActivityController } from "./modules/categoryActivity/useCases/createCategoryActivity/CreateCategoryActivityController";
+import { UpdateCategoryActivityController } from "./modules/categoryActivity/useCases/updateCategoryActivity/UpdateCategoryActivityController";
+import { DeleteCategoryActivityController } from "./modules/categoryActivity/useCases/deleteCategoryActivity/DeleteCategoryActivityController";
 
 const routes = Router();
 
@@ -38,6 +42,10 @@ const uploadBackgroundController = new UploadBackgroundClassController();
 const findClassByUidController = new FindClassByUidController();
 const updateClassController = new UpdateClassController();
 const classArchiveController = new ClassArchiveController();
+const listAllCategoryActivity = new ListAllCategoryActivityController();
+const createCategoryActivityController = new CreateCategoryActivityController();
+const updateCategoryActivityController = new UpdateCategoryActivityController();
+const deleteCategoryActivityController = new DeleteCategoryActivityController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -73,6 +81,26 @@ routes.patch(
   "/class/:uid_class",
   ensureAuthenticated,
   classArchiveController.handle
+);
+routes.get(
+  "/category-activity/:class_uid",
+  ensureAuthenticated,
+  listAllCategoryActivity.handle
+);
+routes.post(
+  "/category-activity/",
+  ensureAuthenticated,
+  createCategoryActivityController.handle
+);
+routes.put(
+  "/category-activity/",
+  ensureAuthenticated,
+  updateCategoryActivityController.handle
+);
+routes.delete(
+  "/category-activity/:id_category_activity",
+  ensureAuthenticated,
+  deleteCategoryActivityController.handle
 );
 
 export { routes };
