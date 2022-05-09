@@ -38,7 +38,7 @@ export function useAllClass(
   options?: UseQueryOptions
 ): UseQueryResult<GetAllClassResponse, unknown> {
   return useQuery(["class"], () => getAllClass(), {
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes
     ...options,
   }) as UseQueryResult<GetAllClassResponse, unknown>;
 }

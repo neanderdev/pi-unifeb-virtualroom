@@ -222,5 +222,5 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
         props: {}
     };
 }, {
-    roles: 'admin'
+    roles: ['admin']
 })

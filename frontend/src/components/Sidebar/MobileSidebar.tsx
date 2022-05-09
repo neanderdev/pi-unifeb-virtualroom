@@ -29,7 +29,7 @@ export function MobileSidebar() {
                             icon={RiDashboardLine}
                         />
 
-                        <Can roles="admin">
+                        <Can roles={["admin"]}>
                             <NavItem
                                 href="/teachers"
                                 name="Professores"

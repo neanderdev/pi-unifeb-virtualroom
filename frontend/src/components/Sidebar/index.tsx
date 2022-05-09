@@ -42,7 +42,7 @@ export function Sidebar({ isCollapseSidebar = false }: SidebarProps) {
                 icon={RiDashboardLine}
             />
 
-            <Can roles="admin">
+            <Can roles={["admin"]}>
                 <NavAction
                     href="/teachers"
                     name="Professores"

@@ -11,7 +11,7 @@ import { AuthTokenError } from "../services/errors/AuthTokenError";
 import { validateUserPermissions } from "./validateUserPermissions";
 
 type WithSSRAuthOptions = {
-  roles?: string;
+  roles?: string[];
 };
 
 export function withSSRAuth<P>(

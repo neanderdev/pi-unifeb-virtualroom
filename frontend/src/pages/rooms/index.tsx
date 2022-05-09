@@ -39,7 +39,7 @@ export default function Rooms({ me }: RoomsProps) {
                     {isSmallScreen && <MobileSidebar />}
 
                     <Box w="full">
-                        <Can roles="admin">
+                        <Can roles={["admin"]}>
                             <Button
                                 as='a'
                                 size='sm'

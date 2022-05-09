@@ -2,7 +2,7 @@ import { Box, Flex, VStack } from "@chakra-ui/react";
 
 import { SidebarActivity } from "./SidebarActivity";
 import { SelectCategoriesAcitivity } from "./SelectCategoriesAcitivity";
-import { ButtonViewActivity } from "./ButtonViewActivity";
+import { ActionsActivity } from "./ActionsActivity";
 import { BoxActivity } from "./BoxActivity";
 
 interface ActivityProps {
@@ -66,7 +66,7 @@ export function Activity({ isSmallScreen }: ActivityProps) {
                     {isSmallScreen && <SelectCategoriesAcitivity />}
 
                     <Box mr="auto" ml={-4}>
-                        <ButtonViewActivity />
+                        <ActionsActivity />
                     </Box>
 
                     {fakeActivity.map((activity) => (

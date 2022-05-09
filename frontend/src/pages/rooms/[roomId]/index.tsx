@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useRouter } from "next/router";
 import { useState } from "react";
 import {
@@ -9,12 +10,14 @@ import {
     HStack,
     Image,
     SimpleGrid,
+    Spinner,
     Stack,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
+    Text,
     useColorModeValue,
     useMediaQuery,
     useToast,
@@ -27,9 +30,7 @@ import { useMutation } from "react-query";
 
 import { setupAPIClient } from "../../../services/api";
 import { queryClient } from "../../../services/queryClient";
-import { getClassUid } from "../../../services/hooks/useClassUid";
-
-import { withSSRAuth } from "../../../utils/withSSRAuth";
+import { useClassUid } from "../../../services/hooks/useClassUid";
 
 import { Navbar } from "../../../components/Navbar";
 import { Sidebar } from "../../../components/Sidebar";
@@ -48,7 +49,7 @@ type UpdateClassFormData = {
 
 type UploadBackgroundClassFormData = {
     uid_class: String;
-    data: any;
+    formData: any;
 };
 
 type ClassUser = {
@@ -71,10 +72,6 @@ type ClassResponse = {
     ClassUser: ClassUser[];
 };
 
-type RoomIdProps = {
-    classes: ClassResponse;
-};
-
 const createClassFormSchema = yup.object().shape({
     name_class: yup.string().required('Nome da classe obrigatório'),
     name_matter_class: yup.string().required('Nome da matéria obrigatório'),
@@ -85,7 +82,7 @@ const createClassFormSchema = yup.object().shape({
         .test("type", "Aceita apenas os formatos: .png, .jpeg e .jpg", (value) => !value[0] || (value[0] && ["image/png", "image/jpeg", "image/jpg"].includes(value[0].type))),
 });
 
-export default function RoomId({ classes }: RoomIdProps) {
+export default function RoomId() {
     const router = useRouter();
     const toast = useToast();
 
@@ -96,13 +93,17 @@ export default function RoomId({ classes }: RoomIdProps) {
 
     const [image, setImage] = useState(null);
 
+    const { data, isLoading, error } = useClassUid(router.query.roomId as string);
+
+    const defaultValues = {
+        name_class: isLoading ? "" : data.classes.name_class,
+        name_matter_class: isLoading ? "" : data.classes.name_matter_class,
+        background_class_file: {} as any,
+    };
+
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(createClassFormSchema),
-        defaultValues: {
-            name_class: classes.name_class,
-            name_matter_class: classes.name_matter_class,
-            background_class_file: {} as any,
-        }
+        defaultValues: defaultValues,
     });
 
     const { errors } = formState;
@@ -118,7 +119,7 @@ export default function RoomId({ classes }: RoomIdProps) {
         },
     });
 
-    const uploadBackgroundClass = useMutation(async ({ uid_class, data }: UploadBackgroundClassFormData) => {
+    const uploadBackgroundClass = useMutation(async ({ uid_class, formData }: UploadBackgroundClassFormData) => {
         const apiClient = setupAPIClient();
         const response = await apiClient.patch(`upload-background-class/${uid_class}`, data, {
             headers: {
@@ -142,7 +143,7 @@ export default function RoomId({ classes }: RoomIdProps) {
     const handleUpdateClass: SubmitHandler<UpdateClassFormData> = async (values) => {
         try {
             const classUpdate = {
-                uid_class: classes.uid_class,
+                uid_class: data.classes.uid_class,
                 name_class: values.name_class,
                 name_matter_class: values.name_matter_class
             };
@@ -158,14 +159,14 @@ export default function RoomId({ classes }: RoomIdProps) {
             });
 
             if (values.background_class_file.length > 0) {
-                let data = new FormData();
+                let formData = new FormData();
 
-                data.append("class", values.background_class_file[0]);
+                formData.append("class", values.background_class_file[0]);
 
-                await uploadBackgroundClass.mutateAsync({ uid_class: classes.uid_class, data });
+                await uploadBackgroundClass.mutateAsync({ uid_class: data.classes.uid_class, formData });
             }
 
-            router.push(`/rooms/${classes.uid_class}`);
+            // router.push(`/rooms/${data.classes.uid_class}`);
         } catch (err) {
             console.log(err);
 
@@ -197,168 +198,168 @@ export default function RoomId({ classes }: RoomIdProps) {
 
     return (
         <Box>
-            <Navbar
-                title={classes.name_matter_class}
-                isRoom
-                nameClass={classes.name_class}
-                nameMatter={classes.name_matter_class}
-            />
+            {isLoading ? (
+                <Flex justify='center' align="center">
+                    <Spinner size="xl" color='gray.500' ml='4' />
+                </Flex>
+            ) : error ? (
+                <Flex justify='center'>
+                    <Text>Falha ao obter dados da turmas.</Text>
+                </Flex>
+            ) : (
+                <>
+                    <Navbar
+                        title={data.classes.name_matter_class}
+                        isRoom
+                        nameClass={data.classes.name_class}
+                        nameMatter={data.classes.name_matter_class}
+                    />
 
-            <Box pos="relative" h="max-content" m={[2, , 5]}>
-                <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar isCollapseSidebar />
+                    <Box pos="relative" h="max-content" m={[2, , 5]}>
+                        <Stack direction="row" spacing={{ md: 5 }}>
+                            <Sidebar isCollapseSidebar />
 
-                    {isSmallScreen && <MobileSidebar />}
+                            {isSmallScreen && <MobileSidebar />}
 
-                    <Box w="full">
-                        <Box
-                            h="3rem"
-                        >
-                            <Tabs isFitted isLazy defaultIndex={0}>
-                                <Box w="full" display="flex" justifyContent="center">
-                                    <TabList>
-                                        <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Mural</Tab>
+                            <Box w="full">
+                                <Box
+                                    h="3rem"
+                                >
+                                    <Tabs isFitted isLazy defaultIndex={0}>
+                                        <Box w="full" display="flex" justifyContent="center">
+                                            <TabList>
+                                                <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Mural</Tab>
 
-                                        <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Atividades</Tab>
+                                                <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Atividades</Tab>
 
-                                        <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Pessoas</Tab>
+                                                <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Pessoas</Tab>
 
-                                        <Can roles="admin">
-                                            <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Configuração</Tab>
-                                        </Can>
-                                    </TabList>
-                                </Box>
+                                                <Can roles={["admin", "teacher"]}>
+                                                    <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Configuração</Tab>
+                                                </Can>
+                                            </TabList>
+                                        </Box>
 
-                                <TabPanels>
-                                    <TabPanel>
-                                        <Wall
-                                            backgroundClass={`http://localhost:8000/files${classes.background_class}`}
-                                            nameClass={classes.name_class}
-                                            nameMatter={classes.name_matter_class}
-                                            classNotice={classNotice}
-                                            setClassNotice={setClassNotice}
-                                            avatarTeacher=""
-                                            nameTeacher="Wendel Cortes"
-                                            publicDateComment="12 de abril de 2020"
-                                            avatarStudent="https://github.com/neanderdev.png"
-                                            nameStudent="Neander de Souza"
-                                            classComment={classComment}
-                                            setClassComment={setClassComment}
-                                        />
-                                    </TabPanel>
+                                        <TabPanels>
+                                            <TabPanel>
+                                                <Wall
+                                                    backgroundClass={`http://localhost:8000/files${data.classes.background_class}`}
+                                                    nameClass={data.classes.name_class}
+                                                    nameMatter={data.classes.name_matter_class}
+                                                    classNotice={classNotice}
+                                                    setClassNotice={setClassNotice}
+                                                    avatarTeacher=""
+                                                    nameTeacher="Wendel Cortes"
+                                                    publicDateComment="12 de abril de 2020"
+                                                    avatarStudent="https://github.com/neanderdev.png"
+                                                    nameStudent="Neander de Souza"
+                                                    classComment={classComment}
+                                                    setClassComment={setClassComment}
+                                                />
+                                            </TabPanel>
 
-                                    <TabPanel>
-                                        <Activity isSmallScreen={isSmallScreen} />
-                                    </TabPanel>
+                                            <TabPanel>
+                                                <Activity isSmallScreen={isSmallScreen} />
+                                            </TabPanel>
 
-                                    <TabPanel>
-                                        <Classmates
-                                            teachers={classes.ClassUser.filter((classe) => classe.user.tipo_user === "T")}
-                                            students={classes.ClassUser.filter((classe) => classe.user.tipo_user === "S")}
-                                        />
-                                    </TabPanel>
+                                            <TabPanel>
+                                                <Classmates
+                                                    teachers={data.classes.ClassUser.filter((classe) => classe.user.tipo_user === "T")}
+                                                    students={data.classes.ClassUser.filter((classe) => classe.user.tipo_user === "S")}
+                                                />
+                                            </TabPanel>
 
-                                    <TabPanel>
-                                        <Can roles="admin">
-                                            <Box w="full">
-                                                <Box
-                                                    as='form'
-                                                    flex='1'
-                                                    borderRadius={8}
-                                                    bg={useColorModeValue('gray.200', 'gray.800')}
-                                                    p={['6', '8']}
-                                                    onSubmit={handleSubmit(handleUpdateClass)}
-                                                >
-                                                    <Heading size='lg' fontWeight='normal'>Editar turma</Heading>
+                                            <TabPanel>
+                                                <Can roles={["admin", "teacher"]}>
+                                                    <Box w="full">
+                                                        <Box
+                                                            as='form'
+                                                            flex='1'
+                                                            borderRadius={8}
+                                                            bg={useColorModeValue('gray.200', 'gray.800')}
+                                                            p={['6', '8']}
+                                                            onSubmit={handleSubmit(handleUpdateClass)}
+                                                        >
+                                                            <Heading size='lg' fontWeight='normal'>Editar turma</Heading>
 
-                                                    <Divider my='6' borderColor='gray.700' />
+                                                            <Divider my='6' borderColor='gray.700' />
 
-                                                    <VStack spacing='8'>
-                                                        <SimpleGrid minChildWidth='240px' spacing={['6', '8']} w='100%'>
-                                                            <Input
-                                                                name='name_class'
-                                                                label='Nome da classe'
-                                                                {...register('name_class')}
-                                                                error={errors.name_class}
-                                                                bgColor={useColorModeValue('gray.50', 'gray.600')}
-                                                                _hover={{
-                                                                    bgColor: useColorModeValue('gray.100', 'gray.500')
-                                                                }}
-                                                                _focus={{
-                                                                    bg: useColorModeValue('gray.100', 'gray.500'),
-                                                                }}
-                                                            />
-                                                            <Input
-                                                                name='name_matter_class'
-                                                                label='Nome da matéria'
-                                                                {...register('name_matter_class')}
-                                                                error={errors.name_matter_class}
-                                                                bgColor={useColorModeValue('gray.50', 'gray.600')}
-                                                                _hover={{
-                                                                    bgColor: useColorModeValue('gray.100', 'gray.500')
-                                                                }}
-                                                                _focus={{
-                                                                    bg: useColorModeValue('gray.100', 'gray.500'),
-                                                                }}
-                                                            />
-
-                                                            <VStack>
-                                                                <Input
-                                                                    name='background_class_file'
-                                                                    type="file"
-                                                                    label='Background da turma'
-                                                                    {...register('background_class_file')}
-                                                                    error={errors.background_class_file}
-                                                                    bgColor={useColorModeValue('gray.50', 'gray.600')}
-                                                                    _hover={{
-                                                                        bgColor: useColorModeValue('gray.100', 'gray.500')
-                                                                    }}
-                                                                    _focus={{
-                                                                        bg: useColorModeValue('gray.100', 'gray.500'),
-                                                                    }}
-                                                                    accept="image/*"
-                                                                    onChange={handleFileChange}
-                                                                />
-
-                                                                <Box maxH="120px">
-                                                                    <Image
-                                                                        src={!image ? `http://localhost:8000/files${classes.background_class}` : image}
-                                                                        alt='Background da turma'
-                                                                        h="120px"
-                                                                        w="full"
+                                                            <VStack spacing='8'>
+                                                                <SimpleGrid minChildWidth='240px' spacing={['6', '8']} w='100%'>
+                                                                    <Input
+                                                                        name='name_class'
+                                                                        label='Nome da classe'
+                                                                        {...register('name_class')}
+                                                                        error={errors.name_class}
+                                                                        bgColor={useColorModeValue('gray.50', 'gray.600')}
+                                                                        _hover={{
+                                                                            bgColor: useColorModeValue('gray.100', 'gray.500')
+                                                                        }}
+                                                                        _focus={{
+                                                                            bg: useColorModeValue('gray.100', 'gray.500'),
+                                                                        }}
                                                                     />
-                                                                </Box>
-                                                            </VStack>
-                                                        </SimpleGrid>
-                                                    </VStack>
+                                                                    <Input
+                                                                        name='name_matter_class'
+                                                                        label='Nome da matéria'
+                                                                        {...register('name_matter_class')}
+                                                                        error={errors.name_matter_class}
+                                                                        bgColor={useColorModeValue('gray.50', 'gray.600')}
+                                                                        _hover={{
+                                                                            bgColor: useColorModeValue('gray.100', 'gray.500')
+                                                                        }}
+                                                                        _focus={{
+                                                                            bg: useColorModeValue('gray.100', 'gray.500'),
+                                                                        }}
+                                                                    />
 
-                                                    <Flex mt='8' justify='flex-end'>
-                                                        <HStack spacing='4'>
-                                                            <Button type='submit' colorScheme='pink' isLoading={formState.isSubmitting}>Salvar</Button>
-                                                        </HStack>
-                                                    </Flex>
-                                                </Box>
-                                            </Box>
-                                        </Can>
-                                    </TabPanel>
-                                </TabPanels>
-                            </Tabs>
-                        </Box>
+                                                                    <VStack>
+                                                                        <Input
+                                                                            name='background_class_file'
+                                                                            type="file"
+                                                                            label='Background da turma'
+                                                                            {...register('background_class_file')}
+                                                                            error={errors.background_class_file}
+                                                                            bgColor={useColorModeValue('gray.50', 'gray.600')}
+                                                                            _hover={{
+                                                                                bgColor: useColorModeValue('gray.100', 'gray.500')
+                                                                            }}
+                                                                            _focus={{
+                                                                                bg: useColorModeValue('gray.100', 'gray.500'),
+                                                                            }}
+                                                                            accept="image/*"
+                                                                            onChange={handleFileChange}
+                                                                        />
+
+                                                                        <Box maxH="120px">
+                                                                            <Image
+                                                                                src={!image ? `http://localhost:8000/files${data.classes.background_class}` : image}
+                                                                                alt='Background da turma'
+                                                                                h="120px"
+                                                                                w="full"
+                                                                            />
+                                                                        </Box>
+                                                                    </VStack>
+                                                                </SimpleGrid>
+                                                            </VStack>
+
+                                                            <Flex mt='8' justify='flex-end'>
+                                                                <HStack spacing='4'>
+                                                                    <Button type='submit' colorScheme='pink' isLoading={formState.isSubmitting}>Salvar</Button>
+                                                                </HStack>
+                                                            </Flex>
+                                                        </Box>
+                                                    </Box>
+                                                </Can>
+                                            </TabPanel>
+                                        </TabPanels>
+                                    </Tabs>
+                                </Box>
+                            </Box>
+                        </Stack>
                     </Box>
-                </Stack>
-            </Box>
+                </>
+            )}
         </Box>
     );
 }
-
-export const getServerSideProps = withSSRAuth(async (ctx) => {
-    const uid_class = ctx.params.roomId as string;
-
-    const { classes } = await getClassUid(uid_class, ctx);
-
-    return {
-        props: {
-            classes,
-        }
-    };
-})

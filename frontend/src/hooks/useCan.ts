@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { validateUserPermissions } from "../utils/validateUserPermissions";
 
 type UseCanParams = {
-  roles?: string;
+  roles?: string[];
 };
 
 export function useCan({ roles }: UseCanParams) {
