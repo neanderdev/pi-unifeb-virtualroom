@@ -23,6 +23,7 @@ import { ListAllCategoryActivityController } from "./modules/categoryActivity/us
 import { CreateCategoryActivityController } from "./modules/categoryActivity/useCases/createCategoryActivity/CreateCategoryActivityController";
 import { UpdateCategoryActivityController } from "./modules/categoryActivity/useCases/updateCategoryActivity/UpdateCategoryActivityController";
 import { DeleteCategoryActivityController } from "./modules/categoryActivity/useCases/deleteCategoryActivity/DeleteCategoryActivityController";
+import { ListAllActivitiesController } from "./modules/listAllActivities/useCases/listAllActivities/ListAllActivitiesController";
 
 const routes = Router();
 
@@ -46,6 +47,7 @@ const listAllCategoryActivity = new ListAllCategoryActivityController();
 const createCategoryActivityController = new CreateCategoryActivityController();
 const updateCategoryActivityController = new UpdateCategoryActivityController();
 const deleteCategoryActivityController = new DeleteCategoryActivityController();
+const listAllActivitiesController = new ListAllActivitiesController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -101,6 +103,11 @@ routes.delete(
   "/category-activity/:id_category_activity",
   ensureAuthenticated,
   deleteCategoryActivityController.handle
+);
+routes.get(
+  "/list-all-activities/:class_uid",
+  ensureAuthenticated,
+  listAllActivitiesController.handle
 );
 
 export { routes };
