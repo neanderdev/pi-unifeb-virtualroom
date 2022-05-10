@@ -1,11 +1,11 @@
-type User = {
+interface User {
   roles: string;
-};
+}
 
-type ValidateUserPermissionsParams = {
+interface ValidateUserPermissionsParams {
   user: User;
   roles?: string[];
-};
+}
 
 export function validateUserPermissions({
   user,

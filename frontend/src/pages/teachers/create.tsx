@@ -19,7 +19,7 @@ import { Input } from "../../components/Form/Input";
 import { RadioButton } from "../../components/Form/RadioButton";
 import { Switch } from "../../components/Form/Switch";
 
-type CreateUserFormData = {
+interface CreateUserFormData {
     ra_user: number;
     email_user: string;
     name_user: string;

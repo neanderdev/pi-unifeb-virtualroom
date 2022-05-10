@@ -14,18 +14,18 @@ import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { Input } from "../../components/Form/Input";
 
-type CreateClassFormData = {
+interface CreateClassFormData {
     name_class: string;
     name_matter_class: string;
     background_class_file?: any;
 };
 
-type UploadBackgroundClassFormData = {
+interface UploadBackgroundClassFormData {
     uid_class: String;
     data: any;
 };
 
-type GetResponseCreateClass = {
+interface GetResponseCreateClass {
     uid_class: string;
     name_class: string;
     name_matter_class: string;

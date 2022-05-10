@@ -6,22 +6,23 @@ interface RadioProps extends ChakraRadioProps {
     name: string;
     label?: string;
     error?: FieldError;
+    valueChecked?: string;
     arrayValuesRadio?: Array<{ value: string; name: string; id: string; label: string }>;
 }
 
 const RadioButtonBase: ForwardRefRenderFunction<HTMLInputElement, RadioProps>
-    = ({ name, label, error = null, arrayValuesRadio = [], ...rest }, ref) => {
+    = ({ name, label, error = null, valueChecked, arrayValuesRadio = [], ...rest }, ref) => {
         return (
             <FormControl isInvalid={!!error}>
                 {!!label && <FormLabel htmlFor={name}>{label}</FormLabel>}
 
-                <ChakraRadioGroup defaultValue={arrayValuesRadio[0]?.value}>
+                <ChakraRadioGroup name={name} defaultValue={valueChecked ? valueChecked : arrayValuesRadio[0]?.value}>
                     <HStack spacing="24px">
                         {arrayValuesRadio.map((valueRadio, index) => (
                             <ChakraRadio
                                 key={index}
                                 value={valueRadio.value}
-                                name={valueRadio.name}
+                                name={name}
                                 id={valueRadio.id}
                                 borderColor={!!error === true && "red.500"}
                                 bgColor="white"

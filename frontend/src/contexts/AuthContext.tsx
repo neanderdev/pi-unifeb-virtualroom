@@ -5,26 +5,26 @@ import { useToast } from '@chakra-ui/react';
 
 import { api } from '../services/apiClient';
 
-type User = {
+interface User {
     ra_user: number;
     email_user: string;
     cpf_cnpj_user: string;
     roles: string;
 };
 
-type SignInCredentials = {
+interface SignInCredentials {
     ra: number;
     senha: string;
 };
 
-type AuthContextData = {
+interface AuthContextData {
     signIn: (credentials: SignInCredentials) => Promise<void>;
     signOut: () => void;
     user: User,
     isAuthenticated: boolean;
 };
 
-type AuthProviderProps = {
+interface AuthProviderProps {
     children: ReactNode,
 };
 

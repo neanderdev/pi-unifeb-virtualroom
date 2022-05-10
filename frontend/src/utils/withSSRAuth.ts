@@ -10,9 +10,9 @@ import { AuthTokenError } from "../services/errors/AuthTokenError";
 
 import { validateUserPermissions } from "./validateUserPermissions";
 
-type WithSSRAuthOptions = {
+interface WithSSRAuthOptions {
   roles?: string[];
-};
+}
 
 export function withSSRAuth<P>(
   fn: GetServerSideProps<P>,

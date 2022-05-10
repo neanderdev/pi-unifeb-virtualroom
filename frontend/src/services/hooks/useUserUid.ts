@@ -3,7 +3,7 @@ import { useQuery, UseQueryOptions, UseQueryResult } from "react-query";
 
 import { setupAPIClient } from "../api";
 
-type User = {
+interface User {
   uid_user: string;
   ra_user: number;
   name_user: string;
@@ -25,11 +25,11 @@ type User = {
   senha: string;
   tipo_user: string;
   roles: string;
-};
+}
 
-type GetUserResponse = {
+interface GetUserResponse {
   user: User;
-};
+}
 
 export async function getUserUid(
   uid_user: string,

@@ -10,7 +10,7 @@ import { withSSRGuest } from '../utils/withSSRGuest';
 
 import { Input } from '../components/Form/Input';
 
-type SignInFormData = {
+interface SignInFormData {
     ra: number;
     senha: string;
 }

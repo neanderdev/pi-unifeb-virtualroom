@@ -3,16 +3,16 @@ import { useQuery, UseQueryOptions, UseQueryResult } from "react-query";
 
 import { setupAPIClient } from "../api";
 
-type ClassUser = {
+interface ClassUser {
   user: {
     ra_user: number;
     name_user: string;
     email_user: string;
     tipo_user: string;
   };
-};
+}
 
-type ClassResponse = {
+interface ClassResponse {
   uid_class: string;
   name_class: string;
   name_matter_class: string;
@@ -21,11 +21,11 @@ type ClassResponse = {
   createdAt_class: Date;
   updatedAt_class: Date;
   ClassUser: ClassUser[];
-};
+}
 
-type GetClassUidResponse = {
+interface GetClassUidResponse {
   classes: ClassResponse;
-};
+}
 
 export async function getClassUid(
   uid_class: string,
@@ -46,7 +46,7 @@ export function useClassUid(
   options?: UseQueryOptions
 ): UseQueryResult<GetClassUidResponse, unknown> {
   return useQuery(["classUid", uid_class], () => getClassUid(uid_class), {
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes
     ...options,
   }) as UseQueryResult<GetClassUidResponse, unknown>;
 }

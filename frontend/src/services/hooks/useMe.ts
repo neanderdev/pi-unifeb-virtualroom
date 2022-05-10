@@ -3,16 +3,16 @@ import { useQuery, UseQueryOptions, UseQueryResult } from "react-query";
 
 import { setupAPIClient } from "../api";
 
-type Me = {
+interface Me {
   cpf_cnpj_user: string;
   email_user: string;
   ra_user: number;
   roles: string;
-};
+}
 
-type GetMeResponse = {
+interface GetMeResponse {
   me: Me;
-};
+}
 
 export async function getMe(
   ctx?: GetServerSidePropsContext

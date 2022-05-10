@@ -22,7 +22,7 @@ import { Input } from "../../components/Form/Input";
 import { RadioButton } from "../../components/Form/RadioButton";
 import { Switch } from "../../components/Form/Switch";
 
-type User = {
+interface User {
     ra_user: number;
     email_user: string;
     name_user: string;
@@ -258,6 +258,7 @@ export default function Student({ user }: IStudent) {
                                                     label='Sexo'
                                                     {...register('gender_user')}
                                                     error={errors.gender_user}
+                                                    valueChecked={user.gender_user}
                                                     arrayValuesRadio={[
                                                         {
                                                             value: 'M',
