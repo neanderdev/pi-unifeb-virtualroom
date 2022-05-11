@@ -55,6 +55,7 @@ export function Activity({ class_uid, isSmallScreen }: ActivityProps) {
                             {data.map((activity) => (
                                 <BoxActivity
                                     key={activity.id_category_activity}
+                                    idCategory={activity.id_category_activity}
                                     title={activity.name_category_activity}
                                     tipoActivity={activity.tipo_category_activity}
                                     activity={activity.Activity}

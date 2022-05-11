@@ -13,12 +13,13 @@ interface Activity {
 
 
 interface BoxActivityProps {
+    idCategory: number;
     title: string;
-    tipoActivity: string,
+    tipoActivity: string;
     activity: Array<Activity>;
 }
 
-export function BoxActivity({ title, tipoActivity, activity }: BoxActivityProps) {
+export function BoxActivity({ idCategory, title, tipoActivity, activity }: BoxActivityProps) {
     return (
         <Flex
             ml={4}
@@ -26,7 +27,7 @@ export function BoxActivity({ title, tipoActivity, activity }: BoxActivityProps)
             direction="column"
         >
 
-            <BoxHeaderActivity title={title} />
+            <BoxHeaderActivity idCategory={idCategory} title={title} tipoActivity={tipoActivity} />
 
             {activity.length === 0 && (
                 <Text

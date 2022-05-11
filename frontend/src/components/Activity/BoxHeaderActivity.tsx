@@ -1,11 +1,16 @@
+import { useRouter } from "next/router";
 import { Box, Icon, IconButton, LinkOverlay, Popover, PopoverContent, PopoverTrigger, Portal, Text, useColorModeValue } from "@chakra-ui/react";
 import { IoAddSharp, IoEllipsisVertical } from "react-icons/io5";
 
 interface BoxHeaderActivityProps {
-    title: string
+    idCategory: number;
+    title: string;
+    tipoActivity: string;
 }
 
-export function BoxHeaderActivity({ title }: BoxHeaderActivityProps) {
+export function BoxHeaderActivity({ idCategory, title, tipoActivity }: BoxHeaderActivityProps) {
+    const router = useRouter();
+
     return (
         <Box
             id="id-tde-01"
@@ -44,7 +49,7 @@ export function BoxHeaderActivity({ title }: BoxHeaderActivityProps) {
                         bg: "transparent",
                     }}
                     icon={<Icon as={IoAddSharp} fontSize={24} />}
-                    onClick={() => alert("Adicionar nova ativadade")}
+                    onClick={() => router.push(`${router.asPath}/${tipoActivity}/${idCategory}`)}
                 />
 
                 <Popover>
