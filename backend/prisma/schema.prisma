@@ -100,8 +100,8 @@ model Activity {
   name_activity              String           @db.VarChar(100)
   content_activity           String
   dt_entrega_activity        DateTime
-  isAcceptWithDelay_Activity Boolean          @default(true) @db.Boolean
-  nota_max_activity          Decimal          @db.Decimal(2, 2)
+  isAcceptWithDelay_Activity Boolean          @default(false) @db.Boolean
+  nota_max_activity          Int
   isEntregue_activity        Boolean          @default(false) @db.Boolean
   createdAt_activity         DateTime         @default(now())
   updatedAt_activity         DateTime         @updatedAt
