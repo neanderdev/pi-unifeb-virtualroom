@@ -25,10 +25,12 @@ import { UpdateCategoryActivityController } from "./modules/categoryActivity/use
 import { DeleteCategoryActivityController } from "./modules/categoryActivity/useCases/deleteCategoryActivity/DeleteCategoryActivityController";
 import { ListAllActivitiesController } from "./modules/listAllActivities/useCases/listAllActivities/ListAllActivitiesController";
 import { CreateActivityController } from "./modules/activity/useCases/createActivity/CreateActivityController";
+import { UploadMaterialActivityController } from "./modules/materialActivity/useCases/uploadMaterialActivity/UploadMaterialActivityController";
 
 const routes = Router();
 
 const uploadClass = multer(upload.upload("./tmp/class"));
+const uploadMaterialActivity = multer(upload.upload("./tmp/materialActivity"));
 
 const loginController = new LoginController();
 const refreshTokenController = new RefreshTokenController();
@@ -50,6 +52,7 @@ const updateCategoryActivityController = new UpdateCategoryActivityController();
 const deleteCategoryActivityController = new DeleteCategoryActivityController();
 const listAllActivitiesController = new ListAllActivitiesController();
 const createActivityController = new CreateActivityController();
+const uploadMaterialActivityController = new UploadMaterialActivityController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -112,5 +115,11 @@ routes.get(
   listAllActivitiesController.handle
 );
 routes.post("/activity/", ensureAuthenticated, createActivityController.handle);
+routes.post(
+  "/upload-material-activity/:activity_uid",
+  ensureAuthenticated,
+  uploadMaterialActivity.array("materiais"),
+  uploadMaterialActivityController.handle
+);
 
 export { routes };
