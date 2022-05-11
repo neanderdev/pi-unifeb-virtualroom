@@ -1,5 +1,5 @@
 import { Box, Icon, IconButton, LinkOverlay, Popover, PopoverContent, PopoverTrigger, Portal, Text, useColorModeValue } from "@chakra-ui/react";
-import { IoEllipsisVertical } from "react-icons/io5";
+import { IoAddSharp, IoEllipsisVertical } from "react-icons/io5";
 
 interface BoxHeaderActivityProps {
     title: string
@@ -33,6 +33,20 @@ export function BoxHeaderActivity({ title }: BoxHeaderActivityProps) {
             </Text>
 
             <Box ml="auto" mr={4}>
+                <IconButton
+                    aria-label="Adicionar nova atividade"
+                    rounded="full"
+                    bg="transparent"
+                    _hover={{
+                        bg: "transparent",
+                    }}
+                    _active={{
+                        bg: "transparent",
+                    }}
+                    icon={<Icon as={IoAddSharp} fontSize={24} />}
+                    onClick={() => alert("Adicionar nova ativadade")}
+                />
+
                 <Popover>
                     <PopoverTrigger>
                         <IconButton

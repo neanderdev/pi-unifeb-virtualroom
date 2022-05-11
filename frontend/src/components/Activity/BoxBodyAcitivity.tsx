@@ -3,13 +3,14 @@ import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { CgNotes } from "react-icons/cg";
 
 interface BoxBodyAcitivityProps {
-    titleBodyActivity: string;
-    dateFinalized?: string;
-    datePosted?: string;
-    dataUpdatedPosted?: string;
+    tipoActivity?: string;
+    name_activity?: string;
+    dt_entrega_activity?: string;
+    createdAt_activity?: string;
+    updatedAt_activity?: string;
 }
 
-function BoxBodyAcitivityComponent({ titleBodyActivity, dateFinalized, datePosted, dataUpdatedPosted }: BoxBodyAcitivityProps) {
+function BoxBodyAcitivityComponent({ tipoActivity, name_activity, dt_entrega_activity, createdAt_activity, updatedAt_activity }: BoxBodyAcitivityProps) {
     return (
         <Box
             w="full"
@@ -42,7 +43,7 @@ function BoxBodyAcitivityComponent({ titleBodyActivity, dateFinalized, datePoste
                     ml={4}
                     isTruncated
                 >
-                    {titleBodyActivity}
+                    {name_activity}
                 </Text>
             </Flex>
 
@@ -53,11 +54,17 @@ function BoxBodyAcitivityComponent({ titleBodyActivity, dateFinalized, datePoste
                 fontWeight="normal"
                 isTruncated
             >
-                {dateFinalized && `Data de entrega: ${dateFinalized}`}
+                {tipoActivity === "A" || tipoActivity === "C"
+                    ? `Data de entrega em ${dt_entrega_activity}`
+                    : null
+                }
 
-                {datePosted && !dataUpdatedPosted && `Item postado: ${datePosted}`}
-
-                {dataUpdatedPosted && `Última edição: ${dataUpdatedPosted}`}
+                {tipoActivity === "M" && createdAt_activity === updatedAt_activity
+                    ? `Item postado em ${createdAt_activity}`
+                    : tipoActivity === "M" && createdAt_activity !== updatedAt_activity
+                        ? `Última edição em ${updatedAt_activity}`
+                        : null
+                }
             </Text>
         </Box>
     );

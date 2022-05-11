@@ -4,20 +4,21 @@ import { BoxHeaderActivity } from "./BoxHeaderActivity";
 import { BoxBodyAcitivity } from "./BoxBodyAcitivity";
 
 interface Activity {
-    id: number;
-    titleBodyActivity: string;
-    dateFinalized?: string;
-    datePosted?: string;
-    dateUpdatedPosted?: string;
+    uid_activity: string;
+    name_activity: string;
+    dt_entrega_activity: string;
+    createdAt_activity: string;
+    updatedAt_activity: string;
 }
 
 
 interface BoxActivityProps {
     title: string;
+    tipoActivity: string,
     activity: Array<Activity>;
 }
 
-export function BoxActivity({ title, activity }: BoxActivityProps) {
+export function BoxActivity({ title, tipoActivity, activity }: BoxActivityProps) {
     return (
         <Flex
             ml={4}
@@ -40,11 +41,12 @@ export function BoxActivity({ title, activity }: BoxActivityProps) {
 
             {activity.map((activity) => (
                 <BoxBodyAcitivity
-                    key={activity.id}
-                    titleBodyActivity={activity.titleBodyActivity}
-                    dateFinalized={activity.dateFinalized}
-                    datePosted={activity.datePosted}
-                    dataUpdatedPosted={activity.dateUpdatedPosted}
+                    key={activity.uid_activity}
+                    tipoActivity={tipoActivity}
+                    name_activity={activity.name_activity}
+                    dt_entrega_activity={activity.dt_entrega_activity}
+                    createdAt_activity={activity.createdAt_activity}
+                    updatedAt_activity={activity.updatedAt_activity}
                 />
             ))}
         </Flex>

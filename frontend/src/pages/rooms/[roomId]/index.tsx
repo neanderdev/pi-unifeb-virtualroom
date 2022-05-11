@@ -246,7 +246,7 @@ export default function RoomId({ classes }: RoomIdProps) {
                                     </TabPanel>
 
                                     <TabPanel>
-                                        <Activity isSmallScreen={isSmallScreen} />
+                                        <Activity class_uid={classes.uid_class} isSmallScreen={isSmallScreen} />
 
                                         <ModalNewCategory class_uid={classes.uid_class} />
                                     </TabPanel>

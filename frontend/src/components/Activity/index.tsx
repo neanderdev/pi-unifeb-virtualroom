@@ -1,4 +1,6 @@
-import { Box, Flex, VStack } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Text, VStack } from "@chakra-ui/react";
+
+import { useAllActivities } from "../../services/hooks/useAllActivities";
 
 import { SidebarActivity } from "./SidebarActivity";
 import { SelectCategoriesAcitivity } from "./SelectCategoriesAcitivity";
@@ -6,54 +8,29 @@ import { ActionsActivity } from "./ActionsActivity";
 import { BoxActivity } from "./BoxActivity";
 
 interface ActivityProps {
+    class_uid: string;
     isSmallScreen: boolean
 }
 
-interface Activity {
-    id: number;
-    titleBodyActivity: string;
-    dateFinalized?: string;
-    datePosted?: string;
-    dateUpdatedPosted?: string;
-}
+export function Activity({ class_uid, isSmallScreen }: ActivityProps) {
+    const { data, isLoading, error } = useAllActivities(class_uid);
 
-interface FakeActivity {
-    id: number;
-    title: string;
-    activity: Array<Activity>;
-}
+    if (isLoading) {
+        return (
+            <Flex justify="center" alignItems="center">
+                <Spinner color="red" size="xl" />
+            </Flex>
+        );
+    }
 
-const fakeActivity: Array<FakeActivity> = [
-    {
-        id: 1,
-        title: "TDE 01",
-        activity: [],
-    },
-    {
-        id: 1,
-        title: "TDE 02",
-        activity: [
-            {
-                id: 1,
-                titleBodyActivity: "Entrega",
-                dateFinalized: "12/04/2022",
-            },
-            {
-                id: 2,
-                titleBodyActivity: "Material",
-                datePosted: "12/04/2022",
-            },
-            {
-                id: 3,
-                titleBodyActivity: "Links",
-                datePosted: "12/04/2022",
-                dateUpdatedPosted: "13/04/2022"
-            },
-        ],
-    },
-];
+    if (error) {
+        return (
+            <Flex justify="center" alignItems="center">
+                <Text fontWeight="bold" fontSize="xl">Erro ao buscar as atividades desta turma</Text>
+            </Flex>
+        );
+    }
 
-export function Activity({ isSmallScreen }: ActivityProps) {
     return (
         <Flex
             p={5}
@@ -69,13 +46,22 @@ export function Activity({ isSmallScreen }: ActivityProps) {
                         <ActionsActivity />
                     </Box>
 
-                    {fakeActivity.map((activity) => (
-                        <BoxActivity
-                            key={activity.id}
-                            title={activity.title}
-                            activity={activity.activity}
-                        />
-                    ))}
+                    {data.length === 0 ? (
+                        <Flex justifyContent="center" alignItems="center">
+                            <Text fontWeight="bold" fontSize="xl">Nenhuma atividade vinculada nesta turma</Text>
+                        </Flex>
+                    ) : (
+                        <>
+                            {data.map((activity) => (
+                                <BoxActivity
+                                    key={activity.id_category_activity}
+                                    title={activity.name_category_activity}
+                                    tipoActivity={activity.tipo_category_activity}
+                                    activity={activity.Activity}
+                                />
+                            ))}
+                        </>
+                    )}
                 </VStack>
             </Flex>
         </Flex>
