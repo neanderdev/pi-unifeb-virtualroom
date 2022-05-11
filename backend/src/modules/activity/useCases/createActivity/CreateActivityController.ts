@@ -10,7 +10,6 @@ export class CreateActivityController {
       dt_entrega_activity,
       isAcceptWithDelay_Activity,
       nota_max_activity,
-      isEntregue_activity,
       class_uid,
       category_activity_id,
     } = request.body;
@@ -22,7 +21,6 @@ export class CreateActivityController {
       dt_entrega_activity,
       isAcceptWithDelay_Activity,
       nota_max_activity,
-      isEntregue_activity,
       class_uid,
       category_activity_id,
     });

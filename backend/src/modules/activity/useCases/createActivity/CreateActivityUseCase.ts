@@ -8,7 +8,6 @@ interface ICreateActivity {
   dt_entrega_activity: Date;
   isAcceptWithDelay_Activity: boolean;
   nota_max_activity: number;
-  isEntregue_activity: boolean;
   class_uid: string;
   category_activity_id: number;
 }
@@ -20,7 +19,6 @@ export class CreateActivityUseCase {
     dt_entrega_activity,
     isAcceptWithDelay_Activity,
     nota_max_activity,
-    isEntregue_activity,
     class_uid,
     category_activity_id,
   }: ICreateActivity) {
@@ -51,7 +49,6 @@ export class CreateActivityUseCase {
         dt_entrega_activity,
         isAcceptWithDelay_Activity,
         nota_max_activity,
-        isEntregue_activity,
         class_uid,
         category_activity_id,
       },
