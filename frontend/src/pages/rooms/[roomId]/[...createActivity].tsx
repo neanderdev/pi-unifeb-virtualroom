@@ -1,11 +1,13 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
-import { Box, Button, Divider, Flex, Heading, HStack, Icon, IconButton, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue, useMediaQuery, VStack } from "@chakra-ui/react";
+import { Image, Box, Button, Divider, Flex, Heading, HStack, Icon, IconButton, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useMediaQuery, VStack, FormLabel, Input as ChakraInput, FormControl } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IoAddSharp } from "react-icons/io5";
+import { MdDeleteOutline } from "react-icons/md"
+import { AiOutlineFilePdf, AiOutlineFileWord, AiOutlineFileZip, AiOutlineLink } from "react-icons/ai";
 
 import { withSSRAuth } from "../../../utils/withSSRAuth";
 
@@ -25,6 +27,18 @@ interface CreateActivityFormData {
     archives_materials?: any;
 };
 
+interface Materiais {
+    blobURL: string;
+    name: string;
+    size: number;
+    format: string;
+}
+
+interface Links {
+    name_link: string;
+    link: string;
+}
+
 const createActivityFormSchema = yup.object().shape({
     name_activity: yup.string().required("Nome da atividade obrigatório"),
     dt_entrega_activity: yup.date()
@@ -39,37 +53,40 @@ const createActivityFormSchema = yup.object().shape({
         .max(10, "Máximo da nota máxima é 10"),
     content_activity: yup.string().required("Conteúdo da atividade obrigatório"),
     archives_materials: yup.mixed()
-        .required('A file is required')
+        // .required('A file is required')
         // .test('isEmpty', "Nenhum arquivo encontrado", (value) => value.length > 0)
         .test('fileSize', "Arquivo é muito grande", (value) => {
             let isArchiveLarge = false;
 
-            Object.keys(value).forEach((key) => {
-                if (!value[0] || value[key].size >= 2000000) {
-                    isArchiveLarge = true;
-                }
-            });
-
+            if (value !== undefined) {
+                Object.keys(value).forEach((key) => {
+                    if (!value[0] || value[key].size >= 2000000) {
+                        isArchiveLarge = true;
+                    }
+                });
+            }
 
             if (isArchiveLarge) {
                 return;
             } else {
-                return value;
+                return value !== undefined ? value : true;
             }
         })
         .test("type", "Aceita apenas os formatos: .jpg, .jpeg, .png, .doc, .docx, .pdf, .zip, .rar", (value) => {
             let isFormattedValid = false;
 
-            Object.keys(value).forEach((key) => {
-                if (!value[0] || !["jpg", "jpeg", "png", "doc", "docx", "pdf", "zip", "rar"].includes(value[key].name.replace(/^.*\./, ''))) {
-                    isFormattedValid = true;
-                }
-            });
+            if (value !== undefined) {
+                Object.keys(value).forEach((key) => {
+                    if (!value[0] || !["jpg", "jpeg", "png", "doc", "docx", "pdf", "zip", "rar"].includes(value[key].name.replace(/^.*\./, ''))) {
+                        isFormattedValid = true;
+                    }
+                });
+            }
 
             if (isFormattedValid) {
                 return;
             } else {
-                return value;
+                return value !== undefined ? value : true;
             }
         }),
 });
@@ -87,11 +104,60 @@ export default function CreateActivity() {
 
     const { errors } = formState;
 
-    const [materias, setMaterias] = useState([]);
-    const [links, setLinks] = useState([]);
+    const [materiais, setMateriais] = useState<Materiais[]>([]);
+    const [links, setLinks] = useState<Links[]>([]);
+
+    const [nameLink, setNameLink] = useState("");
+    const [link, setLink] = useState("");
 
     const handleCreateActivity: SubmitHandler<CreateActivityFormData> = async (values) => {
         console.log(values);
+    }
+
+    function handleFileChange(event) {
+        let files;
+
+        if (event.dataTransfer) {
+            files = event.dataTransfer.files;
+        } else if (event.target) {
+            files = event.target.files;
+        }
+
+        Object.keys(files).forEach((key) => {
+            const material = {
+                blobURL: null,
+                name: null,
+                size: null,
+                format: null,
+            };
+
+            material.blobURL = URL.createObjectURL(files[key]);
+            material.name = files[key].name;
+            material.size = files[key].size / 1000;
+            material.format = files[key].name.replace(/^.*\./, '');
+
+            const isExistsMaterial = materiais.filter((mat) => mat.name === material.name);
+
+            if (isExistsMaterial.length === 0) {
+                setMateriais([
+                    ...materiais,
+                    material
+                ]);
+            }
+        });
+    }
+
+    function handleClickAddLink() {
+        setLinks([
+            ...links,
+            {
+                name_link: nameLink,
+                link,
+            }
+        ]);
+
+        setNameLink("");
+        setLink("");
     }
 
     return (
@@ -212,40 +278,293 @@ export default function CreateActivity() {
                                                     bg: useColorModeValue('gray.100', 'gray.500'),
                                                 }}
                                                 accept=".jpg,.jpeg,.png,.doc,.docx,.pdf,.zip,.rar"
+                                                onChange={handleFileChange}
                                             />
 
                                             <Divider my='2' borderColor='gray.700' />
+
+                                            <SimpleGrid minChildWidth='240px' spacing={['6', '8']} w='100%' alignItems="center">
+                                                {materiais.map((material, index) => (
+                                                    ["jpg", "jpeg", "png"].includes(material.format) ? (
+                                                        <Flex
+                                                            key={index}
+                                                            align='center'
+                                                            mb={{ sm: "10px", md: "0px" }}
+                                                            w={{ sm: "100%" }}
+                                                            maxW="sm"
+                                                            p="1"
+                                                            borderWidth="1px"
+                                                            borderColor="gray.500"
+                                                            borderRadius='15px'
+                                                        >
+                                                            <Image
+                                                                me={{ md: "22px" }}
+                                                                src={material.blobURL}
+                                                                alt={material.name}
+                                                                fallbackSrc="/no_image.jpg"
+                                                                w='80px'
+                                                                h='80px'
+                                                                borderRadius='15px'
+                                                            />
+
+                                                            <Flex direction='column' maxWidth='100%' my={{ sm: "14px" }} isTruncated>
+                                                                <Text
+                                                                    fontSize={{ sm: "lg", lg: "xl" }}
+                                                                    color="gray.600"
+                                                                    fontWeight='bold'
+                                                                    ms={{ sm: "8px", md: "0px" }}
+                                                                    isTruncated
+                                                                >
+                                                                    {material.name}
+                                                                </Text>
+
+                                                                <Text
+                                                                    fontSize={{ sm: "sm", lg: "md" }}
+                                                                    color="gray.400"
+                                                                    fontWeight='bold'
+                                                                    ms={{ sm: "8px", md: "0px" }}
+                                                                >
+                                                                    {material.size} KB
+                                                                </Text>
+                                                            </Flex>
+
+                                                            <IconButton
+                                                                aria-label="Remover material"
+                                                                width="10"
+                                                                height="12"
+                                                                variant="unstyled"
+                                                                ml="auto"
+                                                                icon={<Icon as={MdDeleteOutline} fontSize={24} />}
+                                                                onClick={() => {
+                                                                    materiais.splice(index, 1);
+                                                                    setMateriais([...materiais]);
+                                                                }}
+                                                            />
+                                                        </Flex>
+                                                    ) : ["doc", "docx"].includes(material.format) ? (
+                                                        <Flex
+                                                            key={index}
+                                                            align='center'
+                                                            mb={{ sm: "10px", md: "0px" }}
+                                                            w={{ sm: "100%" }}
+                                                            maxW="sm"
+                                                            p="1"
+                                                            borderWidth="1px"
+                                                            borderColor="gray.500"
+                                                            borderRadius='15px'
+                                                        >
+                                                            <Box
+                                                                me={{ md: "22px" }}
+                                                                w='80px'
+                                                                h='80px'
+                                                                borderRadius='15px'
+                                                                display="flex"
+                                                                justifyContent="center"
+                                                                alignItems="center"
+                                                                bg="gray.100"
+                                                            >
+                                                                <Icon as={AiOutlineFileWord} fontSize={48} color="gray.900" />
+                                                            </Box>
+
+                                                            <Flex direction='column' maxWidth='100%' my={{ sm: "14px" }} isTruncated>
+                                                                <Text
+                                                                    fontSize={{ sm: "lg", lg: "xl" }}
+                                                                    color="gray.600"
+                                                                    fontWeight='bold'
+                                                                    ms={{ sm: "8px", md: "0px" }}
+                                                                    isTruncated
+                                                                >
+                                                                    {material.name}
+                                                                </Text>
+
+                                                                <Text
+                                                                    fontSize={{ sm: "sm", lg: "md" }}
+                                                                    color="gray.400"
+                                                                    fontWeight='bold'
+                                                                    ms={{ sm: "8px", md: "0px" }}
+                                                                >
+                                                                    {material.size} KB
+                                                                </Text>
+                                                            </Flex>
+
+                                                            <IconButton
+                                                                aria-label="Remover material"
+                                                                width="10"
+                                                                height="12"
+                                                                variant="unstyled"
+                                                                ml="auto"
+                                                                icon={<Icon as={MdDeleteOutline} fontSize={24} />}
+                                                                onClick={() => {
+                                                                    materiais.splice(index, 1);
+                                                                    setMateriais([...materiais]);
+                                                                }}
+                                                            />
+                                                        </Flex>
+                                                    ) : ["zip", "rar"].includes(material.format) ? (
+                                                        <Flex
+                                                            key={index}
+                                                            align='center'
+                                                            mb={{ sm: "10px", md: "0px" }}
+                                                            w={{ sm: "100%" }}
+                                                            maxW="sm"
+                                                            p="1"
+                                                            borderWidth="1px"
+                                                            borderColor="gray.500"
+                                                            borderRadius='15px'
+                                                        >
+                                                            <Box
+                                                                me={{ md: "22px" }}
+                                                                w='80px'
+                                                                h='80px'
+                                                                borderRadius='15px'
+                                                                display="flex"
+                                                                justifyContent="center"
+                                                                alignItems="center"
+                                                                bg="gray.100"
+                                                            >
+                                                                <Icon as={AiOutlineFileZip} fontSize={48} color="gray.900" />
+                                                            </Box>
+
+                                                            <Flex direction='column' maxWidth='100%' my={{ sm: "14px" }} isTruncated>
+                                                                <Text
+                                                                    fontSize={{ sm: "lg", lg: "xl" }}
+                                                                    color="gray.600"
+                                                                    fontWeight='bold'
+                                                                    ms={{ sm: "8px", md: "0px" }}
+                                                                    isTruncated
+                                                                >
+                                                                    {material.name}
+                                                                </Text>
+
+                                                                <Text
+                                                                    fontSize={{ sm: "sm", lg: "md" }}
+                                                                    color="gray.400"
+                                                                    fontWeight='bold'
+                                                                    ms={{ sm: "8px", md: "0px" }}
+                                                                >
+                                                                    {material.size} KB
+                                                                </Text>
+                                                            </Flex>
+
+                                                            <IconButton
+                                                                aria-label="Remover material"
+                                                                width="10"
+                                                                height="12"
+                                                                variant="unstyled"
+                                                                ml="auto"
+                                                                icon={<Icon as={MdDeleteOutline} fontSize={24} />}
+                                                                onClick={() => {
+                                                                    materiais.splice(index, 1);
+                                                                    setMateriais([...materiais]);
+                                                                }}
+                                                            />
+                                                        </Flex>
+                                                    ) : (
+                                                        <Flex
+                                                            key={index}
+                                                            align='center'
+                                                            mb={{ sm: "10px", md: "0px" }}
+                                                            w={{ sm: "100%" }}
+                                                            maxW="sm"
+                                                            p="1"
+                                                            borderWidth="1px"
+                                                            borderColor="gray.500"
+                                                            borderRadius='15px'
+                                                        >
+                                                            <Box
+                                                                me={{ md: "22px" }}
+                                                                w='80px'
+                                                                h='80px'
+                                                                borderRadius='15px'
+                                                                display="flex"
+                                                                justifyContent="center"
+                                                                alignItems="center"
+                                                                bg="gray.100"
+                                                            >
+                                                                <Icon as={AiOutlineFilePdf} fontSize={48} color="gray.900" />
+                                                            </Box>
+
+                                                            <Flex direction='column' maxWidth='100%' my={{ sm: "14px" }} isTruncated>
+                                                                <Text
+                                                                    fontSize={{ sm: "lg", lg: "xl" }}
+                                                                    color="gray.600"
+                                                                    fontWeight='bold'
+                                                                    ms={{ sm: "8px", md: "0px" }}
+                                                                    isTruncated
+                                                                >
+                                                                    {material.name}
+                                                                </Text>
+
+                                                                <Text
+                                                                    fontSize={{ sm: "sm", lg: "md" }}
+                                                                    color="gray.400"
+                                                                    fontWeight='bold'
+                                                                    ms={{ sm: "8px", md: "0px" }}
+                                                                >
+                                                                    {material.size} KB
+                                                                </Text>
+                                                            </Flex>
+
+                                                            <IconButton
+                                                                aria-label="Remover material"
+                                                                width="10"
+                                                                height="12"
+                                                                variant="unstyled"
+                                                                ml="auto"
+                                                                icon={<Icon as={MdDeleteOutline} fontSize={24} />}
+                                                                onClick={() => {
+                                                                    materiais.splice(index, 1);
+                                                                    setMateriais([...materiais]);
+                                                                }}
+                                                            />
+                                                        </Flex>
+                                                    )
+                                                ))}
+                                            </SimpleGrid>
                                         </VStack>
                                     </TabPanel>
                                     <TabPanel>
                                         <VStack spacing='8'>
                                             <SimpleGrid minChildWidth='240px' spacing={['6', '8']} w='100%' alignItems="center">
-                                                <Input
-                                                    name='name_link'
-                                                    label='Nome do link'
-                                                    {...register('name_link')}
-                                                    error={errors.name_link}
-                                                    bgColor={bgColor}
-                                                    _hover={{
-                                                        bgColor: bgHoverAndFocus,
-                                                    }}
-                                                    _focus={{
-                                                        bg: bgHoverAndFocus,
-                                                    }}
-                                                />
-                                                <Input
-                                                    name='link'
-                                                    label='Link'
-                                                    {...register('link')}
-                                                    error={errors.link}
-                                                    bgColor={bgColor}
-                                                    _hover={{
-                                                        bgColor: bgHoverAndFocus,
-                                                    }}
-                                                    _focus={{
-                                                        bg: bgHoverAndFocus,
-                                                    }}
-                                                />
+                                                <FormControl>
+                                                    <FormLabel htmlFor='name_link'>Nome do link</FormLabel>
+
+                                                    <ChakraInput
+                                                        name='name_link'
+                                                        id='name_link'
+                                                        variant='filled'
+                                                        bgColor={bgColor}
+                                                        _hover={{
+                                                            bgColor: bgHoverAndFocus,
+                                                        }}
+                                                        _focus={{
+                                                            bg: bgHoverAndFocus,
+                                                        }}
+                                                        size='lg'
+                                                        value={nameLink}
+                                                        onChange={(e) => setNameLink(e.target.value)}
+                                                    />
+                                                </FormControl>
+
+                                                <FormControl>
+                                                    <FormLabel htmlFor='link'>Link</FormLabel>
+
+                                                    <ChakraInput
+                                                        name='link'
+                                                        id='link'
+                                                        variant='filled'
+                                                        bgColor={bgColor}
+                                                        _hover={{
+                                                            bgColor: bgHoverAndFocus,
+                                                        }}
+                                                        _focus={{
+                                                            bg: bgHoverAndFocus,
+                                                        }}
+                                                        size='lg'
+                                                        value={link}
+                                                        onChange={(e) => setLink(e.target.value)}
+                                                    />
+                                                </FormControl>
 
                                                 <Box pt={30}>
                                                     <IconButton
@@ -254,12 +573,69 @@ export default function CreateActivity() {
                                                         height="12"
                                                         colorScheme="blue"
                                                         icon={<Icon as={IoAddSharp} fontSize={24} />}
-                                                        onClick={() => alert("AQUI")}
+                                                        disabled={nameLink === "" || link === "" && true}
+                                                        onClick={handleClickAddLink}
                                                     />
                                                 </Box>
                                             </SimpleGrid>
 
                                             <Divider my='2' borderColor='gray.700' />
+
+                                            <SimpleGrid minChildWidth='240px' spacing={['6', '8']} w='100%' alignItems="center">
+                                                {links.map((link, index) => (
+                                                    <Flex
+                                                        key={index}
+                                                        align='center'
+                                                        mb={{ sm: "10px", md: "0px" }}
+                                                        w={{ sm: "100%" }}
+                                                        maxW="sm"
+                                                        p="1"
+                                                        borderWidth="1px"
+                                                        borderColor="gray.500"
+                                                        borderRadius='15px'
+                                                        as="a"
+                                                        href={link.link}
+                                                        target="_blank"
+                                                    >
+                                                        <Box
+                                                            me={{ md: "22px" }}
+                                                            w='80px'
+                                                            h='80px'
+                                                            borderRadius='15px'
+                                                            display="flex"
+                                                            justifyContent="center"
+                                                            alignItems="center"
+                                                            bg="gray.100"
+                                                        >
+                                                            <Icon as={AiOutlineLink} fontSize={48} color="gray.900" />
+                                                        </Box>
+
+                                                        <Text
+                                                            fontSize="sm"
+                                                            color="gray.600"
+                                                            fontWeight='bold'
+                                                            ms={{ sm: "8px", md: "0px" }}
+                                                            isTruncated
+                                                        >
+                                                            {link.name_link}
+                                                        </Text>
+
+                                                        <IconButton
+                                                            aria-label="Remover material"
+                                                            width="10"
+                                                            height="12"
+                                                            variant="unstyled"
+                                                            ml="auto"
+                                                            icon={<Icon as={MdDeleteOutline} fontSize={24} />}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                links.splice(index, 1);
+                                                                setLinks([...links]);
+                                                            }}
+                                                        />
+                                                    </Flex>
+                                                ))}
+                                            </SimpleGrid>
                                         </VStack>
                                     </TabPanel>
                                 </TabPanels>
