@@ -46,26 +46,28 @@ export class UploadMaterialActivityUseCase {
       },
     });
 
-    materiais_name.map(
-      async (file) =>
+    materiais_name.map(async (file) => {
+      if (file) {
         await prisma.materialActivity.create({
           data: {
             link_material_activity: `/materialActivity/${file}`,
             tipo_material_activity: "M",
             activity_uid,
           },
-        })
-    );
+        });
+      }
+    });
 
-    links.map(
-      async (link) =>
+    links.map(async (link) => {
+      if (link) {
         await prisma.materialActivity.create({
           data: {
             link_material_activity: link,
             tipo_material_activity: "L",
             activity_uid,
           },
-        })
-    );
+        });
+      }
+    });
   }
 }

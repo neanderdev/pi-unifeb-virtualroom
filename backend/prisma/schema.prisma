@@ -129,6 +129,7 @@ model MaterialActivity {
 model DetailActivity {
   id_detail_activity            Int      @id @default(autoincrement())
   dt_isEntrega_detail_acitivity DateTime
+  nota_user                     Decimal  @default(0.00)
   activity_uid                  String
   activity                      Activity @relation(fields: [activity_uid], references: [uid_activity])
   user_uid                      String
