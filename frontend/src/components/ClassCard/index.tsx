@@ -53,11 +53,12 @@ function ClassCardComponent({ imageClass, hrefClass, nameClass, nameTeacherClass
                         color={useColorModeValue('gray.700', 'white')}
                         fontSize="2xl"
                         fontFamily="body"
+                        isTruncated
                     >
                         {nameClass}
                     </Heading>
 
-                    <Text color="gray.500">
+                    <Text color="gray.500" isTruncated>
                         {nameTeacherClass}
                     </Text>
                 </Stack>

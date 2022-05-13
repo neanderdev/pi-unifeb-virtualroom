@@ -40,3 +40,14 @@ export const maskCEP = (value: string) => {
 
   return value;
 };
+
+export const formatterDateTimeForInput = (date: Date) => {
+  let day = date.getDate().toString().padStart(2, "0");
+  let month = (date.getMonth() + 1).toString().padStart(2, "0");
+  let year = date.getFullYear();
+  let hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+  let minute =
+    date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+};

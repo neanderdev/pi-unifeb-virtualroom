@@ -1,15 +1,20 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
-import { Image, Box, Button, Divider, Flex, Heading, HStack, Icon, IconButton, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useMediaQuery, VStack, FormLabel, Input as ChakraInput, FormControl } from "@chakra-ui/react";
+import { Image, Box, Button, Divider, Flex, Heading, HStack, Icon, IconButton, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useMediaQuery, VStack, FormLabel, Input as ChakraInput, FormControl, useToast } from "@chakra-ui/react";
+import { AiOutlineFilePdf, AiOutlineFileWord, AiOutlineFileZip, AiOutlineLink } from "react-icons/ai";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IoAddSharp } from "react-icons/io5";
 import { MdDeleteOutline } from "react-icons/md"
-import { AiOutlineFilePdf, AiOutlineFileWord, AiOutlineFileZip, AiOutlineLink } from "react-icons/ai";
+import { useMutation } from 'react-query';
+
+import { setupAPIClient } from "../../../services/api";
+import { queryClient } from '../../../services/queryClient';
 
 import { withSSRAuth } from "../../../utils/withSSRAuth";
+import { formatterDateTimeForInput } from "../../../utils/masks";
 
 import { Navbar } from "../../../components/Navbar";
 import { Sidebar } from "../../../components/Sidebar";
@@ -20,7 +25,7 @@ import { TextArea } from "../../../components/Form/TextArea";
 
 interface CreateActivityFormData {
     name_activity: string;
-    dt_entrega_activity?: Date;
+    dt_entrega_activity?: string;
     isAcceptWithDelay_Activity?: boolean;
     nota_max_activity?: number;
     content_activity: string;
@@ -30,14 +35,48 @@ interface CreateActivityFormData {
 interface Materiais {
     blobURL: string;
     name: string;
-    size: number;
+    sizeInKB: number;
     format: string;
+    lastModified: number;
+    lastModifiedDate: Date;
+    size: number;
+    type: string;
+    webkitRelativePath: string;
 }
 
 interface Links {
     name_link: string;
     link: string;
 }
+
+interface GetResponseCreateActivityFromClass {
+    uid_activity: string;
+    name_activity: string;
+    content_activity: string;
+    dt_entrega_activity: Date;
+    isAcceptWithDelay_Activity: boolean;
+    nota_max_activity: number;
+    isEntregue_activity: boolean;
+    createdAt_activity: Date;
+    updatedAt_activity: Date;
+    class_uid: string;
+    category_activity_id: number;
+};
+
+interface CreateActivityFromClassFormData {
+    name_activity: string;
+    dt_entrega_activity: string | Date;
+    isAcceptWithDelay_Activity: boolean;
+    nota_max_activity: number;
+    content_activity: string;
+    class_uid: string;
+    category_activity_id: number;
+};
+
+interface UploadMaterialAndLinkFromClassFormData {
+    activity_uid: String;
+    formData: any;
+};
 
 const createActivityFormSchema = yup.object().shape({
     name_activity: yup.string().required("Nome da atividade obrigatório"),
@@ -93,17 +132,59 @@ const createActivityFormSchema = yup.object().shape({
 
 export default function CreateActivity() {
     const router = useRouter();
+    const toast = useToast();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const bgColor = useColorModeValue('gray.50', 'gray.600');
     const bgHoverAndFocus = useColorModeValue('gray.100', 'gray.500');
 
+    const createActivityFromClass = useMutation(async (activities: CreateActivityFromClassFormData) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.post<GetResponseCreateActivityFromClass>('activity', activities);
+
+        return response.data;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('class')
+        },
+    });
+
+    const uploadMaterialAndLinkFromClass = useMutation(async ({ activity_uid, formData }: UploadMaterialAndLinkFromClassFormData) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.post(`upload-material-activity/${activity_uid}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            transformRequest: (data) => {
+                return data;
+            },
+            onUploadProgress: (e) => {
+                const progress = Math.round((e.loaded * 100) / e.total);
+            }
+        });
+
+        return response;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('class')
+        },
+    });
+
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(createActivityFormSchema),
+        defaultValues: {
+            content_activity: '',
+            dt_entrega_activity: formatterDateTimeForInput(new Date()),
+            isAcceptWithDelay_Activity: false,
+            name_activity: '',
+            nota_max_activity: 1,
+            archives_materials: {} as any,
+        },
     });
 
     const { errors } = formState;
 
+    const [teste, setTeste] = useState([]);
     const [materiais, setMateriais] = useState<Materiais[]>([]);
     const [links, setLinks] = useState<Links[]>([]);
 
@@ -111,7 +192,49 @@ export default function CreateActivity() {
     const [link, setLink] = useState("");
 
     const handleCreateActivity: SubmitHandler<CreateActivityFormData> = async (values) => {
-        console.log(values);
+        try {
+            const newActivityFromClass = {
+                name_activity: values.name_activity,
+                dt_entrega_activity: router.query.createActivity[0] === 'A' || router.query.createActivity[0] === 'C' ? values.dt_entrega_activity : new Date(),
+                isAcceptWithDelay_Activity: router.query.createActivity[0] === 'A' ? values.isAcceptWithDelay_Activity : false,
+                nota_max_activity: router.query.createActivity[0] === 'A' ? values.nota_max_activity : 0,
+                content_activity: values.content_activity,
+                class_uid: router.query.roomId as string,
+                category_activity_id: parseInt(router.query.createActivity[1]),
+            };
+
+            const data = await createActivityFromClass.mutateAsync(newActivityFromClass);
+
+            await toast({
+                title: 'Atividade criada',
+                description: "Atividade criada com sucesso",
+                status: 'success',
+                duration: 1500,
+                isClosable: true,
+            });
+
+            if (materiais.length > 0 || links.length > 0) {
+                let formData = new FormData();
+
+                teste.map((material) => formData.append("materiais", material));
+
+                links.map((link) => formData.append("links", link.name_link));
+
+                await uploadMaterialAndLinkFromClass.mutateAsync({ activity_uid: data.uid_activity, formData });
+            }
+
+            router.push(`/rooms/${router.query.roomId}`);
+        } catch (err) {
+            console.log(err);
+
+            toast({
+                title: 'Erro ao criar atividade',
+                description: `Erro: ${err.message}`,
+                status: 'error',
+                duration: 1500,
+                isClosable: true,
+            });
+        }
     }
 
     function handleFileChange(event) {
@@ -124,17 +247,31 @@ export default function CreateActivity() {
         }
 
         Object.keys(files).forEach((key) => {
+            setTeste([
+                ...teste,
+                files[key],
+            ]);
             const material = {
                 blobURL: null,
                 name: null,
-                size: null,
+                sizeInKB: null,
                 format: null,
+                lastModified: null,
+                lastModifiedDate: null,
+                size: null,
+                type: null,
+                webkitRelativePath: null,
             };
 
             material.blobURL = URL.createObjectURL(files[key]);
             material.name = files[key].name;
-            material.size = files[key].size / 1000;
+            material.sizeInKB = files[key].size / 1000;
             material.format = files[key].name.replace(/^.*\./, '');
+            material.lastModified = files[key].lastModified;
+            material.lastModifiedDate = files[key].lastModifiedDate;
+            material.size = files[key].size;
+            material.type = files[key].type;
+            material.webkitRelativePath = files[key].webkitRelativePath;
 
             const isExistsMaterial = materiais.filter((mat) => mat.name === material.name);
 
@@ -205,7 +342,7 @@ export default function CreateActivity() {
                                                         bg: bgHoverAndFocus,
                                                     }}
                                                 />
-                                                {router.query.createActivity[0] === 'A' || router.query.createActivity[0] === 'C' ? (
+                                                {router.query.createActivity[0] === 'A' ? (
                                                     <>
                                                         <Input
                                                             name='dt_entrega_activity'
@@ -243,6 +380,22 @@ export default function CreateActivity() {
                                                         />
                                                     </>
                                                 ) : null}
+                                                {router.query.createActivity[0] === 'C' && (
+                                                    <Input
+                                                        name='dt_entrega_activity'
+                                                        type='datetime-local'
+                                                        label='Data de entrega'
+                                                        {...register('dt_entrega_activity')}
+                                                        error={errors.dt_entrega_activity}
+                                                        bgColor={bgColor}
+                                                        _hover={{
+                                                            bgColor: bgHoverAndFocus,
+                                                        }}
+                                                        _focus={{
+                                                            bg: bgHoverAndFocus
+                                                        }}
+                                                    />
+                                                )}
                                             </SimpleGrid>
 
                                             <TextArea
@@ -324,7 +477,7 @@ export default function CreateActivity() {
                                                                     fontWeight='bold'
                                                                     ms={{ sm: "8px", md: "0px" }}
                                                                 >
-                                                                    {material.size} KB
+                                                                    {material.sizeInKB} KB
                                                                 </Text>
                                                             </Flex>
 
@@ -383,7 +536,7 @@ export default function CreateActivity() {
                                                                     fontWeight='bold'
                                                                     ms={{ sm: "8px", md: "0px" }}
                                                                 >
-                                                                    {material.size} KB
+                                                                    {material.sizeInKB} KB
                                                                 </Text>
                                                             </Flex>
 
@@ -442,7 +595,7 @@ export default function CreateActivity() {
                                                                     fontWeight='bold'
                                                                     ms={{ sm: "8px", md: "0px" }}
                                                                 >
-                                                                    {material.size} KB
+                                                                    {material.sizeInKB} KB
                                                                 </Text>
                                                             </Flex>
 
@@ -501,7 +654,7 @@ export default function CreateActivity() {
                                                                     fontWeight='bold'
                                                                     ms={{ sm: "8px", md: "0px" }}
                                                                 >
-                                                                    {material.size} KB
+                                                                    {material.sizeInKB} KB
                                                                 </Text>
                                                             </Flex>
 
