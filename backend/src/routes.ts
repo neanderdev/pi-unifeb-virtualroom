@@ -24,6 +24,7 @@ import { CreateCategoryActivityController } from "./modules/categoryActivity/use
 import { UpdateCategoryActivityController } from "./modules/categoryActivity/useCases/updateCategoryActivity/UpdateCategoryActivityController";
 import { DeleteCategoryActivityController } from "./modules/categoryActivity/useCases/deleteCategoryActivity/DeleteCategoryActivityController";
 import { ListAllActivitiesController } from "./modules/listAllActivities/useCases/listAllActivities/ListAllActivitiesController";
+import { ListActivitiesController } from "./modules/activity/useCases/listActivities/ListActivitiesController";
 import { CreateActivityController } from "./modules/activity/useCases/createActivity/CreateActivityController";
 import { UploadMaterialActivityController } from "./modules/materialActivity/useCases/uploadMaterialActivity/UploadMaterialActivityController";
 
@@ -51,6 +52,7 @@ const createCategoryActivityController = new CreateCategoryActivityController();
 const updateCategoryActivityController = new UpdateCategoryActivityController();
 const deleteCategoryActivityController = new DeleteCategoryActivityController();
 const listAllActivitiesController = new ListAllActivitiesController();
+const listActivitiesController = new ListActivitiesController();
 const createActivityController = new CreateActivityController();
 const uploadMaterialActivityController = new UploadMaterialActivityController();
 
@@ -113,6 +115,11 @@ routes.get(
   "/list-all-activities/:class_uid",
   ensureAuthenticated,
   listAllActivitiesController.handle
+);
+routes.get(
+  "/activity/:class_uid",
+  ensureAuthenticated,
+  listActivitiesController.handle
 );
 routes.post("/activity/", ensureAuthenticated, createActivityController.handle);
 routes.post(
