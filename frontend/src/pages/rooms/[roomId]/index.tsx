@@ -8,12 +8,14 @@ import {
     HStack,
     Image,
     SimpleGrid,
+    Spinner,
     Stack,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
+    Text,
     useColorModeValue,
     useMediaQuery,
     useToast,
@@ -26,7 +28,9 @@ import { useMutation } from "react-query";
 
 import { setupAPIClient } from "../../../services/api";
 import { queryClient } from "../../../services/queryClient";
+
 import { getClassUid } from "../../../services/hooks/useClassUid";
+import { useListActivities } from "../../../services/hooks/useListActivities";
 
 import { withSSRAuth } from "../../../utils/withSSRAuth";
 
@@ -95,6 +99,8 @@ export default function RoomId({ classes }: RoomIdProps) {
     const [classComment, setClassComment] = useState("");
 
     const [image, setImage] = useState(null);
+
+    const { data, isLoading, error } = useListActivities(classes.uid_class);
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(createClassFormSchema),
@@ -229,20 +235,32 @@ export default function RoomId({ classes }: RoomIdProps) {
 
                                 <TabPanels>
                                     <TabPanel>
-                                        <Wall
-                                            backgroundClass={`http://localhost:8000/files${classes.background_class}`}
-                                            nameClass={classes.name_class}
-                                            nameMatter={classes.name_matter_class}
-                                            classNotice={classNotice}
-                                            setClassNotice={setClassNotice}
-                                            avatarTeacher=""
-                                            nameTeacher="Wendel Cortes"
-                                            publicDateComment="12 de abril de 2020"
-                                            avatarStudent="https://github.com/neanderdev.png"
-                                            nameStudent="Neander de Souza"
-                                            classComment={classComment}
-                                            setClassComment={setClassComment}
-                                        />
+                                        {isLoading ? (
+                                            <Flex justify="center" alignItems="center">
+                                                <Spinner color="red" size="xl" />
+                                            </Flex>
+                                        ) : error ? (
+                                            <Flex justify="center" alignItems="center">
+                                                <Text fontWeight="bold" fontSize="xl">Erro ao buscar as atividades desta turma</Text>
+                                            </Flex>
+                                        ) : (
+                                            <Wall
+                                                classUid={classes.uid_class}
+                                                backgroundClass={`http://localhost:8000/files${classes.background_class}`}
+                                                nameClass={classes.name_class}
+                                                nameMatter={classes.name_matter_class}
+                                                classNotice={classNotice}
+                                                setClassNotice={setClassNotice}
+                                                avatarTeacher=""
+                                                nameTeacher="Wendel Cortes"
+                                                publicDateComment="12 de abril de 2020"
+                                                avatarStudent="https://github.com/neanderdev.png"
+                                                nameStudent="Neander de Souza"
+                                                classComment={classComment}
+                                                setClassComment={setClassComment}
+                                                activities={data}
+                                            />
+                                        )}
                                     </TabPanel>
 
                                     <TabPanel>

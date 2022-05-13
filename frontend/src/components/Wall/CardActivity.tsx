@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import {
     Box,
     Flex,
@@ -16,12 +17,15 @@ import { CgNotes } from "react-icons/cg";
 import { IoEllipsisVertical } from "react-icons/io5";
 
 interface CardActivityProps {
+    uid_activity: string;
     nameTeacher: string;
     nameActivity: string
-    publicDateActivity: string;
+    tipoActivity: string;
+    publicDateActivity: string | Date;
+    classUid: string;
 }
 
-export function CardActivity({ nameTeacher, nameActivity, publicDateActivity }: CardActivityProps) {
+export function CardActivity({ uid_activity, nameTeacher, nameActivity, tipoActivity, publicDateActivity, classUid }: CardActivityProps) {
     return (
         <Box
             w="full"
@@ -35,26 +39,28 @@ export function CardActivity({ nameTeacher, nameActivity, publicDateActivity }: 
                 bg: useColorModeValue("gray.100", "gray.800")
             }}
         >
-            <Flex w="full" cursor="pointer">
-                <Box
-                    w={12}
-                    h={12}
-                    bg="gray"
-                    rounded="full"
-                    my="6px"
-                    ml="12px"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    <CgNotes size={24} color="white" />
-                </Box>
+            <NextLink href={`/rooms/${classUid}/${uid_activity}`} passHref>
+                <Flex w="full" cursor="pointer">
+                    <Box
+                        w={12}
+                        h={12}
+                        bg="gray"
+                        rounded="full"
+                        my="6px"
+                        ml="12px"
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        <CgNotes size={24} color="white" />
+                    </Box>
 
-                <VStack ml={8} alignItems="start">
-                    <Text>{nameTeacher} Martins postou uma atividade: {nameActivity}</Text>
-                    <Text>{publicDateActivity}</Text>
-                </VStack>
-            </Flex>
+                    <VStack ml={8} alignItems="start">
+                        <Text>{nameTeacher} Martins postou uma {tipoActivity === "A" ? "atividade" : tipoActivity === "C" ? "chamada" : "material"}: {nameActivity}</Text>
+                        <Text>{publicDateActivity}</Text>
+                    </VStack>
+                </Flex>
+            </NextLink>
 
             <Box ml="auto" mr={4}>
                 <Popover>

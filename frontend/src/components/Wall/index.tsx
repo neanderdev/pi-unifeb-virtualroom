@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Flex, useMediaQuery, VStack } from "@chakra-ui/react";
+import { Flex, Text, useMediaQuery, VStack } from "@chakra-ui/react";
 
 import { HeaderWall } from "./HeaderWall";
 import { NextActivity } from "./NextActivity";
@@ -7,7 +7,31 @@ import { NoticeClass } from "./NoticeClass";
 import { CardActivity } from "./CardActivity";
 import { CommentNotice } from "./CommentNotice";
 
+interface CategoryActivity {
+    tipo_category_activity: string;
+}
+
+interface ClassUser {
+    user: {
+        name_user: string;
+        tipo_user: string;
+    };
+}
+
+interface Class {
+    ClassUser: ClassUser[];
+}
+
+interface Acitivities {
+    uid_activity: string;
+    name_activity: string;
+    createdAt_activity: Date | string;
+    category_activity: CategoryActivity;
+    class: Class;
+}
+
 interface WallProps {
+    classUid: string;
     backgroundClass: string;
     nameMatter: string;
     nameClass: string;
@@ -20,37 +44,25 @@ interface WallProps {
     nameStudent: string;
     classComment: string;
     setClassComment: Dispatch<SetStateAction<string>>;
+    activities: Acitivities[];
 }
 
-interface FakeActivityProps {
-    id: number;
-    nameTeacher: string;
-    nameActivity: string;
-    publicDateActivity: string;
-}
-
-const fakeActivity: Array<FakeActivityProps> = [
-    {
-        id: 1,
-        nameTeacher: "Wendel Cortes",
-        nameActivity: "Revisão P1",
-        publicDateActivity: "12 de abril de 2022",
-    },
-    {
-        id: 2,
-        nameTeacher: "Wendel Cortes",
-        nameActivity: "TDE 01",
-        publicDateActivity: "11 de abril de 2022",
-    },
-    {
-        id: 3,
-        nameTeacher: "Wendel Cortes",
-        nameActivity: "Materiais e Links",
-        publicDateActivity: "10 de abril de 2022",
-    },
-];
-
-export function Wall({ backgroundClass, nameMatter, nameClass, classNotice, setClassNotice, avatarTeacher, nameTeacher, publicDateComment, avatarStudent, nameStudent, classComment, setClassComment }: WallProps) {
+export function Wall({
+    classUid,
+    backgroundClass,
+    nameMatter,
+    nameClass,
+    classNotice,
+    setClassNotice,
+    avatarTeacher,
+    nameTeacher,
+    publicDateComment,
+    avatarStudent,
+    nameStudent,
+    classComment,
+    setClassComment,
+    activities
+}: WallProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     return (
@@ -68,14 +80,25 @@ export function Wall({ backgroundClass, nameMatter, nameClass, classNotice, setC
                 <VStack spacing={4} w="full">
                     <NoticeClass classNotice={classNotice} setClassNotice={setClassNotice} />
 
-                    {fakeActivity.map((activity) => (
-                        <CardActivity
-                            key={activity.id}
-                            nameTeacher={activity.nameTeacher}
-                            nameActivity={activity.nameActivity}
-                            publicDateActivity={activity.publicDateActivity}
-                        />
-                    ))}
+                    {activities.length === 0 ? (
+                        <Flex justify="center" alignItems="center">
+                            <Text fontWeight="bold" fontSize="xl">Essa turma não contém nenhum atividade.</Text>
+                        </Flex>
+                    ) : (
+                        <>
+                            {activities.map((activity) => (
+                                <CardActivity
+                                    key={activity.uid_activity}
+                                    uid_activity={activity.uid_activity}
+                                    nameTeacher={activity.class.ClassUser[0].user.name_user}
+                                    nameActivity={activity.name_activity}
+                                    tipoActivity={activity.category_activity.tipo_category_activity}
+                                    publicDateActivity={activity.createdAt_activity}
+                                    classUid={classUid}
+                                />
+                            ))}
+                        </>
+                    )}
 
                     <CommentNotice
                         avatarTeacher={avatarTeacher}
