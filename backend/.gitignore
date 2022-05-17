@@ -5,3 +5,4 @@ node_modules
 !*/tmp/class/background-class-padrao.png 
 /tmp/class/*
 /tmp/materialActivity/*
+/tmp/materialDetailActivity/*

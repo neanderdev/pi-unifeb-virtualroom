@@ -18,6 +18,9 @@ export class ListActivitiesUseCase {
       where: {
         class_uid,
       },
+      orderBy: {
+        createdAt_activity: "desc",
+      },
       select: {
         uid_activity: true,
         name_activity: true,

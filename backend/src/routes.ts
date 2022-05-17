@@ -28,11 +28,16 @@ import { ListActivitiesController } from "./modules/activity/useCases/listActivi
 import { CreateActivityController } from "./modules/activity/useCases/createActivity/CreateActivityController";
 import { UploadMaterialActivityController } from "./modules/materialActivity/useCases/uploadMaterialActivity/UploadMaterialActivityController";
 import { FindByActivityUidController } from "./modules/activity/useCases/findByUidAcitivity/FindByActivityUidController";
+import { CreateDetailActivityController } from "./modules/detailActivity/createDetailActivity/CreateDetailActivityController";
+import { UploadMaterialDetailActivityController } from "./modules/detailActivity/uploadMaterialDetailActivity/UploadMaterialDetailActivityController";
 
 const routes = Router();
 
 const uploadClass = multer(upload.upload("./tmp/class"));
 const uploadMaterialActivity = multer(upload.upload("./tmp/materialActivity"));
+const uploadMaterialDetailActivity = multer(
+  upload.upload("./tmp/materialDetailActivity")
+);
 
 const loginController = new LoginController();
 const refreshTokenController = new RefreshTokenController();
@@ -57,6 +62,9 @@ const listActivitiesController = new ListActivitiesController();
 const createActivityController = new CreateActivityController();
 const uploadMaterialActivityController = new UploadMaterialActivityController();
 const findByActivityUidController = new FindByActivityUidController();
+const createDetailActivityController = new CreateDetailActivityController();
+const uploadMaterialDetailActivityController =
+  new UploadMaterialDetailActivityController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -134,6 +142,17 @@ routes.get(
   "/find-by-activity-uid/:uid_activity",
   ensureAuthenticated,
   findByActivityUidController.handle
+);
+routes.post(
+  "/detail-activity/",
+  ensureAuthenticated,
+  createDetailActivityController.handle
+);
+routes.post(
+  "/upload-material-detail-activity/:detail_activity_id",
+  ensureAuthenticated,
+  uploadMaterialDetailActivity.array("detail_activity"),
+  uploadMaterialDetailActivityController.handle
 );
 
 export { routes };
