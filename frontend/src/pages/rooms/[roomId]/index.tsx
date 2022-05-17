@@ -64,7 +64,6 @@ interface Class {
     ClassUser: ClassUser[];
 };
 
-
 interface RoomIdProps {
     classes: Class,
 }

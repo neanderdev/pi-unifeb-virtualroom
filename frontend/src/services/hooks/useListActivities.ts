@@ -58,7 +58,7 @@ export function useListActivities(
   options?: UseQueryOptions
 ): UseQueryResult<GetListActivitiesResponse, unknown> {
   return useQuery(
-    ["allActivities", class_uid],
+    ["listActivities", class_uid],
     () => getListActivities(class_uid),
     {
       staleTime: 1000 * 60 * 5, // 5 minutes

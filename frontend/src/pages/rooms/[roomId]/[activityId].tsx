@@ -1,23 +1,38 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { Box, Stack, useMediaQuery } from "@chakra-ui/react";
+
+import { getClassUid } from "../../../services/hooks/useClassUid";
+import { useFindByActivityUid } from "../../../services/hooks/useFindByActivityUid";
+
+import { withSSRAuth } from "../../../utils/withSSRAuth";
 
 import { Navbar } from "../../../components/Navbar";
 import { Sidebar } from "../../../components/Sidebar";
 import { MobileSidebar } from "../../../components/Sidebar/MobileSidebar";
 import { DetailActivity } from "../../../components/DetailActivity";
 
-export default function ActivityId() {
+interface ActivityIdProps {
+    name_class: string;
+    name_matter: string;
+}
+
+export default function ActivityId({ name_class, name_matter }: ActivityIdProps) {
+    const router = useRouter();
+
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const [commentPrivate, setCommentPrivate] = useState("");
 
+    const { data, isLoading, error } = useFindByActivityUid(router.query.activityId as string);
+
     return (
         <Box>
             <Navbar
-                title="Programação Orientada a Objeto"
+                title={name_matter}
                 isRoom
-                nameClass="SIN.3.TU - 2022/1"
-                nameMatter="Programação Orientada a Objeto"
+                nameClass={name_class}
+                nameMatter={name_matter}
             />
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
@@ -31,6 +46,9 @@ export default function ActivityId() {
                             h="3rem"
                         >
                             <DetailActivity
+                                isLoading={isLoading}
+                                error={error}
+                                data={data}
                                 avatarPrivateComment="https://github.com/neanderdev.png"
                                 namePrivateComment="Neander de Souza"
                                 commentPrivate={commentPrivate}
@@ -43,3 +61,14 @@ export default function ActivityId() {
         </Box>
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const { classes } = await getClassUid(ctx.params.roomId as string, ctx);
+
+    return {
+        props: {
+            name_class: classes.name_class,
+            name_matter: classes.name_matter_class,
+        }
+    };
+})

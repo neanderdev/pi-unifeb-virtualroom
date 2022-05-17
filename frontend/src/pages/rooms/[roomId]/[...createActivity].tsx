@@ -184,7 +184,7 @@ export default function CreateActivity() {
 
     const { errors } = formState;
 
-    const [teste, setTeste] = useState([]);
+    const [materiaisIsBlob, setMateriaisIsBlob] = useState([]);
     const [materiais, setMateriais] = useState<Materiais[]>([]);
     const [links, setLinks] = useState<Links[]>([]);
 
@@ -216,9 +216,12 @@ export default function CreateActivity() {
             if (materiais.length > 0 || links.length > 0) {
                 let formData = new FormData();
 
-                teste.map((material) => formData.append("materiais", material));
+                materiaisIsBlob.map((material) => formData.append("materiais", material));
 
-                links.map((link) => formData.append("links", link.name_link));
+                links.map((link) => formData.append("links", JSON.stringify({
+                    name: link.name_link,
+                    link: link.link,
+                }) as any));
 
                 await uploadMaterialAndLinkFromClass.mutateAsync({ activity_uid: data.uid_activity, formData });
             }
@@ -247,10 +250,6 @@ export default function CreateActivity() {
         }
 
         Object.keys(files).forEach((key) => {
-            setTeste([
-                ...teste,
-                files[key],
-            ]);
             const material = {
                 blobURL: null,
                 name: null,
@@ -272,6 +271,15 @@ export default function CreateActivity() {
             material.size = files[key].size;
             material.type = files[key].type;
             material.webkitRelativePath = files[key].webkitRelativePath;
+
+            const isExistsMateriaisIsBlob = materiaisIsBlob.filter((mat) => mat.name === material.name);
+
+            if (isExistsMateriaisIsBlob.length === 0) {
+                setMateriaisIsBlob([
+                    ...materiaisIsBlob,
+                    files[key],
+                ]);
+            }
 
             const isExistsMaterial = materiais.filter((mat) => mat.name === material.name);
 
