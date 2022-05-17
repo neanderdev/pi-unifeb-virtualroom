@@ -152,7 +152,7 @@ export function CardDetailActivity({
                             </Flex>
 
                             <IconButton
-                                aria-label="Remover material"
+                                aria-label="Fazer download do material"
                                 width="10"
                                 height="12"
                                 variant="unstyled"
@@ -209,7 +209,7 @@ export function CardDetailActivity({
                             </Flex>
 
                             <IconButton
-                                aria-label="Remover material"
+                                aria-label="Fazer download do material"
                                 width="10"
                                 height="12"
                                 variant="unstyled"
@@ -266,7 +266,7 @@ export function CardDetailActivity({
                             </Flex>
 
                             <IconButton
-                                aria-label="Remover material"
+                                aria-label="Fazer download do material"
                                 width="10"
                                 height="12"
                                 variant="unstyled"
@@ -323,7 +323,7 @@ export function CardDetailActivity({
                             </Flex>
 
                             <IconButton
-                                aria-label="Remover material"
+                                aria-label="Fazer download do material"
                                 width="10"
                                 height="12"
                                 variant="unstyled"

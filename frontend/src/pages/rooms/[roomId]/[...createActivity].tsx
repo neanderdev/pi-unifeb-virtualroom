@@ -67,6 +67,7 @@ interface CreateActivityFromClassFormData {
     name_activity: string;
     dt_entrega_activity: string | Date;
     isAcceptWithDelay_Activity: boolean;
+    isEntregue_activity: boolean;
     nota_max_activity: number;
     content_activity: string;
     class_uid: string;
@@ -197,6 +198,7 @@ export default function CreateActivity() {
                 name_activity: values.name_activity,
                 dt_entrega_activity: router.query.createActivity[0] === 'A' || router.query.createActivity[0] === 'C' ? values.dt_entrega_activity : new Date(),
                 isAcceptWithDelay_Activity: router.query.createActivity[0] === 'A' ? values.isAcceptWithDelay_Activity : false,
+                isEntregue_activity: router.query.createActivity[0] === 'A' || router.query.createActivity[0] === 'C' ? true : false,
                 nota_max_activity: router.query.createActivity[0] === 'A' ? values.nota_max_activity : 0,
                 content_activity: values.content_activity,
                 class_uid: router.query.roomId as string,

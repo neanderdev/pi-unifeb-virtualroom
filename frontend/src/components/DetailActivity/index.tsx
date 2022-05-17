@@ -63,7 +63,7 @@ export function DetailActivity({ isLoading, error, data, avatarPrivateComment, n
             )}
 
             <Stack direction="column" spacing={4}>
-                <CardFinallizedActivity />
+                {!isLoading && !error && data.isEntregue_activity && <CardFinallizedActivity />}
 
                 <CardPrivateComment
                     avatarPrivateComment={avatarPrivateComment}
