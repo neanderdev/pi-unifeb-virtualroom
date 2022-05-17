@@ -27,6 +27,7 @@ import { ListAllActivitiesController } from "./modules/listAllActivities/useCase
 import { ListActivitiesController } from "./modules/activity/useCases/listActivities/ListActivitiesController";
 import { CreateActivityController } from "./modules/activity/useCases/createActivity/CreateActivityController";
 import { UploadMaterialActivityController } from "./modules/materialActivity/useCases/uploadMaterialActivity/UploadMaterialActivityController";
+import { FindByActivityUidController } from "./modules/activity/useCases/findByUidAcitivity/FindByActivityUidController";
 
 const routes = Router();
 
@@ -55,6 +56,7 @@ const listAllActivitiesController = new ListAllActivitiesController();
 const listActivitiesController = new ListActivitiesController();
 const createActivityController = new CreateActivityController();
 const uploadMaterialActivityController = new UploadMaterialActivityController();
+const findByActivityUidController = new FindByActivityUidController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -127,6 +129,11 @@ routes.post(
   ensureAuthenticated,
   uploadMaterialActivity.array("materiais"),
   uploadMaterialActivityController.handle
+);
+routes.get(
+  "/find-by-activity-uid/:uid_activity",
+  ensureAuthenticated,
+  findByActivityUidController.handle
 );
 
 export { routes };

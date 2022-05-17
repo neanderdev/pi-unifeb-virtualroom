@@ -4,10 +4,21 @@ import { AppError } from "../../../../errors/AppError";
 
 import { deleteFile } from "../../../../utils/file";
 
+interface ILinks {
+  name: string;
+  link: string;
+}
+
+interface IFiles {
+  filename: string;
+  originalname: string;
+  size: number;
+}
+
 interface IUploadMaterialActivity {
   activity_uid: string;
-  materiais_name: string[];
-  links: string[];
+  materiais_name: IFiles[];
+  links: ILinks[] | any;
 }
 
 export class UploadMaterialActivityUseCase {
@@ -50,7 +61,9 @@ export class UploadMaterialActivityUseCase {
       if (file) {
         await prisma.materialActivity.create({
           data: {
-            link_material_activity: `/materialActivity/${file}`,
+            link_material_activity: `/materialActivity/${file.filename}`,
+            name_material_activity: file.originalname,
+            size_material_activity: file.size,
             tipo_material_activity: "M",
             activity_uid,
           },
@@ -59,10 +72,12 @@ export class UploadMaterialActivityUseCase {
     });
 
     links.map(async (link) => {
-      if (link) {
+      if (JSON.parse(link)) {
         await prisma.materialActivity.create({
           data: {
-            link_material_activity: link,
+            link_material_activity: JSON.parse(link).link,
+            name_material_activity: JSON.parse(link).name,
+            size_material_activity: 0,
             tipo_material_activity: "L",
             activity_uid,
           },

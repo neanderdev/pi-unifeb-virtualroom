@@ -4,6 +4,13 @@ import { UploadMaterialActivityUseCase } from "./UploadMaterialActivityUseCase";
 
 interface IFiles {
   filename: string;
+  originalname: string;
+  size: number;
+}
+
+interface ILinks {
+  name: string;
+  link: string;
 }
 
 export class UploadMaterialActivityController {
@@ -11,17 +18,23 @@ export class UploadMaterialActivityController {
     const { activity_uid } = request.params;
 
     const materiais = request.files as IFiles[];
-    let links = [];
+    let links = [] as ILinks[];
 
     if (!Array.isArray(request.body.links)) {
-      links.push(request.body.links);
+      links.push(request.body.links as ILinks);
     } else {
-      links = request.body.links;
+      links = request.body.links as ILinks[];
     }
 
     const uploadMaterialActivityUseCase = new UploadMaterialActivityUseCase();
 
-    const materiais_name = materiais.map((file) => file.filename);
+    const materiais_name = materiais.map((file) => {
+      return {
+        filename: file.filename,
+        originalname: file.originalname,
+        size: file.size,
+      };
+    });
 
     await uploadMaterialActivityUseCase.execute({
       activity_uid,

@@ -119,6 +119,8 @@ model Activity {
 model MaterialActivity {
   id_material_activity   Int      @id @default(autoincrement())
   link_material_activity String   @db.VarChar(180)
+  name_material_activity String   @default("") @db.VarChar(80)
+  size_material_activity Int      @default(0)
   tipo_material_activity String   @default("M") @db.Char(1)
   activity_uid           String
   activity               Activity @relation(fields: [activity_uid], references: [uid_activity])
