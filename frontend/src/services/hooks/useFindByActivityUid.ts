@@ -15,7 +15,8 @@ interface FindByActivityUidResponse {
   uid_activity: string;
   name_activity: string;
   content_activity: string;
-  dt_entrega_activity: Date | string;
+  dt_entrega_activity: Date;
+  dt_entrega_activity_formated: string;
   isAcceptWithDelay_Activity: boolean;
   nota_max_activity: number;
   isEntregue_activity: boolean;
@@ -36,7 +37,7 @@ export async function getFindByActivityUid(
   );
 
   if (data) {
-    data.dt_entrega_activity = new Date(
+    data.dt_entrega_activity_formated = new Date(
       data?.dt_entrega_activity
     ).toLocaleDateString("pt-BR", {
       day: "2-digit",

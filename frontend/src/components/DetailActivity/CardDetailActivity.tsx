@@ -13,7 +13,7 @@ interface MaterialActivity {
 interface CardDetailActivityProps {
     name_activity: string;
     content_activity: string;
-    dt_entrega_activity: string | Date;
+    dt_entrega_activity_formated: string;
     isEntregue_activity: boolean;
     createdAt_activity: string | Date;
     updatedAt_activity: string | Date;
@@ -24,7 +24,7 @@ interface CardDetailActivityProps {
 export function CardDetailActivity({
     name_activity,
     content_activity,
-    dt_entrega_activity,
+    dt_entrega_activity_formated,
     isEntregue_activity,
     createdAt_activity,
     updatedAt_activity,
@@ -79,7 +79,7 @@ export function CardDetailActivity({
                     fontWeight="normal"
                     fontSize="md"
                 >
-                    {isEntregue_activity && `Data de entrega: ${dt_entrega_activity}`}
+                    {isEntregue_activity && `Data de entrega: ${dt_entrega_activity_formated}`}
                 </Text>
             </Box>
 

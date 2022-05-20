@@ -8,7 +8,6 @@ import { useMutation } from "react-query";
 
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
-import { useMe } from "../../services/hooks/useMe";
 
 import { useModal } from "../../contexts/ModalContext";
 
@@ -31,15 +30,41 @@ interface UploadMaterialDetailActivityFormData {
     formData: any;
 };
 
-export function CardFinallizedActivity() {
+interface MaterialDetailActivity {
+    id_material_detail_activity: number;
+    link_material_detail_activity: string;
+    detail_activity_id: number;
+    name_material_detail_activity: string;
+    size_material_detail_activity: number;
+};
+
+interface CardFinallizedActivityProps {
+    ra_user: number;
+    roles: any;
+    dt_entrega_activity: Date;
+    isAcceptWithDelay_Activity: boolean;
+    nota_max_activity: number;
+    dt_isEntrega_detail_acitivity: Date | string;
+    nota_user: number;
+    MaterialDetailActivity: MaterialDetailActivity[];
+};
+
+export function CardFinallizedActivity({
+    ra_user,
+    roles,
+    dt_entrega_activity,
+    isAcceptWithDelay_Activity,
+    nota_max_activity,
+    dt_isEntrega_detail_acitivity,
+    nota_user,
+    MaterialDetailActivity
+}: CardFinallizedActivityProps) {
     const router = useRouter();
     const { isOpen, onClose, onOpen } = useModal();
     const toast = useToast();
 
-    const [isFinished, setIsFinished] = useState(false);
+    const [isFinished, setIsFinished] = useState(!dt_isEntrega_detail_acitivity ? false : true);
     const [attachmentArchives, setAttachmentArchives] = useState([]);
-
-    const { data } = useMe();
 
     const createMaterialDetailActivity = useMutation(async (materialDetailActivity: CreateMaterialDetailActivityFormData) => {
         const apiClient = setupAPIClient();
@@ -73,11 +98,22 @@ export function CardFinallizedActivity() {
         },
     });
 
+    const handleAddJobs = () => {
+        const dateNow = new Date();
+        const dateEntregaActivity = new Date(dt_entrega_activity);
+
+        if (dateEntregaActivity >= dateNow || isAcceptWithDelay_Activity) {
+            onOpen();
+        } else {
+            alert("Essa atividade passou do prazo, você não poderá-la enviar mais!");
+        }
+    };
+
     const handleSendTask = async () => {
         const newMaterialDetailActivity = {
             dt_isEntrega_detail_acitivity: new Date(),
             activity_uid: router.query.activityId as string,
-            ra_user: data.me.ra_user,
+            ra_user: ra_user,
         };
 
         try {
@@ -400,13 +436,13 @@ export function CardFinallizedActivity() {
                 </Flex>
 
                 <VStack w="full" my={4}>
-                    {["admin", "teacher"].includes(data.me.roles) ? (
+                    {["admin", "teacher"].includes(roles) ? (
                         <Button colorScheme='gray' variant='solid' onClick={() => alert("Ver notas")}>
                             Ver notas
                         </Button>
                     ) : !isFinished ? (
                         <>
-                            <Button colorScheme='gray' variant='solid' onClick={onOpen}>
+                            <Button colorScheme='gray' variant='solid' onClick={handleAddJobs}>
                                 Adicionar trabalho
                             </Button>
 
@@ -420,6 +456,16 @@ export function CardFinallizedActivity() {
                         </Button>
                     )}
                 </VStack>
+
+                <Flex justifyContent="end" alignItems="center" m={2}>
+                    <Text
+                        fontSize="lg"
+                        fontWeight="bold"
+                        color={(new Date(dt_entrega_activity) >= new Date() || isAcceptWithDelay_Activity) ? "red.500" : "green.500"}
+                    >
+                        {nota_max_activity > 0 && `${nota_user ?? 0} / ${nota_max_activity}`}
+                    </Text>
+                </Flex>
             </Box>
 
             <Modal

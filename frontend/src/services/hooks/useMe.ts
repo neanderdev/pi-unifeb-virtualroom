@@ -4,6 +4,7 @@ import { useQuery, UseQueryOptions, UseQueryResult } from "react-query";
 import { setupAPIClient } from "../api";
 
 interface Me {
+  uid_user: string;
   cpf_cnpj_user: string;
   email_user: string;
   ra_user: number;

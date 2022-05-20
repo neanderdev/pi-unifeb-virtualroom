@@ -13,6 +13,7 @@ import { ClassCard } from "../../components/ClassCard";
 import { Can } from "../../components/Can";
 
 interface Me {
+    uid_user: string;
     cpf_cnpj_user: string;
     email_user: string;
     ra_user: number;
