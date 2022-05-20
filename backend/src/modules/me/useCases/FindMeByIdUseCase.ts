@@ -15,6 +15,7 @@ export class FindMeByIdUseCase {
     }
 
     return {
+      uid_user: user?.uid_user,
       ra_user: user?.ra_user,
       email_user: user?.email_user,
       cpf_cnpj_user: user?.cpf_cnpj_user,
