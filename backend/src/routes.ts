@@ -31,6 +31,7 @@ import { FindByActivityUidController } from "./modules/activity/useCases/findByU
 import { CreateDetailActivityController } from "./modules/detailActivity/createDetailActivity/CreateDetailActivityController";
 import { UploadMaterialDetailActivityController } from "./modules/detailActivity/uploadMaterialDetailActivity/UploadMaterialDetailActivityController";
 import { FindDetailActivityByUserUidController } from "./modules/detailActivity/findDetailActivityByUserUid/FindDetailActivityByUserUidController";
+import { DeleteDetailActivityController } from "./modules/detailActivity/deleteDetailActivity/DeleteDetailActivityController";
 
 const routes = Router();
 
@@ -68,6 +69,7 @@ const uploadMaterialDetailActivityController =
   new UploadMaterialDetailActivityController();
 const findDetailActivityByUserUidController =
   new FindDetailActivityByUserUidController();
+const deleteDetailActivityController = new DeleteDetailActivityController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -161,6 +163,11 @@ routes.get(
   "/detail-activity/:activity_uid/:user_uid",
   ensureAuthenticated,
   findDetailActivityByUserUidController.handle
+);
+routes.delete(
+  "/detail-activity/:activity_uid/:user_uid",
+  ensureAuthenticated,
+  deleteDetailActivityController.handle
 );
 
 export { routes };
