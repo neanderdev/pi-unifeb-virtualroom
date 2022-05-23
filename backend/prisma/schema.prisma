@@ -33,9 +33,11 @@ model User {
   tipo_user          String   @default("S") @db.Char(1)
   roles              Roles    @default(student)
 
-  UserToken      UserToken[]
-  ClassUser      ClassUser[]
-  DetailActivity DetailActivity[]
+  UserToken         UserToken[]
+  ClassUser         ClassUser[]
+  DetailActivity    DetailActivity[]
+  ClassNotice       ClassNotice[]
+  ClassNoticeAnswer ClassNoticeAnswer[]
 
   @@map("user")
 }
@@ -69,6 +71,7 @@ model Class {
   ClassUser        ClassUser[]
   CategoryActivity CategoryActivity[]
   Activity         Activity[]
+  ClassNotice      ClassNotice[]
 
   @@map("class")
 }
@@ -151,4 +154,30 @@ model MaterialDetailActivity {
   detail_activity               DetailActivity @relation(fields: [detail_activity_id], references: [id_detail_activity])
 
   @@map("material_detail_activity")
+}
+
+model ClassNotice {
+  id_class_notice        Int      @id @default(autoincrement())
+  message                String   @db.VarChar(250)
+  createdAt_class_notice DateTime @default(now())
+  user_uid               String
+  user                   User     @relation(fields: [user_uid], references: [uid_user])
+  class_uid              String
+  class                  Class    @relation(fields: [class_uid], references: [uid_class])
+
+  ClassNoticeAnswer ClassNoticeAnswer[]
+
+  @@map("class_notice")
+}
+
+model ClassNoticeAnswer {
+  id_class_notice_answer        Int         @id @default(autoincrement())
+  message                       String      @db.VarChar(250)
+  createdAt_class_notice_answer DateTime    @default(now())
+  user_uid                      String
+  user                          User        @relation(fields: [user_uid], references: [uid_user])
+  class_notice_id               Int
+  class_notice                  ClassNotice @relation(fields: [class_notice_id], references: [id_class_notice])
+
+  @@map("class_notice_answer")
 }

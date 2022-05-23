@@ -32,6 +32,9 @@ import { CreateDetailActivityController } from "./modules/detailActivity/createD
 import { UploadMaterialDetailActivityController } from "./modules/detailActivity/uploadMaterialDetailActivity/UploadMaterialDetailActivityController";
 import { FindDetailActivityByUserUidController } from "./modules/detailActivity/findDetailActivityByUserUid/FindDetailActivityByUserUidController";
 import { DeleteDetailActivityController } from "./modules/detailActivity/deleteDetailActivity/DeleteDetailActivityController";
+import { ListAllClassNoticeController } from "./modules/classNotice/useCases/listAllClassNotice/ListAllClassNoticeController";
+import { CreateClassNoticeController } from "./modules/classNotice/useCases/createClassNotice/CreateClassNoticeController";
+import { CreateClassNoticeAnswerController } from "./modules/classNoticeAnswer/useCases/createClassNoticeAnswer/CreateClassNoticeAnswerController";
 
 const routes = Router();
 
@@ -70,6 +73,10 @@ const uploadMaterialDetailActivityController =
 const findDetailActivityByUserUidController =
   new FindDetailActivityByUserUidController();
 const deleteDetailActivityController = new DeleteDetailActivityController();
+const listAllClassNoticeController = new ListAllClassNoticeController();
+const createClassNoticeController = new CreateClassNoticeController();
+const createClassNoticeAnswerController =
+  new CreateClassNoticeAnswerController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -168,6 +175,21 @@ routes.delete(
   "/detail-activity/:activity_uid/:user_uid",
   ensureAuthenticated,
   deleteDetailActivityController.handle
+);
+routes.get(
+  "/list-all-class-notice/:class_uid",
+  ensureAuthenticated,
+  listAllClassNoticeController.handle
+);
+routes.post(
+  "/class-notice/",
+  ensureAuthenticated,
+  createClassNoticeController.handle
+);
+routes.post(
+  "/class-notice-answer/",
+  ensureAuthenticated,
+  createClassNoticeAnswerController.handle
 );
 
 export { routes };
