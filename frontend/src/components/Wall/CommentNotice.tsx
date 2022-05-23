@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import {
     Avatar,
     Box,
@@ -13,46 +13,104 @@ import {
     IconButton,
     Portal,
     PopoverContent,
-    LinkOverlay
+    LinkOverlay,
+    useToast
 } from "@chakra-ui/react";
 import { BiSend } from "react-icons/bi";
 import { IoEllipsisVertical } from "react-icons/io5";
+import { useMutation } from 'react-query';
+
+import { setupAPIClient } from "../../services/api";
+import { queryClient } from '../../services/queryClient';
 
 import { Comment } from "./Comment";
 
+interface User {
+    name_user: string;
+};
+
+interface ClassNoticeAnswer {
+    id_class_notice_answer: number;
+    message: string;
+    createdAt_class_notice_answer: Date | string;
+    user_uid: string;
+    class_notice_id: number;
+    user: User;
+};
+
 interface CommentNoticeProps {
+    user_uid: string;
+    classNoticeId: number;
+    message: string;
     avatarTeacher: string;
     nameTeacher: string;
-    publicDateComment: string;
+    publicDateComment: Date | string;
+    classNoticeAnswer: ClassNoticeAnswer[];
     avatarStudent: string;
     nameStudent: string;
-    classComment: string;
-    setClassComment: Dispatch<SetStateAction<string>>;
-}
+};
 
-interface FakeCommentProps {
-    id: number;
-    avatarStudent: string;
-    nameStudent: string;
-    commentStudent: string;
-}
+interface CreateClassNoticeAnswerFormData {
+    message: string;
+    user_uid: string;
+    class_notice_id: number;
+};
 
-const fakeComment: Array<FakeCommentProps> = [
-    {
-        id: 1,
-        avatarStudent: "https://github.com/neanderdev.png",
-        nameStudent: "Neander de Souza",
-        commentStudent: "Bom dia professor, tamo junto 🚀",
-    },
-    {
-        id: 2,
-        avatarStudent: "",
-        nameStudent: "Vinicius Cardoso",
-        commentStudent: "Bom dia napa, tamo junto 💕",
-    }
-];
+interface GetResponseCreateClassNoticeAnswer {
+    id_class_notice_answer: number;
+    message: string;
+    createdAt_class_notice_answer: Date;
+    user_uid: string;
+    class_notice_id: number;
+};
 
-export function CommentNotice({ avatarTeacher, nameTeacher, publicDateComment, avatarStudent, nameStudent, classComment, setClassComment }: CommentNoticeProps) {
+export function CommentNotice({ user_uid, classNoticeId, message, avatarTeacher, nameTeacher, publicDateComment, classNoticeAnswer, avatarStudent, nameStudent }: CommentNoticeProps) {
+    const toast = useToast();
+    const [classComment, setClassComment] = useState("");
+
+    const createClassNoticeAnswer = useMutation(async (createClassNoticeAnswer: CreateClassNoticeAnswerFormData) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.post<GetResponseCreateClassNoticeAnswer>('class-notice-answer', createClassNoticeAnswer);
+
+        return response.data;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('classNotice')
+        },
+    });
+
+    const handleCreateClassNoticeAnswer = async () => {
+        try {
+            const createClassNoticeAnswerFormData = {
+                message: classComment,
+                user_uid: user_uid,
+                class_notice_id: classNoticeId,
+            };
+
+            await createClassNoticeAnswer.mutateAsync(createClassNoticeAnswerFormData);
+
+            toast({
+                title: 'Comentário do aviso criado',
+                description: "Comentário do aviso criado criada com sucesso",
+                status: 'success',
+                duration: 1500,
+                isClosable: true,
+            });
+
+            setClassComment("");
+        } catch (err) {
+            console.log(err);
+
+            toast({
+                title: 'Erro ao criar comentário do aviso',
+                description: `Erro: ${err.message}`,
+                status: 'error',
+                duration: 1500,
+                isClosable: true,
+            });
+        }
+    };
+
     return (
         <Box
             w="full"
@@ -127,18 +185,18 @@ export function CommentNotice({ avatarTeacher, nameTeacher, publicDateComment, a
                     my="6px"
                     ml="12px"
                 >
-                    <Text>Bom dia pessoal, sejam bem vindos ao nosso ambiente virtual!</Text>
+                    <Text>{message}</Text>
 
                 </Box>
 
                 <Divider orientation='horizontal' />
 
-                {fakeComment.map((comment) => (
+                {classNoticeAnswer.map((answerClassNotice) => (
                     <Comment
-                        key={comment.id}
-                        avatarStudent={comment.avatarStudent}
-                        nameStudent={comment.nameStudent}
-                        commentStudent={comment.commentStudent}
+                        key={answerClassNotice.id_class_notice_answer}
+                        avatarStudent={answerClassNotice.user.name_user}
+                        nameStudent={answerClassNotice.user.name_user}
+                        commentStudent={answerClassNotice.message}
                     />
                 ))}
 
@@ -190,7 +248,7 @@ export function CommentNotice({ avatarTeacher, nameTeacher, publicDateComment, a
                             color={classComment !== "" ? "gray.500" : "gray.200"}
                             cursor={classComment !== "" ? "pointer" : "not-allowed"}
                             title="Postar"
-                            onClick={() => classComment !== "" && alert(classComment)}
+                            onClick={classComment !== "" ? handleCreateClassNoticeAnswer : null}
                         />
                     </Flex>
                 </Box>

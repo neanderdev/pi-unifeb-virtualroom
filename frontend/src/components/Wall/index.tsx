@@ -9,18 +9,18 @@ import { CommentNotice } from "./CommentNotice";
 
 interface CategoryActivity {
     tipo_category_activity: string;
-}
+};
 
 interface ClassUser {
     user: {
         name_user: string;
         tipo_user: string;
     };
-}
+};
 
 interface Class {
     ClassUser: ClassUser[];
-}
+};
 
 interface Acitivities {
     uid_activity: string;
@@ -28,39 +28,56 @@ interface Acitivities {
     createdAt_activity: Date | string;
     category_activity: CategoryActivity;
     class: Class;
-}
+};
+
+interface User {
+    name_user: string;
+};
+
+interface ClassNoticeAnswer {
+    id_class_notice_answer: number;
+    message: string;
+    createdAt_class_notice_answer: Date | string;
+    user_uid: string;
+    class_notice_id: number;
+    user: User;
+};
+
+interface ClassNotice {
+    id_class_notice: number;
+    message: string;
+    createdAt_class_notice: Date | string;
+    user_uid: string;
+    class_uid: string;
+    ClassNoticeAnswer: ClassNoticeAnswer[];
+    user: User;
+};
 
 interface WallProps {
+    user_uid: string;
     classUid: string;
     backgroundClass: string;
     nameMatter: string;
     nameClass: string;
+    classNotices: ClassNotice[];
     classNotice: string;
     setClassNotice: Dispatch<SetStateAction<string>>;
-    avatarTeacher: string;
-    nameTeacher: string;
-    publicDateComment: string;
     avatarStudent: string;
     nameStudent: string;
-    classComment: string;
-    setClassComment: Dispatch<SetStateAction<string>>;
     activities: Acitivities[];
 }
 
 export function Wall({
+    user_uid,
     classUid,
     backgroundClass,
     nameMatter,
     nameClass,
+    classNotices,
     classNotice,
     setClassNotice,
-    avatarTeacher,
-    nameTeacher,
-    publicDateComment,
     avatarStudent,
     nameStudent,
-    classComment,
-    setClassComment,
     activities
 }: WallProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -78,7 +95,7 @@ export function Wall({
                 )}
 
                 <VStack spacing={4} w="full">
-                    <NoticeClass classNotice={classNotice} setClassNotice={setClassNotice} />
+                    <NoticeClass classUid={classUid} user_uid={user_uid} classNotice={classNotice} setClassNotice={setClassNotice} />
 
                     {activities.length === 0 ? (
                         <Flex justify="center" alignItems="center">
@@ -100,15 +117,20 @@ export function Wall({
                         </>
                     )}
 
-                    <CommentNotice
-                        avatarTeacher={avatarTeacher}
-                        nameTeacher={nameTeacher}
-                        publicDateComment={publicDateComment}
-                        avatarStudent={avatarStudent}
-                        nameStudent={nameStudent}
-                        classComment={classComment}
-                        setClassComment={setClassComment}
-                    />
+                    {classNotices.map((classNotice) => (
+                        <CommentNotice
+                            key={classNotice.id_class_notice}
+                            user_uid={user_uid}
+                            classNoticeId={classNotice.id_class_notice}
+                            avatarTeacher={classNotice.user.name_user}
+                            message={classNotice.message}
+                            nameTeacher={classNotice.user.name_user}
+                            publicDateComment={classNotice.createdAt_class_notice}
+                            classNoticeAnswer={classNotice.ClassNoticeAnswer}
+                            avatarStudent={avatarStudent}
+                            nameStudent={nameStudent}
+                        />
+                    ))}
                 </VStack>
             </Flex>
         </Flex>

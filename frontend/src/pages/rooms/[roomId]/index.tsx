@@ -30,6 +30,8 @@ import { setupAPIClient } from "../../../services/api";
 import { queryClient } from "../../../services/queryClient";
 
 import { getClassUid } from "../../../services/hooks/useClassUid";
+import { getAllClassNotice } from "../../../services/hooks/useAllClassNotice";
+import { getMe } from "../../../services/hooks/useMe";
 import { useListActivities } from "../../../services/hooks/useListActivities";
 
 import { withSSRAuth } from "../../../utils/withSSRAuth";
@@ -64,8 +66,34 @@ interface Class {
     ClassUser: ClassUser[];
 };
 
+interface User {
+    name_user: string;
+};
+
+interface ClassNoticeAnswer {
+    id_class_notice_answer: number;
+    message: string;
+    createdAt_class_notice_answer: Date | string;
+    user_uid: string;
+    class_notice_id: number;
+    user: User;
+};
+
+interface ClassNotice {
+    id_class_notice: number;
+    message: string;
+    createdAt_class_notice: Date | string;
+    user_uid: string;
+    class_uid: string;
+    ClassNoticeAnswer: ClassNoticeAnswer[];
+    user: User;
+};
+
 interface RoomIdProps {
-    classes: Class,
+    classes: Class;
+    classNotices: ClassNotice[];
+    uid_user: string;
+    ra_user: number;
 }
 
 interface UpdateClassFormData {
@@ -89,13 +117,12 @@ const createClassFormSchema = yup.object().shape({
         .test("interface", "Aceita apenas os formatos: .png, .jpeg e .jpg", (value) => !value[0] || (value[0] && ["image/png", "image/jpeg", "image/jpg"].includes(value[0].type))),
 });
 
-export default function RoomId({ classes }: RoomIdProps) {
+export default function RoomId({ classes, classNotices, uid_user, ra_user }: RoomIdProps) {
     const toast = useToast();
 
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const [classNotice, setClassNotice] = useState("");
-    const [classComment, setClassComment] = useState("");
 
     const [image, setImage] = useState(null);
 
@@ -244,19 +271,16 @@ export default function RoomId({ classes }: RoomIdProps) {
                                             </Flex>
                                         ) : (
                                             <Wall
+                                                user_uid={uid_user}
                                                 classUid={classes.uid_class}
                                                 backgroundClass={`http://localhost:8000/files${classes.background_class}`}
                                                 nameClass={classes.name_class}
                                                 nameMatter={classes.name_matter_class}
+                                                classNotices={classNotices}
                                                 classNotice={classNotice}
                                                 setClassNotice={setClassNotice}
-                                                avatarTeacher=""
-                                                nameTeacher="Wendel Cortes"
-                                                publicDateComment="12 de abril de 2020"
-                                                avatarStudent="https://github.com/neanderdev.png"
-                                                nameStudent="Neander de Souza"
-                                                classComment={classComment}
-                                                setClassComment={setClassComment}
+                                                avatarStudent=""
+                                                nameStudent={classes.ClassUser?.filter((user) => user.user.ra_user === ra_user)[0].user.name_user}
                                                 activities={data}
                                             />
                                         )}
@@ -370,10 +394,15 @@ export default function RoomId({ classes }: RoomIdProps) {
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
     const { classes } = await getClassUid(ctx.params.roomId as string, ctx);
+    const data = await getAllClassNotice(ctx.params.roomId as string, ctx);
+    const { me } = await getMe(ctx);
 
     return {
         props: {
             classes,
+            classNotices: data,
+            uid_user: me.uid_user,
+            ra_user: me.ra_user,
         }
     };
 }, {
