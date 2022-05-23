@@ -20,12 +20,17 @@ interface MaterialDetailActivity {
     detail_activity_id: number;
     name_material_detail_activity: string;
     size_material_detail_activity: number;
+    format: string;
+    size: number;
+    name: string;
+    blobURL: string;
 };
 
 interface ActivityIdProps {
     name_class: string;
     name_matter: string;
     ra_user: number;
+    uid_user: string;
     roles: any;
     dt_isEntrega_detail_acitivity: Date | string;
     nota_user: number;
@@ -36,6 +41,7 @@ export default function ActivityId({
     name_class,
     name_matter,
     ra_user,
+    uid_user,
     roles,
     dt_isEntrega_detail_acitivity,
     nota_user,
@@ -73,6 +79,7 @@ export default function ActivityId({
                                 error={error}
                                 data={data}
                                 ra_user={ra_user}
+                                uid_user={uid_user}
                                 roles={roles}
                                 dt_isEntrega_detail_acitivity={dt_isEntrega_detail_acitivity}
                                 nota_user={nota_user}
@@ -95,15 +102,26 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
     const { me } = await getMe(ctx);
     const data = await getFindDetailActivityByUserUid(ctx.params.activityId as string, me.uid_user, ctx);
 
+    const materialDetailActivity = data?.MaterialDetailActivity?.map((materialDetailActivity) => {
+        return {
+            ...materialDetailActivity,
+            format: materialDetailActivity.name_material_detail_activity.replace(/^.*\./, ''),
+            size: materialDetailActivity.size_material_detail_activity,
+            name: materialDetailActivity.name_material_detail_activity,
+            blobURL: `http://localhost:8000/files${materialDetailActivity.link_material_detail_activity}`,
+        };
+    });
+
     return {
         props: {
             name_class: classes.name_class,
             name_matter: classes.name_matter_class,
             ra_user: me.ra_user,
+            uid_user: me.uid_user,
             roles: me.roles,
             dt_isEntrega_detail_acitivity: data?.dt_isEntrega_detail_acitivity ?? null,
             nota_user: data?.nota_user ?? null,
-            MaterialDetailActivity: data?.MaterialDetailActivity ?? [],
+            MaterialDetailActivity: materialDetailActivity ?? [],
         }
     };
 })

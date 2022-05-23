@@ -35,6 +35,10 @@ interface MaterialDetailActivity {
     detail_activity_id: number;
     name_material_detail_activity: string;
     size_material_detail_activity: number;
+    format: string;
+    size: number;
+    name: string;
+    blobURL: string;
 };
 
 interface DetailActivityProps {
@@ -42,6 +46,7 @@ interface DetailActivityProps {
     error: boolean | unknown;
     data: ActivityUid;
     ra_user: number;
+    uid_user: string;
     roles: any;
     dt_isEntrega_detail_acitivity: Date | string;
     nota_user: number;
@@ -57,6 +62,7 @@ export function DetailActivity({
     error,
     data,
     ra_user,
+    uid_user,
     roles,
     dt_isEntrega_detail_acitivity,
     nota_user,
@@ -93,6 +99,7 @@ export function DetailActivity({
                 {!isLoading && !error && data.isEntregue_activity &&
                     <CardFinallizedActivity
                         ra_user={ra_user}
+                        uid_user={uid_user}
                         roles={roles}
                         dt_entrega_activity={data.dt_entrega_activity}
                         isAcceptWithDelay_Activity={data.isAcceptWithDelay_Activity}

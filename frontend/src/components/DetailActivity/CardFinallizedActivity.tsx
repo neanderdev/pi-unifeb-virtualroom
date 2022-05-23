@@ -30,16 +30,25 @@ interface UploadMaterialDetailActivityFormData {
     formData: any;
 };
 
+interface DeleteDetailActivityFormData {
+    activity_uid: string; user_uid: string;
+}
+
 interface MaterialDetailActivity {
     id_material_detail_activity: number;
     link_material_detail_activity: string;
     detail_activity_id: number;
     name_material_detail_activity: string;
     size_material_detail_activity: number;
+    format: string;
+    size: number;
+    name: string;
+    blobURL: string;
 };
 
 interface CardFinallizedActivityProps {
     ra_user: number;
+    uid_user: string;
     roles: any;
     dt_entrega_activity: Date;
     isAcceptWithDelay_Activity: boolean;
@@ -51,6 +60,7 @@ interface CardFinallizedActivityProps {
 
 export function CardFinallizedActivity({
     ra_user,
+    uid_user,
     roles,
     dt_entrega_activity,
     isAcceptWithDelay_Activity,
@@ -64,7 +74,7 @@ export function CardFinallizedActivity({
     const toast = useToast();
 
     const [isFinished, setIsFinished] = useState(!dt_isEntrega_detail_acitivity ? false : true);
-    const [attachmentArchives, setAttachmentArchives] = useState([]);
+    const [attachmentArchives, setAttachmentArchives] = useState(MaterialDetailActivity);
 
     const createMaterialDetailActivity = useMutation(async (materialDetailActivity: CreateMaterialDetailActivityFormData) => {
         const apiClient = setupAPIClient();
@@ -98,6 +108,17 @@ export function CardFinallizedActivity({
         },
     });
 
+    const deleteDetailActivity = useMutation(async ({ activity_uid, user_uid }: DeleteDetailActivityFormData) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.delete(`detail-activity/${activity_uid}/${user_uid}`);
+
+        return response;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('materialDetailActivity')
+        },
+    });
+
     const handleAddJobs = () => {
         const dateNow = new Date();
         const dateEntregaActivity = new Date(dt_entrega_activity);
@@ -122,7 +143,7 @@ export function CardFinallizedActivity({
             if (attachmentArchives.length > 0) {
                 let formData = new FormData();
 
-                attachmentArchives.map((archive) => formData.append("detail_activity", archive));
+                attachmentArchives.map((archive) => formData.append("detail_activity", archive as any));
 
                 await uploadMaterialDetailActivity.mutateAsync({ detail_activity_id: data.id_detail_activity, formData });
             }
@@ -141,6 +162,38 @@ export function CardFinallizedActivity({
 
             toast({
                 title: 'Erro ao enviar tarefa',
+                description: `Erro: ${err.message}`,
+                status: 'error',
+                duration: 1500,
+                isClosable: true,
+            });
+        }
+    };
+
+    const handleCancelTask = async () => {
+        const deleteDetailActivityFormData = {
+            activity_uid: router.query.activityId as string,
+            user_uid: uid_user,
+        };
+
+        try {
+            await deleteDetailActivity.mutateAsync(deleteDetailActivityFormData);
+
+            setIsFinished(!isFinished);
+            setAttachmentArchives([]);
+
+            await toast({
+                title: 'Tarefa cancelada',
+                description: "Tarefa cancelada com sucesso",
+                status: 'success',
+                duration: 1500,
+                isClosable: true,
+            });
+        } catch (err) {
+            console.log(err);
+
+            toast({
+                title: 'Erro ao cancelar a tarefa',
                 description: `Erro: ${err.message}`,
                 status: 'error',
                 duration: 1500,
@@ -451,7 +504,7 @@ export function CardFinallizedActivity({
                             </Button>
                         </>
                     ) : (
-                        <Button colorScheme='gray' variant='outline' onClick={() => setIsFinished(!isFinished)}>
+                        <Button colorScheme='gray' variant='outline' onClick={handleCancelTask}>
                             Cancelar envio
                         </Button>
                     )}
@@ -461,7 +514,7 @@ export function CardFinallizedActivity({
                     <Text
                         fontSize="lg"
                         fontWeight="bold"
-                        color={(new Date(dt_entrega_activity) >= new Date() || isAcceptWithDelay_Activity) ? "red.500" : "green.500"}
+                        color={(new Date(dt_entrega_activity) >= new Date() || isAcceptWithDelay_Activity) ? "green.500" : "red.500"}
                     >
                         {nota_max_activity > 0 && `${nota_user ?? 0} / ${nota_max_activity}`}
                     </Text>
