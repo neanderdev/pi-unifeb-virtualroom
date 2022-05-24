@@ -1,6 +1,7 @@
 import { Box, Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import { useAllActivities } from "../../services/hooks/useAllActivities";
+import { useAllCategories } from "../../services/hooks/useAllCategories";
 
 import { SidebarActivity } from "./SidebarActivity";
 import { SelectCategoriesAcitivity } from "./SelectCategoriesAcitivity";
@@ -14,6 +15,11 @@ interface ActivityProps {
 
 export function Activity({ class_uid, isSmallScreen }: ActivityProps) {
     const { data, isLoading, error } = useAllActivities(class_uid);
+    const {
+        data: categories,
+        isLoading: isLoadingCategories,
+        error: errorCategories
+    } = useAllCategories(class_uid);
 
     if (isLoading) {
         return (
@@ -37,10 +43,18 @@ export function Activity({ class_uid, isSmallScreen }: ActivityProps) {
             direction="column"
         >
             <Flex direction="row" pt="1.5rem">
-                {!isSmallScreen && <SidebarActivity />}
+                {!isSmallScreen && <SidebarActivity
+                    categories={categories}
+                    isLoadingCategories={isLoadingCategories}
+                    errorCategories={errorCategories}
+                />}
 
                 <VStack spacing={4} w="full">
-                    {isSmallScreen && <SelectCategoriesAcitivity />}
+                    {isSmallScreen && <SelectCategoriesAcitivity
+                        categories={categories}
+                        isLoadingCategories={isLoadingCategories}
+                        errorCategories={errorCategories}
+                    />}
 
                     <Box mr="auto" ml={-4}>
                         <ActionsActivity />

@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { Box, Icon, IconButton, LinkOverlay, Popover, PopoverContent, PopoverTrigger, Portal, Text, useColorModeValue } from "@chakra-ui/react";
 import { IoAddSharp, IoEllipsisVertical } from "react-icons/io5";
 
+import { Can } from "../Can";
+
 interface BoxHeaderActivityProps {
     idCategory: number;
     title: string;
@@ -13,7 +15,7 @@ export function BoxHeaderActivity({ idCategory, title, tipoActivity }: BoxHeader
 
     return (
         <Box
-            id="id-tde-01"
+            id={idCategory.toString()}
             w="full"
             borderBottomWidth="1px"
             borderBottomColor="gray.500"
@@ -38,19 +40,21 @@ export function BoxHeaderActivity({ idCategory, title, tipoActivity }: BoxHeader
             </Text>
 
             <Box ml="auto" mr={4}>
-                <IconButton
-                    aria-label="Adicionar nova atividade"
-                    rounded="full"
-                    bg="transparent"
-                    _hover={{
-                        bg: "transparent",
-                    }}
-                    _active={{
-                        bg: "transparent",
-                    }}
-                    icon={<Icon as={IoAddSharp} fontSize={24} />}
-                    onClick={() => router.push(`${router.asPath}/${tipoActivity}/${idCategory}`)}
-                />
+                <Can roles={["admin", "teacher"]}>
+                    <IconButton
+                        aria-label="Adicionar nova atividade"
+                        rounded="full"
+                        bg="transparent"
+                        _hover={{
+                            bg: "transparent",
+                        }}
+                        _active={{
+                            bg: "transparent",
+                        }}
+                        icon={<Icon as={IoAddSharp} fontSize={24} />}
+                        onClick={() => router.push(`${router.asPath}/${tipoActivity}/${idCategory}`)}
+                    />
+                </Can>
 
                 <Popover>
                     <PopoverTrigger>

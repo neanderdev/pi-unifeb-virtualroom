@@ -142,7 +142,7 @@ export function DetailActivity({
                     </Flex>
                 ) : errorActivityComments ? (
                     <Flex justify="center" alignItems="center">
-                        <Text fontWeight="bold" fontSize="xl">Erro ao buscar esta atividade desta turma</Text>
+                        <Text fontWeight="bold" fontSize="xl">Erro ao buscar os comentários desta turma</Text>
                     </Flex>
                 ) : (
                     <CardActivityComment

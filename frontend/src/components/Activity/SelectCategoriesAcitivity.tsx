@@ -1,30 +1,71 @@
-import { Box, Select } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { Box, Flex, Select, Spinner, Text } from "@chakra-ui/react";
 
-interface FakeCategoriesActivity {
-    id: number;
-    slug: string;
-    nameCategorieActivity: string;
-}
+interface AllCategories {
+    id_category_activity: number;
+    name_category_activity: string;
+    tipo_category_activity: string;
+    class_uid: string;
+};
 
-const fakeCategoriesActivity: Array<FakeCategoriesActivity> = [
-    {
-        id: 1,
-        slug: "tde-01",
-        nameCategorieActivity: "TDE 01",
-    },
-    {
-        id: 2,
-        slug: "tde-02",
-        nameCategorieActivity: "TDE 02",
+interface SelectCategoriesAcitivityProps {
+    categories: AllCategories[];
+    isLoadingCategories: boolean;
+    errorCategories: unknown;
+};
+
+export function SelectCategoriesAcitivity({ categories, isLoadingCategories, errorCategories }: SelectCategoriesAcitivityProps) {
+    const router = useRouter();
+
+    if (isLoadingCategories) {
+        return (
+            <Flex justify="center" alignItems="center">
+                <Spinner color="red" size="md" />
+            </Flex>
+        );
     }
-];
 
-export function SelectCategoriesAcitivity() {
+    if (errorCategories) {
+        return (
+            <Flex justify="center" alignItems="center">
+                <Text fontWeight="bold" fontSize="xl">Erro ao buscar as categorias desta turma</Text>
+            </Flex>
+        );
+    }
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    };
+
     return (
         <Box mr="auto" ml={4} w="full">
-            <Select placeholder='Todos os temas'>
-                {fakeCategoriesActivity.map((categorieActivity) => (
-                    <option key={categorieActivity.id} value={categorieActivity.slug}>{categorieActivity.nameCategorieActivity}</option>
+            <Select
+                defaultValue={router.asPath.split("#")[1]}
+                onChange={(event) => {
+                    if (event.target.value === "all-categories") {
+                        router.replace(`#${event.target.value}`);
+                        scrollToTop();
+                    } else {
+                        router.replace(`#${event.target.value}`);
+                    }
+                }}
+            >
+                <option
+                    value="all-categories"
+                >
+                    Todos os temas
+                </option>
+
+                {categories.map((categorie) => (
+                    <option
+                        key={categorie.id_category_activity.toString()}
+                        value={categorie.id_category_activity.toString()}
+                    >
+                        {categorie.name_category_activity}
+                    </option>
                 ))}
             </Select>
         </Box>

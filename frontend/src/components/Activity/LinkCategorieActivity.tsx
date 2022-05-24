@@ -9,6 +9,13 @@ interface LinkCategorieActivityProps {
 }
 
 function LinkCategorieActivityComponent({ href, nameCategorieActivity, isActive = false }: LinkCategorieActivityProps) {
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    };
+
     return (
         <NextLink href={href} passHref>
             <Box
@@ -25,6 +32,7 @@ function LinkCategorieActivityComponent({ href, nameCategorieActivity, isActive 
                     bg: "gray.100"
                 }}
                 color={isActive ? "red.500" : "gray"}
+                onClick={href === "#all-categories" ? scrollToTop : null}
             >
                 <Text
                     fontWeight="bold"
