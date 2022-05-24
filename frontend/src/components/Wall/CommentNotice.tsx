@@ -194,7 +194,7 @@ export function CommentNotice({ user_uid, classNoticeId, message, avatarTeacher,
                 {classNoticeAnswer.map((answerClassNotice) => (
                     <Comment
                         key={answerClassNotice.id_class_notice_answer}
-                        avatarStudent={answerClassNotice.user.name_user}
+                        avatarStudent=""
                         nameStudent={answerClassNotice.user.name_user}
                         commentStudent={answerClassNotice.message}
                     />

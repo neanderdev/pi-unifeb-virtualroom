@@ -3,7 +3,7 @@ import { Flex, SimpleGrid, Spinner, Stack, Text } from "@chakra-ui/react";
 
 import { CardDetailActivity } from "./CardDetailActivity";
 import { CardFinallizedActivity } from "./CardFinallizedActivity";
-import { CardPrivateComment } from "./CardPrivateComment";
+import { CardActivityComment } from "./CardActivityComment";
 
 interface MaterialActivity {
     id_material_activity: number;
@@ -41,20 +41,35 @@ interface MaterialDetailActivity {
     blobURL: string;
 };
 
+interface User {
+    name_user: string;
+};
+
+interface ActivityComment {
+    id_private_comment: number;
+    message: string;
+    createdAt_private_comment: Date | string;
+    user_uid: string;
+    activity_uid: string;
+    user: User;
+};
+
 interface DetailActivityProps {
     isLoading: boolean;
     error: boolean | unknown;
     data: ActivityUid;
     ra_user: number;
     uid_user: string;
+    uid_activity: string;
     roles: any;
     dt_isEntrega_detail_acitivity: Date | string;
     nota_user: number;
     MaterialDetailActivity: MaterialDetailActivity[];
-    avatarPrivateComment: string;
-    namePrivateComment: string;
-    commentPrivate: string;
-    setCommentPrivate: Dispatch<SetStateAction<string>>;
+    avatarActivityComment: string;
+    nameActivityComment: string;
+    commentActivity: string;
+    setCommentActivity: Dispatch<SetStateAction<string>>;
+    activityComments: ActivityComment[];
 };
 
 export function DetailActivity({
@@ -63,14 +78,16 @@ export function DetailActivity({
     data,
     ra_user,
     uid_user,
+    uid_activity,
     roles,
     dt_isEntrega_detail_acitivity,
     nota_user,
     MaterialDetailActivity,
-    avatarPrivateComment,
-    namePrivateComment,
-    commentPrivate,
-    setCommentPrivate
+    avatarActivityComment,
+    nameActivityComment,
+    commentActivity,
+    setCommentActivity,
+    activityComments
 }: DetailActivityProps) {
     return (
         <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
@@ -109,11 +126,14 @@ export function DetailActivity({
                         MaterialDetailActivity={MaterialDetailActivity}
                     />}
 
-                <CardPrivateComment
-                    avatarPrivateComment={avatarPrivateComment}
-                    namePrivateComment={namePrivateComment}
-                    commentPrivate={commentPrivate}
-                    setCommentPrivate={setCommentPrivate}
+                <CardActivityComment
+                    activityComments={activityComments}
+                    uid_user={uid_user}
+                    uid_activity={uid_activity}
+                    avatarActivityComment={avatarActivityComment}
+                    nameActivityComment={nameActivityComment}
+                    commentActivity={commentActivity}
+                    setCommentActivity={setCommentActivity}
                 />
             </Stack>
         </SimpleGrid>

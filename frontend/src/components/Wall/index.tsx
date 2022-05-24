@@ -122,7 +122,7 @@ export function Wall({
                             key={classNotice.id_class_notice}
                             user_uid={user_uid}
                             classNoticeId={classNotice.id_class_notice}
-                            avatarTeacher={classNotice.user.name_user}
+                            avatarTeacher=""
                             message={classNotice.message}
                             nameTeacher={classNotice.user.name_user}
                             publicDateComment={classNotice.createdAt_class_notice}
