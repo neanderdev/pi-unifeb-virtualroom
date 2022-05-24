@@ -70,6 +70,9 @@ interface DetailActivityProps {
     commentActivity: string;
     setCommentActivity: Dispatch<SetStateAction<string>>;
     activityComments: ActivityComment[];
+    isLoadingActivityComments: boolean;
+    isFetchingActivityComments: boolean;
+    errorActivityComments: unknown;
 };
 
 export function DetailActivity({
@@ -87,7 +90,10 @@ export function DetailActivity({
     nameActivityComment,
     commentActivity,
     setCommentActivity,
-    activityComments
+    activityComments,
+    isLoadingActivityComments,
+    isFetchingActivityComments,
+    errorActivityComments,
 }: DetailActivityProps) {
     return (
         <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
@@ -126,15 +132,29 @@ export function DetailActivity({
                         MaterialDetailActivity={MaterialDetailActivity}
                     />}
 
-                <CardActivityComment
-                    activityComments={activityComments}
-                    uid_user={uid_user}
-                    uid_activity={uid_activity}
-                    avatarActivityComment={avatarActivityComment}
-                    nameActivityComment={nameActivityComment}
-                    commentActivity={commentActivity}
-                    setCommentActivity={setCommentActivity}
-                />
+                {isLoadingActivityComments ? (
+                    <Flex justify="center" alignItems="center">
+                        <Spinner color="red" size="md" />
+                    </Flex>
+                ) : isFetchingActivityComments ? (
+                    <Flex justify="center" alignItems="center">
+                        <Spinner color="red" size="md" />
+                    </Flex>
+                ) : errorActivityComments ? (
+                    <Flex justify="center" alignItems="center">
+                        <Text fontWeight="bold" fontSize="xl">Erro ao buscar esta atividade desta turma</Text>
+                    </Flex>
+                ) : (
+                    <CardActivityComment
+                        activityComments={activityComments}
+                        uid_user={uid_user}
+                        uid_activity={uid_activity}
+                        avatarActivityComment={avatarActivityComment}
+                        nameActivityComment={nameActivityComment}
+                        commentActivity={commentActivity}
+                        setCommentActivity={setCommentActivity}
+                    />
+                )}
             </Stack>
         </SimpleGrid>
     );

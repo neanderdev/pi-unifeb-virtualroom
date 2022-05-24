@@ -5,8 +5,8 @@ import { Box, Stack, useMediaQuery } from "@chakra-ui/react";
 import { getClassUid } from "../../../services/hooks/useClassUid";
 import { getMe } from "../../../services/hooks/useMe";
 import { getFindDetailActivityByUserUid } from "../../../services/hooks/useFindDetailActivityByUserUid";
-import { getListAllActivityComment } from "../../../services/hooks/useListAllActivityComment";
 import { useFindByActivityUid } from "../../../services/hooks/useFindByActivityUid";
+import { useListAllActivityComment } from "../../../services/hooks/useListAllActivityComment";
 
 import { withSSRAuth } from "../../../utils/withSSRAuth";
 
@@ -27,19 +27,6 @@ interface MaterialDetailActivity {
     blobURL: string;
 };
 
-interface User {
-    name_user: string;
-};
-
-interface ActivityComment {
-    id_private_comment: number;
-    message: string;
-    createdAt_private_comment: Date | string;
-    user_uid: string;
-    activity_uid: string;
-    user: User;
-};
-
 interface ActivityIdProps {
     name_class: string;
     name_matter: string;
@@ -50,8 +37,7 @@ interface ActivityIdProps {
     dt_isEntrega_detail_acitivity: Date | string;
     nota_user: number;
     MaterialDetailActivity: MaterialDetailActivity[];
-    activityComments: ActivityComment[];
-}
+};
 
 export default function ActivityId({
     name_class,
@@ -63,7 +49,6 @@ export default function ActivityId({
     dt_isEntrega_detail_acitivity,
     nota_user,
     MaterialDetailActivity,
-    activityComments,
 }: ActivityIdProps) {
     const router = useRouter();
 
@@ -72,6 +57,12 @@ export default function ActivityId({
     const [commentActivity, setCommentActivity] = useState("");
 
     const { data, isLoading, error } = useFindByActivityUid(router.query.activityId as string);
+    const {
+        data: activityComments,
+        isLoading: isLoadingActivityComments,
+        isFetching: isFetchingActivityComments,
+        error: errorActivityComments,
+    } = useListAllActivityComment(router.query.activityId as string);
 
     return (
         <Box>
@@ -108,6 +99,9 @@ export default function ActivityId({
                                 commentActivity={commentActivity}
                                 setCommentActivity={setCommentActivity}
                                 activityComments={activityComments}
+                                isLoadingActivityComments={isLoadingActivityComments}
+                                isFetchingActivityComments={isFetchingActivityComments}
+                                errorActivityComments={errorActivityComments}
                             />
                         </Box>
                     </Box>
@@ -121,7 +115,6 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
     const { classes } = await getClassUid(ctx.params.roomId as string, ctx);
     const { me } = await getMe(ctx);
     const data = await getFindDetailActivityByUserUid(ctx.params.activityId as string, me.uid_user, ctx);
-    const activityComments = await getListAllActivityComment(ctx.params.activityId as string, ctx);
 
     const materialDetailActivity = data?.MaterialDetailActivity?.map((materialDetailActivity) => {
         return {
@@ -144,7 +137,6 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
             dt_isEntrega_detail_acitivity: data?.dt_isEntrega_detail_acitivity ?? null,
             nota_user: data?.nota_user ?? null,
             MaterialDetailActivity: materialDetailActivity ?? [],
-            activityComments,
         }
     };
 })
