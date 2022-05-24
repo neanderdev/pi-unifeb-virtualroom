@@ -38,6 +38,7 @@ model User {
   DetailActivity    DetailActivity[]
   ClassNotice       ClassNotice[]
   ClassNoticeAnswer ClassNoticeAnswer[]
+  ActivityComment   ActivityComment[]
 
   @@map("user")
 }
@@ -115,6 +116,7 @@ model Activity {
 
   MaterialActivity MaterialActivity[]
   DetailActivity   DetailActivity[]
+  ActivityComment  ActivityComment[]
 
   @@map("activity")
 }
@@ -180,4 +182,16 @@ model ClassNoticeAnswer {
   class_notice                  ClassNotice @relation(fields: [class_notice_id], references: [id_class_notice])
 
   @@map("class_notice_answer")
+}
+
+model ActivityComment {
+  id_private_comment        Int      @id @default(autoincrement())
+  message                   String   @db.VarChar(250)
+  createdAt_private_comment DateTime @default(now())
+  user_uid                  String
+  user                      User     @relation(fields: [user_uid], references: [uid_user])
+  activity_uid              String
+  activity                  Activity @relation(fields: [activity_uid], references: [uid_activity])
+
+  @@map("activity_comment")
 }

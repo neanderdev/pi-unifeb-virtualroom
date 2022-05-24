@@ -35,6 +35,8 @@ import { DeleteDetailActivityController } from "./modules/detailActivity/deleteD
 import { ListAllClassNoticeController } from "./modules/classNotice/useCases/listAllClassNotice/ListAllClassNoticeController";
 import { CreateClassNoticeController } from "./modules/classNotice/useCases/createClassNotice/CreateClassNoticeController";
 import { CreateClassNoticeAnswerController } from "./modules/classNoticeAnswer/useCases/createClassNoticeAnswer/CreateClassNoticeAnswerController";
+import { ListAllActivityCommentController } from "./modules/privateComment/useCases/listAllActivityComment/ListAllActivityCommentController";
+import { CreateActivityCommentController } from "./modules/privateComment/useCases/createActivityComment/CreateActivityCommentController";
 
 const routes = Router();
 
@@ -77,6 +79,8 @@ const listAllClassNoticeController = new ListAllClassNoticeController();
 const createClassNoticeController = new CreateClassNoticeController();
 const createClassNoticeAnswerController =
   new CreateClassNoticeAnswerController();
+const listAllActivityCommentController = new ListAllActivityCommentController();
+const createActivityCommentController = new CreateActivityCommentController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -190,6 +194,16 @@ routes.post(
   "/class-notice-answer/",
   ensureAuthenticated,
   createClassNoticeAnswerController.handle
+);
+routes.get(
+  "/activity-comment/:activity_uid",
+  ensureAuthenticated,
+  listAllActivityCommentController.handle
+);
+routes.post(
+  "/activity-comment/",
+  ensureAuthenticated,
+  createActivityCommentController.handle
 );
 
 export { routes };
