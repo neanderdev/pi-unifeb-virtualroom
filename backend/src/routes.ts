@@ -37,6 +37,7 @@ import { CreateClassNoticeController } from "./modules/classNotice/useCases/crea
 import { CreateClassNoticeAnswerController } from "./modules/classNoticeAnswer/useCases/createClassNoticeAnswer/CreateClassNoticeAnswerController";
 import { ListAllActivityCommentController } from "./modules/privateComment/useCases/listAllActivityComment/ListAllActivityCommentController";
 import { CreateActivityCommentController } from "./modules/privateComment/useCases/createActivityComment/CreateActivityCommentController";
+import { ListThatWeekActivityController } from "./modules/activity/useCases/listThatWeekActivity/ListThatWeekActivityController";
 
 const routes = Router();
 
@@ -81,6 +82,7 @@ const createClassNoticeAnswerController =
   new CreateClassNoticeAnswerController();
 const listAllActivityCommentController = new ListAllActivityCommentController();
 const createActivityCommentController = new CreateActivityCommentController();
+const listThatWeekActivityController = new ListThatWeekActivityController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -204,6 +206,11 @@ routes.post(
   "/activity-comment/",
   ensureAuthenticated,
   createActivityCommentController.handle
+);
+routes.get(
+  "/list-that-week-activity/:class_uid",
+  ensureAuthenticated,
+  listThatWeekActivityController.handle
 );
 
 export { routes };
