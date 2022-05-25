@@ -46,6 +46,7 @@ import { Classmates } from "../../../components/Classmates";
 import { Can } from "../../../components/Can";
 import { Input } from "../../../components/Form/Input";
 import { ModalNewCategory } from "../../../components/ModalNewCategory";
+import { StudentGrades } from "../../../components/StudentGrades";
 
 interface ClassUser {
     user: {
@@ -263,6 +264,10 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
                                         <Can roles={["admin", "teacher"]}>
                                             <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Configuração</Tab>
                                         </Can>
+
+                                        <Can roles={["admin", "teacher"]}>
+                                            <Tab _selected={{ borderColor: "pink.500", borderBottomWidth: "3.5px" }}>Notas</Tab>
+                                        </Can>
                                     </TabList>
                                 </Box>
 
@@ -389,6 +394,10 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
                                                 </Box>
                                             </Box>
                                         </Can>
+                                    </TabPanel>
+
+                                    <TabPanel>
+                                        <StudentGrades />
                                     </TabPanel>
                                 </TabPanels>
                             </Tabs>
