@@ -53,6 +53,11 @@ interface ClassNotice {
     user: User;
 };
 
+interface ThatWeekActivity {
+    uid_activity: string;
+    name_activity: string;
+};
+
 interface WallProps {
     user_uid: string;
     classUid: string;
@@ -65,7 +70,8 @@ interface WallProps {
     avatarStudent: string;
     nameStudent: string;
     activities: Acitivities[];
-}
+    thatWeekActivity: ThatWeekActivity[];
+};
 
 export function Wall({
     user_uid,
@@ -78,7 +84,8 @@ export function Wall({
     setClassNotice,
     avatarStudent,
     nameStudent,
-    activities
+    activities,
+    thatWeekActivity
 }: WallProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
@@ -91,7 +98,10 @@ export function Wall({
 
             <Flex direction="row" pt="1.5rem">
                 {!isSmallScreen && (
-                    <NextActivity />
+                    <NextActivity
+                        classUid={classUid}
+                        thatWeekActivity={thatWeekActivity} /
+                    >
                 )}
 
                 <VStack spacing={4} w="full">

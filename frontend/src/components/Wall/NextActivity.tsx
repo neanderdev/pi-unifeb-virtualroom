@@ -1,6 +1,17 @@
+import NextLink from "next/link";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 
-export function NextActivity() {
+interface ThatWeekActivity {
+    uid_activity: string;
+    name_activity: string;
+};
+
+interface NextActivityProps {
+    classUid: string;
+    thatWeekActivity: ThatWeekActivity[];
+};
+
+export function NextActivity({ classUid, thatWeekActivity }: NextActivityProps) {
     return (
         <Box
             w={240}
@@ -21,15 +32,35 @@ export function NextActivity() {
                     Próximas atividades
                 </Text>
 
-                <Text
-                    p={2}
-                    textStyle="default"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    color="gray.400"
-                >
-                    Nenhuma atividade para a próxima semana!
-                </Text>
+                {thatWeekActivity.length === 0 ? (
+                    <Text
+                        p={2}
+                        textStyle="default"
+                        fontSize="sm"
+                        fontWeight="normal"
+                        color="gray.400"
+                    >
+                        Nenhuma atividade para a próxima semana!
+                    </Text>
+                ) : (
+                    <>
+                        {thatWeekActivity.map((activity) => (
+                            <NextLink href={`/rooms/${classUid}/${activity.uid_activity}`} passHref key={activity.uid_activity}>
+                                <Text
+                                    p={2}
+                                    textStyle="default"
+                                    fontSize="sm"
+                                    fontWeight="normal"
+                                    color="gray.400"
+                                    cursor="pointer"
+                                    isTruncated
+                                >
+                                    {activity.name_activity}
+                                </Text>
+                            </NextLink>
+                        ))}
+                    </>
+                )}
 
                 <Button colorScheme='red' variant='ghost' ml="auto" mr="2">
                     Ver tudo

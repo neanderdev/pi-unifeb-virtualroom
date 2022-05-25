@@ -31,6 +31,7 @@ import { queryClient } from "../../../services/queryClient";
 
 import { getClassUid } from "../../../services/hooks/useClassUid";
 import { getAllClassNotice } from "../../../services/hooks/useAllClassNotice";
+import { getListThatWeekActivity } from "../../../services/hooks/useListThatWeekActivity";
 import { getMe } from "../../../services/hooks/useMe";
 import { useListActivities } from "../../../services/hooks/useListActivities";
 
@@ -89,9 +90,15 @@ interface ClassNotice {
     user: User;
 };
 
+interface ThatWeekActivity {
+    uid_activity: string;
+    name_activity: string;
+};
+
 interface RoomIdProps {
     classes: Class;
     classNotices: ClassNotice[];
+    thatWeekActivity: ThatWeekActivity[];
     uid_user: string;
     ra_user: number;
 }
@@ -117,7 +124,7 @@ const createClassFormSchema = yup.object().shape({
         .test("interface", "Aceita apenas os formatos: .png, .jpeg e .jpg", (value) => !value[0] || (value[0] && ["image/png", "image/jpeg", "image/jpg"].includes(value[0].type))),
 });
 
-export default function RoomId({ classes, classNotices, uid_user, ra_user }: RoomIdProps) {
+export default function RoomId({ classes, classNotices, thatWeekActivity, uid_user, ra_user }: RoomIdProps) {
     const toast = useToast();
 
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -282,6 +289,7 @@ export default function RoomId({ classes, classNotices, uid_user, ra_user }: Roo
                                                 avatarStudent=""
                                                 nameStudent={classes.ClassUser?.filter((user) => user.user.ra_user === ra_user)[0].user.name_user}
                                                 activities={data}
+                                                thatWeekActivity={thatWeekActivity}
                                             />
                                         )}
                                     </TabPanel>
@@ -394,13 +402,15 @@ export default function RoomId({ classes, classNotices, uid_user, ra_user }: Roo
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
     const { classes } = await getClassUid(ctx.params.roomId as string, ctx);
-    const data = await getAllClassNotice(ctx.params.roomId as string, ctx);
+    const dataAllClassNotice = await getAllClassNotice(ctx.params.roomId as string, ctx);
+    const dataListThatWeekActivity = await getListThatWeekActivity(ctx.params.roomId as string, ctx);
     const { me } = await getMe(ctx);
 
     return {
         props: {
             classes,
-            classNotices: data,
+            classNotices: dataAllClassNotice,
+            thatWeekActivity: dataListThatWeekActivity,
             uid_user: me.uid_user,
             ra_user: me.ra_user,
         }
