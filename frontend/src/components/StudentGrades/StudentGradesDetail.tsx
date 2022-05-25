@@ -3,21 +3,22 @@ import { Flex, FormControl, FormErrorMessage, Icon, IconButton, Input, Text, use
 import { IoSaveSharp } from "react-icons/io5";
 
 interface StudentGradesDetailProps {
-    id: number;
-    name: string;
-    notaMax: number;
+    uid_user: string;
+    name_user: string;
+    nota_max_activity: number;
+    isStudentDeliveredTheActivity: boolean;
 };
 
 interface ErrorInputNote {
     message: string;
 }
 
-export function StudentGradesDetail({ id, name, notaMax }: StudentGradesDetailProps) {
+export function StudentGradesDetail({ uid_user, name_user, nota_max_activity, isStudentDeliveredTheActivity }: StudentGradesDetailProps) {
     const [note, setNote] = useState(null);
-    const [error, setError] = useState<ErrorInputNote | null>({} as ErrorInputNote);
+    const [error, setError] = useState<ErrorInputNote | null>({} as ErrorInputNote | null);
 
     const handleChange = (event) => {
-        if (event.target.value <= notaMax) {
+        if (event.target.value <= nota_max_activity) {
             setNote(event.target.value);
         }
     };
@@ -43,15 +44,15 @@ export function StudentGradesDetail({ id, name, notaMax }: StudentGradesDetailPr
                 pr={6}
                 isTruncated
             >
-                {name}
+                {name_user}
             </Text>
 
             <Flex alignItems="center">
                 <FormControl isInvalid={!!error.message} pr={2}>
                     <Input
-                        name={`nota_user_${id.toString()}`}
+                        name={`nota_user_${uid_user}`}
                         type="number"
-                        id={`nota_user_${id.toString()}`}
+                        id={`nota_user_${uid_user}`}
                         focusBorderColor={!!error.message === false ? 'pink.500' : 'red.500'}
                         bgColor={useColorModeValue('gray.100', 'gray.600')}
                         variant='filled'
@@ -79,6 +80,7 @@ export function StudentGradesDetail({ id, name, notaMax }: StudentGradesDetailPr
                     textStyle="default"
                     fontSize="2xl"
                     pr={1}
+                    color={!isStudentDeliveredTheActivity ? "red.500" : "green.500"}
                 >
                     /
                 </Text>
@@ -87,12 +89,14 @@ export function StudentGradesDetail({ id, name, notaMax }: StudentGradesDetailPr
                     textStyle="default"
                     fontSize="2xl"
                     pr={2}
+                    color={!isStudentDeliveredTheActivity ? "red.500" : "green.500"}
                 >
-                    {notaMax}
+                    {nota_max_activity}
                 </Text>
 
                 <IconButton
                     aria-label="Salvar nota do aluno"
+                    title="Salvar nota do aluno"
                     size="md"
                     bg="green.300"
                     _hover={{

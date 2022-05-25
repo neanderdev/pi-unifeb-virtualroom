@@ -1,4 +1,6 @@
-import { Box, Divider, Flex, Stack } from "@chakra-ui/react";
+import { Box, Divider, Flex, Spinner, Stack, Text } from "@chakra-ui/react";
+
+import { useListActivityAndUsers } from "../../services/hooks/useListActivityAndUsers";
 
 import { StudentGradesHeader } from "./StudentGradesHeader";
 import { StudentGradesDetail } from "./StudentGradesDetail";
@@ -59,28 +61,57 @@ const fakeApiStudentActivity: FakeApiStudentActivity[] = [
     },
 ];
 
-export function StudentGrades() {
+interface StudentGradesProps {
+    class_uid: string;
+}
+
+export function StudentGrades({ class_uid }: StudentGradesProps) {
+    const { data, isLoading, error } = useListActivityAndUsers(class_uid);
+
+    if (isLoading) {
+        return (
+            <Flex justify="center" alignItems="center">
+                <Spinner color="red" size="xl" />
+            </Flex>
+        );
+    }
+
+    if (error) {
+        return (
+            <Flex justify="center" alignItems="center">
+                <Text
+                    fontWeight="bold"
+                    fontSize="xl"
+                    isTruncated
+                >
+                    Erro ao buscar esta atividade com os dados dos alunos desta turma
+                </Text>
+            </Flex>
+        );
+    }
+
     return (
         <Flex
             p={5}
             direction="column"
         >
-            {fakeApiStudentActivity.map((activity) => (
-                <Box key={activity.id_activity}>
+            {data.map((activity) => (
+                <Box key={activity.uid_activity}>
                     <StudentGradesHeader
-                        title={activity.name_activity}
-                        count={1}
+                        name_activity={activity.name_activity}
+                        count={activity.DetailActivity.length}
                     />
 
                     <Divider orientation='horizontal' />
 
                     <Stack spacing={4} mt={2} direction="column">
-                        {activity.user.map((user) => (
+                        {activity.class?.ClassUser?.map((user) => (
                             <StudentGradesDetail
-                                key={user.id_user}
-                                id={user.id_user}
-                                name={user.name_user}
-                                notaMax={activity.nota_max}
+                                key={user.user.uid_user}
+                                uid_user={user.user.uid_user}
+                                name_user={user.user.name_user}
+                                nota_max_activity={activity.nota_max_activity}
+                                isStudentDeliveredTheActivity={activity.DetailActivity.filter((detail) => detail.user_uid === user.user.uid_user).length > 0 ? true : false}
                             />
                         ))}
                     </Stack>

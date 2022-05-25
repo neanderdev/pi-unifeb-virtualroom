@@ -397,7 +397,7 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
                                     </TabPanel>
 
                                     <TabPanel>
-                                        <StudentGrades />
+                                        <StudentGrades class_uid={classes.uid_class} />
                                     </TabPanel>
                                 </TabPanels>
                             </Tabs>

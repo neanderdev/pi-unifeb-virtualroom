@@ -1,11 +1,11 @@
 import { Box, Text } from "@chakra-ui/react";
 
 interface StudentGradesHeaderProps {
-    title: string;
+    name_activity: string;
     count: number;
 }
 
-export function StudentGradesHeader({ title, count }: StudentGradesHeaderProps) {
+export function StudentGradesHeader({ name_activity, count }: StudentGradesHeaderProps) {
     return (
         <Box display="flex" justifyContent="space-between" alignItems="center">
             <Text
@@ -14,7 +14,7 @@ export function StudentGradesHeader({ title, count }: StudentGradesHeaderProps) 
                 fontWeight="bold"
                 isTruncated
             >
-                {title}
+                {name_activity}
             </Text>
 
             <Text
