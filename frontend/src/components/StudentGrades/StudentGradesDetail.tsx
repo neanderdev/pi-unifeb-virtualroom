@@ -22,7 +22,7 @@ interface ErrorInputNote {
 
 interface GradeStudents {
     id_detail_activity: number | null;
-    nota_user: number | string;
+    nota_user: number;
     activity_uid: string;
     user_uid: string;
 };
@@ -66,7 +66,7 @@ export function StudentGradesDetail({ activity_uid, id_detail_activity, uid_user
         try {
             const gradeTheStudents = {
                 id_detail_activity: id_detail_activity === undefined ? null : id_detail_activity,
-                nota_user: note,
+                nota_user: parseFloat(note),
                 activity_uid: activity_uid,
                 user_uid: uid_user,
             };

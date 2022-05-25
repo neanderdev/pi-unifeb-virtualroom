@@ -56,7 +56,7 @@ export function StudentGrades({ class_uid }: StudentGradesProps) {
                                 id_detail_activity={activity.DetailActivity.filter((detail) => detail.user_uid === user.user.uid_user)[0]?.id_detail_activity}
                                 uid_user={user.user.uid_user}
                                 name_user={user.user.name_user}
-                                nota_user={activity.DetailActivity.filter((detail) => detail.user_uid === user.user.uid_user)[0]?.nota_user}
+                                nota_user={activity.DetailActivity.filter((detail) => detail.user_uid === user.user.uid_user)[0]?.nota_user.toString()}
                                 nota_max_activity={activity.nota_max_activity}
                                 isStudentDeliveredTheActivity={activity.DetailActivity.filter((detail) => detail.user_uid === user.user.uid_user).length > 0 ? true : false}
                             />
