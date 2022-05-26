@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
+import md5 from 'md5';
 
 import { getUserUid } from "../../services/hooks/useUserUid";
 
@@ -99,8 +100,10 @@ export default function Teacher({ user }: ITeacher) {
     const handleUpdateUser: SubmitHandler<User> = async (values) => {
         const user = {
             ...values,
+            senha: md5(values.senha),
+            confirmacao_senha: md5(values.confirmacao_senha),
             tipo_user: "T",
-            roles: "teacher"
+            roles: "teacher",
         };
 
         try {

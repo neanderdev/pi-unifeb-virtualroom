@@ -1,4 +1,3 @@
-import { compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import { prisma } from "../../../../database/prismaClient";
@@ -34,9 +33,7 @@ export class LoginUseCase {
     }
 
     // Comparar senha do usário
-    const comparePasswordUser = await compare(senha, user.senha);
-
-    if (!comparePasswordUser) {
+    if (senha !== user.senha || ra !== user.ra_user) {
       throw new AppError("RA ou senha incorreto", 401);
     }
 

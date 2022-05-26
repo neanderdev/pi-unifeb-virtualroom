@@ -1,5 +1,3 @@
-import { compare, hash } from "bcrypt";
-
 import { prisma } from "../../../../database/prismaClient";
 
 import { AppError } from "../../../../errors/AppError";
@@ -88,14 +86,7 @@ export class UpdateUserUseCase {
     }
 
     // Comparar senha do usário
-    const comparePasswordUser = await compare(senha, user?.senha ?? "");
-
-    let hashPassword = user?.senha;
-
-    if (!comparePasswordUser) {
-      // Criptografar a senha
-      hashPassword = await hash(senha, 10);
-    }
+    let hashPassword = senha;
 
     // Atualizar usuário
     await prisma.user.update({

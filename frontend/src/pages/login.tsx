@@ -3,6 +3,7 @@ import { Flex, Button, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import md5 from 'md5';
 
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -31,7 +32,12 @@ export default function SignIn() {
     const { signIn } = useContext(AuthContext);
 
     const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-        await signIn(values);
+        const value = {
+            ...values,
+            senha: md5(values.senha),
+        };
+
+        await signIn(value);
     }
 
     return (

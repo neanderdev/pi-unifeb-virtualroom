@@ -1,5 +1,3 @@
-import { hash } from "bcrypt";
-
 import { prisma } from "../../../../database/prismaClient";
 
 import { AppError } from "../../../../errors/AppError";
@@ -82,10 +80,6 @@ export class CreateUserUseCase {
     if (userIsCPFOrCNPJExist) {
       throw new AppError("CPF/CNPJ already exists");
     }
-
-    // Criptografar a senha
-    const hashPassword = await hash(senha, 10);
-
     // Salvar o usuário
     const user = await prisma.user.create({
       data: {
@@ -106,7 +100,7 @@ export class CreateUserUseCase {
         dt_nascimento_user,
         dt_matricula_user,
         situacao_user,
-        senha: hashPassword,
+        senha,
         tipo_user,
         roles,
       },

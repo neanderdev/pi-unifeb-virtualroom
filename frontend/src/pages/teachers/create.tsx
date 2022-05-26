@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
+import md5 from 'md5';
 
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from '../../services/queryClient';
@@ -91,6 +92,8 @@ export default function CreateTeacher() {
     const handleCreateUser: SubmitHandler<CreateUserFormData> = async (values) => {
         const user = {
             ...values,
+            senha: md5(values.senha),
+            confirmacao_senha: md5(values.confirmacao_senha),
             tipo_user: "T",
             roles: "teacher"
         };
