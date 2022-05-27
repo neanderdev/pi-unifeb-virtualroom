@@ -19,6 +19,7 @@ import { UploadBackgroundClassController } from "./modules/class/useCases/upload
 import { FindClassByUidController } from "./modules/class/useCases/findClassByUid/FindClassByUidController";
 import { UpdateClassController } from "./modules/class/useCases/updateClass/UpdateClassController";
 import { ClassArchiveController } from "./modules/class/useCases/classArchive/ClassArchiveController";
+import { AddUserToClassController } from "./modules/classUser/useCases/addUserToClass/AddUserToClassController";
 import { ListAllCategoryActivityController } from "./modules/categoryActivity/useCases/listAllCategoryActivity/ListAllCategoryActivityController";
 import { CreateCategoryActivityController } from "./modules/categoryActivity/useCases/createCategoryActivity/CreateCategoryActivityController";
 import { UpdateCategoryActivityController } from "./modules/categoryActivity/useCases/updateCategoryActivity/UpdateCategoryActivityController";
@@ -63,6 +64,7 @@ const uploadBackgroundController = new UploadBackgroundClassController();
 const findClassByUidController = new FindClassByUidController();
 const updateClassController = new UpdateClassController();
 const classArchiveController = new ClassArchiveController();
+const addUserToClassController = new AddUserToClassController();
 const listAllCategoryActivity = new ListAllCategoryActivityController();
 const createCategoryActivityController = new CreateCategoryActivityController();
 const updateCategoryActivityController = new UpdateCategoryActivityController();
@@ -122,6 +124,11 @@ routes.patch(
   "/class/:uid_class",
   ensureAuthenticated,
   classArchiveController.handle
+);
+routes.post(
+  "/add-user-to-class/",
+  ensureAuthenticated,
+  addUserToClassController.handle
 );
 routes.get(
   "/category-activity/:class_uid",

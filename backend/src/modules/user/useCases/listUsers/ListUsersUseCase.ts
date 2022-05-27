@@ -11,9 +11,11 @@ export class ListUsersUseCase {
         take: Number(per_page),
       });
 
+      const totalUsers = await prisma.user.findMany();
+
       return {
         users,
-        countUsers: users.length,
+        countUsers: totalUsers.length,
       };
     } else {
       const users = await prisma.user.findMany({
