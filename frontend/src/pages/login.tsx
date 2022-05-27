@@ -14,13 +14,12 @@ import { Input } from '../components/Form/Input';
 interface SignInFormData {
     ra: number;
     senha: string;
-}
+};
 
 const signInFormSchema = yup.object().shape({
     ra: yup.number().typeError("RA é somente número").required('RA obrigatório'),
     senha: yup.string().required('Senha obrigatória'),
 });
-
 
 export default function SignIn() {
     const { register, handleSubmit, formState } = useForm({

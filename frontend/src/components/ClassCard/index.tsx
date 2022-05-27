@@ -2,6 +2,9 @@ import NextLink from "next/link";
 import { memo } from "react";
 import { Avatar, Box, Flex, Heading, Stack, Text, Image, useColorModeValue, IconButton } from "@chakra-ui/react";
 import { FaTasks } from "react-icons/fa";
+import { IoMdAdd } from "react-icons/io";
+
+import { useModal } from "../../contexts/ModalContext";
 
 interface ClassCardProps {
     imageClass: string;
@@ -13,6 +16,8 @@ interface ClassCardProps {
 }
 
 function ClassCardComponent({ imageClass, hrefClass, nameClass, nameTeacherClass, nameStudent, imageStudent }: ClassCardProps) {
+    const { onOpen } = useModal();
+
     return (
         <NextLink href={hrefClass} passHref>
             <Box
@@ -63,7 +68,7 @@ function ClassCardComponent({ imageClass, hrefClass, nameClass, nameTeacherClass
                     </Text>
                 </Stack>
 
-                <Stack pl={4} pt={-2} pb={4}>
+                <Stack pl={4} pt={-2} pb={4} direction="row">
                     <IconButton
                         color="pink.500"
                         colorScheme="transparent"
@@ -79,6 +84,23 @@ function ClassCardComponent({ imageClass, hrefClass, nameClass, nameTeacherClass
                             alert(nameClass);
                         }}
                         title="Ver tarefas desta sala de aula"
+                    />
+
+                    <IconButton
+                        color="pink.500"
+                        colorScheme="transparent"
+                        aria-label="Adicionar usuário a esta turma"
+                        boxSize="15px"
+                        _focus={{ shadow: "none" }}
+                        icon={
+                            <IoMdAdd size={28} />
+                        }
+                        onClick={(e) => {
+                            e.preventDefault();
+
+                            onOpen();
+                        }}
+                        title="Adicionar usuário a esta turma"
                     />
                 </Stack>
             </Box>

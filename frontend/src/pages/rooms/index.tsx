@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Icon, SimpleGrid, Spinner, Stack, Text, useMediaQuery } from "@chakra-ui/react";
+import { Box, Button, Flex, Icon, SimpleGrid, Spinner, Stack, Text, useBreakpointValue, useMediaQuery } from "@chakra-ui/react";
 import { RiAddLine } from "react-icons/ri";
 
 import { getMe } from "../../services/hooks/useMe";
@@ -11,6 +11,7 @@ import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { ClassCard } from "../../components/ClassCard";
 import { Can } from "../../components/Can";
+import { ModalAddUser } from "../../components/ModalAddUser";
 
 interface Me {
     uid_user: string;
@@ -26,6 +27,10 @@ interface RoomsProps {
 
 export default function Rooms({ me }: RoomsProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
+    const isWideVersion = useBreakpointValue({
+        base: false,
+        lg: true,
+    });
 
     const { data, isLoading, error } = useAllClass();
 
@@ -69,15 +74,18 @@ export default function Rooms({ me }: RoomsProps) {
                                         <Text>Você ainda não está em nenhuma turma.</Text>
                                     </Flex>
                                 ) : data.map((turma) => (
-                                    <ClassCard
-                                        key={turma.uid_class}
-                                        imageClass={`http://localhost:8000/files${turma.background_class}`}
-                                        nameClass={turma.name_matter_class}
-                                        hrefClass={`/rooms/${turma.uid_class}`}
-                                        nameTeacherClass={turma.ClassUser?.filter((user) => user.user.tipo_user === 'T')[0].user.name_user}
-                                        nameStudent={turma.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0].user.name_user}
-                                        imageStudent=""
-                                    />
+                                    <Box key={turma.uid_class}>
+                                        <ClassCard
+                                            imageClass={`http://localhost:8000/files${turma.background_class}`}
+                                            nameClass={turma.name_matter_class}
+                                            hrefClass={`/rooms/${turma.uid_class}`}
+                                            nameTeacherClass={turma.ClassUser?.filter((user) => user.user.tipo_user === 'T')[0]?.user.name_user}
+                                            nameStudent={turma.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.name_user}
+                                            imageStudent=""
+                                        />
+
+                                        <ModalAddUser class_uid={turma.uid_class} isWideVersion={isWideVersion} />
+                                    </Box>
                                 ))
                             )}
                         </SimpleGrid>

@@ -292,7 +292,7 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
                                                 classNotice={classNotice}
                                                 setClassNotice={setClassNotice}
                                                 avatarStudent=""
-                                                nameStudent={classes.ClassUser?.filter((user) => user.user.ra_user === ra_user)[0].user.name_user}
+                                                nameStudent={classes.ClassUser?.filter((user) => user.user.ra_user === ra_user)[0]?.user.name_user}
                                                 activities={data}
                                                 thatWeekActivity={thatWeekActivity}
                                             />
