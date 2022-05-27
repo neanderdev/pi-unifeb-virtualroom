@@ -25,6 +25,7 @@ interface User {
   senha: string;
   tipo_user: string;
   roles: string;
+  checked?: boolean;
 }
 
 interface GetUserResponse {
@@ -82,6 +83,7 @@ export async function getUsers(
       senha: user.senha,
       tipo_user: user.tipo_user,
       roles: user.roles,
+      checked: false,
     };
   });
 

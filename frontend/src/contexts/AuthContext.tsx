@@ -121,7 +121,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         } catch (error) {
             toast({
                 title: 'Falha ao fazer o login',
-                description: `${error.response.data?.message}`,
+                description: `${error.response?.data?.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

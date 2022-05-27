@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { memo } from "react";
+import { Dispatch, memo, SetStateAction } from "react";
 import { Avatar, Box, Flex, Heading, Stack, Text, Image, useColorModeValue, IconButton } from "@chakra-ui/react";
 import { FaTasks } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
@@ -7,15 +7,17 @@ import { IoMdAdd } from "react-icons/io";
 import { useModal } from "../../contexts/ModalContext";
 
 interface ClassCardProps {
+    classUid: string;
     imageClass: string;
     hrefClass: string;
     nameClass: string;
     nameTeacherClass: string;
     nameStudent: string;
     imageStudent: string;
+    setClassUidSelectedIsModal: Dispatch<SetStateAction<string>>;
 }
 
-function ClassCardComponent({ imageClass, hrefClass, nameClass, nameTeacherClass, nameStudent, imageStudent }: ClassCardProps) {
+function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTeacherClass, nameStudent, imageStudent, setClassUidSelectedIsModal }: ClassCardProps) {
     const { onOpen } = useModal();
 
     return (
@@ -97,6 +99,8 @@ function ClassCardComponent({ imageClass, hrefClass, nameClass, nameTeacherClass
                         }
                         onClick={(e) => {
                             e.preventDefault();
+
+                            setClassUidSelectedIsModal(classUid);
 
                             onOpen();
                         }}

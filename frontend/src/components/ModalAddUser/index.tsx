@@ -1,20 +1,149 @@
-import { useState } from "react";
-import { Box, Button, Checkbox, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useBreakpointValue, VStack } from "@chakra-ui/react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Box, Button, Checkbox, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useToast, VStack } from "@chakra-ui/react";
+import { useMutation } from "react-query";
+
+import { setupAPIClient } from "../../services/api";
+import { queryClient } from "../../services/queryClient";
 
 import { useModal } from "../../contexts/ModalContext";
+
+import { Pagination } from "../Pagination";
+
+interface User {
+    uid_user: string;
+    ra_user: number;
+    name_user: string;
+    gender_user: string;
+    cpf_cnpj_user: string;
+    tel_cel_user: string;
+    tel_res_user: string;
+    endereco_user: string;
+    numero_user: string;
+    bairro_user: string;
+    complemento_user: string;
+    cep_user: string;
+    cidade_user: string;
+    uf_user: string;
+    email_user: string;
+    dt_nascimento_user: Date | string;
+    dt_matricula_user: Date | string;
+    situacao_user: boolean;
+    senha: string;
+    tipo_user: string;
+    roles: string;
+    checked?: boolean;
+};
 
 interface ModalAddUserProps {
     class_uid: string;
     isWideVersion: boolean;
+    isLoadingUsers: boolean;
+    isFetchingUsers: boolean;
+    errorUsers: any;
+    users: User[];
+    totalCount: number;
+    page: number;
+    setPage: Dispatch<SetStateAction<number>>;
 };
 
-export function ModalAddUser({ class_uid, isWideVersion }: ModalAddUserProps) {
+interface UserToClass {
+    user_uid: string;
+    class_uid: string;
+};
+
+export function ModalAddUser({
+    class_uid,
+    isWideVersion,
+    isLoadingUsers,
+    isFetchingUsers,
+    errorUsers,
+    users,
+    totalCount,
+    page,
+    setPage,
+}: ModalAddUserProps) {
     const { isOpen, onClose } = useModal();
+    const toast = useToast();
 
-    const [checkedItems, setCheckedItems] = useState([false, false]);
+    const [usersArr, setUsersArr] = useState(users ?? []);
 
-    const allChecked = checkedItems.every(Boolean);
-    const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
+    const allChecked = usersArr?.every(user => user.checked);
+    const isIndeterminate = usersArr?.some(user => user.checked) && !allChecked;
+
+    const addUserToClass = useMutation(async (addUserToClass: UserToClass) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.post('add-user-to-class', addUserToClass);
+
+        return response;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('classUid')
+        }
+    });
+
+    const handleAddUserToClass = async () => {
+        try {
+            const isUserChecked = usersArr?.filter((user) => user.checked === true);
+
+            if (isUserChecked?.length > 0) {
+                const userToClass = isUserChecked.map((user) => {
+                    return {
+                        user_uid: user.uid_user,
+                        class_uid,
+                    };
+                }) as UserToClass[];
+
+                userToClass.map(async (userToClass) => {
+                    try {
+                        await addUserToClass.mutateAsync({
+                            user_uid: userToClass.user_uid,
+                            class_uid: userToClass.class_uid,
+                        });
+
+                        toast({
+                            title: 'Usuário adicionado a turma',
+                            description: "Usuário adicionado a turma com sucesso",
+                            status: 'success',
+                            duration: 1500,
+                            isClosable: true,
+                        });
+                    } catch (error) {
+                        console.log(error);
+
+                        toast({
+                            title: 'Erro ao adicionar usuário a turma',
+                            description: `Erro: ${error.response?.data?.message}`,
+                            status: 'error',
+                            duration: 1500,
+                            isClosable: true,
+                        });
+
+                        return;
+                    }
+                });
+
+                onClose();
+            } else {
+                toast({
+                    title: 'Usuários vazios',
+                    description: "Nenhum usuário selecionado",
+                    status: 'warning',
+                    duration: 1500,
+                    isClosable: true,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+
+            toast({
+                title: 'Erro ao adicionar usuário a turma',
+                description: `Erro: ${error.message}`,
+                status: 'error',
+                duration: 1500,
+                isClosable: true,
+            });
+        }
+    };
 
     return (
         <Modal
@@ -38,59 +167,90 @@ export function ModalAddUser({ class_uid, isWideVersion }: ModalAddUserProps) {
                         p={['6', '8']}
                     >
                         <VStack spacing='8'>
-                            <TableContainer w="full">
-                                <Table variant='striped' colorScheme='gray'>
-                                    <Thead>
-                                        <Tr>
-                                            <Th>
-                                                <Checkbox
-                                                    colorScheme='pink'
-                                                    isChecked={allChecked}
-                                                    isIndeterminate={isIndeterminate}
-                                                    onChange={(e) => setCheckedItems([e.target.checked, e.target.checked])}
-                                                />
-                                            </Th>
-                                            <Th isNumeric>RA</Th>
+                            {isLoadingUsers ? (
+                                <Flex justify='center' align="center">
+                                    <Spinner size="xl" color='gray.500' ml='4' />
+                                </Flex>
+                            ) : isFetchingUsers ? (
+                                <Flex justify='center' align="center">
+                                    <Spinner size="xl" color='gray.500' ml='4' />
+                                </Flex>
+                            ) : errorUsers ? (
+                                <Flex justify='center'>
+                                    <Text>Falha ao obter dados da turmas.</Text>
+                                </Flex>
+                            ) : (
+                                <>
+                                    <Table variant='striped' colorScheme='linkedin'>
+                                        <Thead>
+                                            <Tr>
+                                                <Th>
+                                                    <Checkbox
+                                                        colorScheme='pink'
+                                                        isChecked={allChecked}
+                                                        isIndeterminate={isIndeterminate}
+                                                        onChange={(e) => {
+                                                            const isVerifyAllCheckedUsers = users?.map((user) => {
+                                                                return {
+                                                                    ...user,
+                                                                    checked: e.target.checked,
+                                                                };
+                                                            });
 
-                                            {isWideVersion && <Th>Nome</Th>}
-                                        </Tr>
-                                    </Thead>
+                                                            setUsersArr(isVerifyAllCheckedUsers);
+                                                        }}
+                                                    />
+                                                </Th>
 
-                                    <Tbody>
-                                        <Tr key="1">
-                                            <Td>
-                                                <Checkbox
-                                                    colorScheme='pink'
-                                                    isChecked={checkedItems[0]}
-                                                    onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
-                                                />
-                                            </Td>
+                                                {isWideVersion && <Th>Nome</Th>}
 
-                                            <Td isNumeric>535885</Td>
+                                                <Th isNumeric>RA</Th>
+                                            </Tr>
+                                        </Thead>
 
-                                            {isWideVersion && <Td isTruncated>Neander de Souza</Td>}
-                                        </Tr>
+                                        <Tbody>
+                                            {usersArr?.map((user, index) => (
+                                                <Tr key={index}>
+                                                    <Td>
+                                                        <Checkbox
+                                                            colorScheme='pink'
+                                                            isChecked={user.checked}
+                                                            onChange={(e) => {
+                                                                const isVerifyCheckedUser = usersArr?.map((user, i) => {
+                                                                    if (i === index) {
+                                                                        user.checked = e.target.checked;
+                                                                    }
 
-                                        <Tr key="2">
-                                            <Td>
-                                                <Checkbox
-                                                    colorScheme='pink'
-                                                    isChecked={checkedItems[1]}
-                                                    onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
-                                                />
-                                            </Td>
+                                                                    return {
+                                                                        ...user
+                                                                    };
+                                                                });
 
-                                            <Td isNumeric>999999</Td>
+                                                                setUsersArr(isVerifyCheckedUser);
+                                                            }}
+                                                        />
+                                                    </Td>
 
-                                            {isWideVersion && <Td isTruncated>Dudu Buch</Td>}
-                                        </Tr>
-                                    </Tbody>
-                                </Table>
-                            </TableContainer>
+                                                    {isWideVersion && <Td isTruncated>{user.name_user}</Td>}
+
+                                                    <Td isNumeric>{user.ra_user}</Td>
+                                                </Tr>
+                                            ))}
+                                        </Tbody>
+                                    </Table>
+
+                                    <Pagination
+                                        totalCountOfRegisters={totalCount}
+                                        totalCountOfRegistersNow={usersArr.length}
+                                        currentPage={page}
+                                        onPageChange={setPage}
+                                    />
+                                </>
+                            )}
                         </VStack>
 
                         <HStack mt={4} alignItems="center" justifyContent="flex-end">
-                            <Button type='submit' colorScheme='pink' mr={3}>
+                            <Button type='submit' colorScheme='pink' mr={3} onClick={handleAddUserToClass}>
                                 Salvar
                             </Button>
 

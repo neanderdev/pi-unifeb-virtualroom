@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Box, Button, Flex, Icon, SimpleGrid, Spinner, Stack, Text, useBreakpointValue, useMediaQuery } from "@chakra-ui/react";
 import { RiAddLine } from "react-icons/ri";
 
 import { getMe } from "../../services/hooks/useMe";
 import { useAllClass } from "../../services/hooks/useAllClass";
+import { useUsers } from "../../services/hooks/useUsers";
+
+import { useModal } from "../../contexts/ModalContext";
 
 import { withSSRAuth } from "../../utils/withSSRAuth";
 
@@ -26,13 +30,24 @@ interface RoomsProps {
 };
 
 export default function Rooms({ me }: RoomsProps) {
+    const { isOpen } = useModal();
+
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
     const isWideVersion = useBreakpointValue({
         base: false,
         lg: true,
     });
 
+    const [page, setPage] = useState(1);
+    const [classUidSelectedIsModal, setClassUidSelectedIsModal] = useState("");
+
     const { data, isLoading, error } = useAllClass();
+    const {
+        data: dataUsers,
+        isLoading: isLoadingUsers,
+        isFetching: isFetchingUsers,
+        error: errorUsers
+    } = useUsers(page, "A");
 
     return (
         <Box>
@@ -74,24 +89,40 @@ export default function Rooms({ me }: RoomsProps) {
                                         <Text>Você ainda não está em nenhuma turma.</Text>
                                     </Flex>
                                 ) : data.map((turma) => (
-                                    <Box key={turma.uid_class}>
-                                        <ClassCard
-                                            imageClass={`http://localhost:8000/files${turma.background_class}`}
-                                            nameClass={turma.name_matter_class}
-                                            hrefClass={`/rooms/${turma.uid_class}`}
-                                            nameTeacherClass={turma.ClassUser?.filter((user) => user.user.tipo_user === 'T')[0]?.user.name_user}
-                                            nameStudent={turma.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.name_user}
-                                            imageStudent=""
-                                        />
-
-                                        <ModalAddUser class_uid={turma.uid_class} isWideVersion={isWideVersion} />
-                                    </Box>
+                                    <ClassCard
+                                        key={turma.uid_class}
+                                        classUid={turma.uid_class}
+                                        imageClass={`http://localhost:8000/files${turma.background_class}`}
+                                        nameClass={turma.name_matter_class}
+                                        hrefClass={`/rooms/${turma.uid_class}`}
+                                        nameTeacherClass={turma.ClassUser?.filter((user) => user.user.tipo_user === 'T')[0]?.user.name_user}
+                                        nameStudent={turma.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.name_user}
+                                        imageStudent=""
+                                        setClassUidSelectedIsModal={setClassUidSelectedIsModal}
+                                    />
                                 ))
                             )}
                         </SimpleGrid>
                     </Box>
                 </Stack>
             </Box>
+
+            {isOpen && <ModalAddUser
+                class_uid={classUidSelectedIsModal}
+                isWideVersion={isWideVersion}
+                isLoadingUsers={isLoadingUsers}
+                isFetchingUsers={isFetchingUsers}
+                errorUsers={errorUsers}
+                users={dataUsers?.users?.map((user) => {
+                    return {
+                        ...user,
+                        checked: false,
+                    };
+                })}
+                totalCount={dataUsers?.totalCount}
+                page={page}
+                setPage={setPage}
+            />}
         </Box>
     );
 }
