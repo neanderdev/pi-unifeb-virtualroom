@@ -1,10 +1,15 @@
 import NextLink from "next/link";
 import { Dispatch, memo, SetStateAction } from "react";
-import { Avatar, Box, Flex, Heading, Stack, Text, Image, useColorModeValue, IconButton } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Heading, Stack, Text, Image, useColorModeValue, IconButton, useToast } from "@chakra-ui/react";
 import { FaTasks } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
+import { BiArchiveIn, BiArchiveOut } from "react-icons/bi";
+import { useMutation } from "react-query";
 
 import { useModal } from "../../contexts/ModalContext";
+
+import { setupAPIClient } from "../../services/api";
+import { queryClient } from "../../services/queryClient";
 
 interface ClassCardProps {
     classUid: string;
@@ -14,11 +19,54 @@ interface ClassCardProps {
     nameTeacherClass: string;
     nameStudent: string;
     imageStudent: string;
-    setClassUidSelectedIsModal: Dispatch<SetStateAction<string>>;
+    setClassUidSelectedIsModal?: Dispatch<SetStateAction<string>>;
+    isArchiveClass?: boolean;
+};
+
+interface ArchiveClass {
+    class_uid: string;
 }
 
-function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTeacherClass, nameStudent, imageStudent, setClassUidSelectedIsModal }: ClassCardProps) {
+function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTeacherClass, nameStudent, imageStudent, setClassUidSelectedIsModal, isArchiveClass = false }: ClassCardProps) {
     const { onOpen } = useModal();
+    const toast = useToast();
+
+    const archiveClass = useMutation(async ({ class_uid }: ArchiveClass) => {
+        const apiClient = setupAPIClient();
+        const response = await apiClient.patch(`class/${class_uid}`);
+
+        return response;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('class')
+        }
+    });
+
+    const handleArchiveClass = async (class_uid: string) => {
+        try {
+            if (window.confirm("Você realmente deseja arquivar esta turma?")) {
+                await archiveClass.mutateAsync({ class_uid });
+
+                toast({
+                    title: 'Turma arquivada',
+                    description: "Turma arquivada com sucesso",
+                    status: 'success',
+                    duration: 1500,
+                    isClosable: true,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+
+            toast({
+                title: 'Erro ao arquivar a turma',
+                description: `Erro: ${error.message}`,
+                status: 'error',
+                duration: 1500,
+                isClosable: true,
+            });
+        }
+    };
 
     return (
         <NextLink href={hrefClass} passHref>
@@ -88,23 +136,42 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
                         title="Ver tarefas desta sala de aula"
                     />
 
+                    {!isArchiveClass && (
+                        <IconButton
+                            color="pink.500"
+                            colorScheme="transparent"
+                            aria-label="Adicionar usuário a esta turma"
+                            boxSize="15px"
+                            _focus={{ shadow: "none" }}
+                            icon={
+                                <IoMdAdd size={28} />
+                            }
+                            onClick={(e) => {
+                                e.preventDefault();
+
+                                setClassUidSelectedIsModal(classUid);
+
+                                onOpen();
+                            }}
+                            title="Adicionar usuário a esta turma"
+                        />
+                    )}
+
                     <IconButton
                         color="pink.500"
                         colorScheme="transparent"
-                        aria-label="Adicionar usuário a esta turma"
+                        aria-label="Arquivar esta turma"
                         boxSize="15px"
                         _focus={{ shadow: "none" }}
                         icon={
-                            <IoMdAdd size={28} />
+                            isArchiveClass ? <BiArchiveOut size={28} /> : <BiArchiveIn size={28} />
                         }
                         onClick={(e) => {
                             e.preventDefault();
 
-                            setClassUidSelectedIsModal(classUid);
-
-                            onOpen();
+                            handleArchiveClass(classUid);
                         }}
-                        title="Adicionar usuário a esta turma"
+                        title="Arquivar esta turma"
                     />
                 </Stack>
             </Box>

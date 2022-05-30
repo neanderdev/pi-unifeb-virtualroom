@@ -26,18 +26,24 @@ interface ClassResponse {
 type GetAllClassResponse = ClassResponse[];
 
 export async function getAllClass(
+  tipo: string,
   ctx?: GetServerSidePropsContext
 ): Promise<GetAllClassResponse> {
   const apiClient = setupAPIClient(ctx);
-  const { data } = await apiClient.get<GetAllClassResponse>("class");
+  const { data } = await apiClient.get<GetAllClassResponse>("class", {
+    params: {
+      tipo,
+    },
+  });
 
   return data;
 }
 
 export function useAllClass(
+  tipo: string,
   options?: UseQueryOptions
 ): UseQueryResult<GetAllClassResponse, unknown> {
-  return useQuery(["class"], () => getAllClass(), {
+  return useQuery(["class", tipo], () => getAllClass(tipo), {
     staleTime: 1000 * 60 * 5, // 5 minutes
     ...options,
   }) as UseQueryResult<GetAllClassResponse, unknown>;

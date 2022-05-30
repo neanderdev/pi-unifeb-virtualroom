@@ -14,7 +14,7 @@ import { setupAPIClient } from "../../services/api";
 import { queryClient } from '../../services/queryClient';
 
 import { withSSRAuth } from "../../utils/withSSRAuth";
-import { maskWhatsApp, maskCPFOrCNPJ, maskPhone, maskCEP } from "../../utils/masks";
+import { maskWhatsApp, maskCPFOrCNPJ, maskPhone, maskCEP, formatterDateTimeForInput } from "../../utils/masks";
 
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
@@ -478,6 +478,9 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
     const uid_user = ctx.params.uid_user as string;
 
     const { user } = await getUserUid(uid_user, ctx);
+
+    user.dt_nascimento_user = formatterDateTimeForInput(new Date(user.dt_nascimento_user)).split("T")[0];
+    user.dt_matricula_user = formatterDateTimeForInput(new Date(user.dt_matricula_user)).split("T")[0];
 
     return {
         props: {

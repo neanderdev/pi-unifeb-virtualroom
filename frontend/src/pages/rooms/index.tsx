@@ -41,7 +41,7 @@ export default function Rooms({ me }: RoomsProps) {
     const [page, setPage] = useState(1);
     const [classUidSelectedIsModal, setClassUidSelectedIsModal] = useState("");
 
-    const { data, isLoading, error } = useAllClass();
+    const { data, isLoading, error } = useAllClass("C");
     const {
         data: dataUsers,
         isLoading: isLoadingUsers,
