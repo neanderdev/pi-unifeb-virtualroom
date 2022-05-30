@@ -1,20 +1,22 @@
 import { prisma } from "../../../../database/prismaClient";
 
 export class ListAllClassUseCase {
-  async execute(tipo_user: string, uid_user: string) {
+  async execute(tipo_user: string, uid_user: string, tipo: string) {
     if (tipo_user === "A") {
       const allClassAdmin = await prisma.class.findMany({
         where: {
-          isArchive: false,
+          isArchive: tipo === "C" ? false : true,
         },
       });
 
       return allClassAdmin;
     }
 
+    // A = Class Archive
+    // C = Class
     const allClassUser = await prisma.class.findMany({
       where: {
-        isArchive: false,
+        isArchive: tipo === "C" ? false : true,
         ClassUser: {
           some: {
             user_uid: uid_user,
