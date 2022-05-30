@@ -12,6 +12,7 @@ import { CreateUserController } from "./modules/user/useCases/createUser/CreateU
 import { FindUserByUidController } from "./modules/user/useCases/findUserByUid/FindUserByUidController";
 import { UpdateUserController } from "./modules/user/useCases/updateUser/UpdateUserController";
 import { DeleteUserController } from "./modules/user/useCases/deleteUser/DeleteUserController";
+import { FindClassUserByUidController } from "./modules/classUser/useCases/findClassUserByUid/FindClassUserByUidController";
 import { FindMeByIdController } from "./modules/me/useCases/FindMeByIdController";
 import { ListAllClassController } from "./modules/class/useCases/listAllClass/ListAllClassController";
 import { CreateClassController } from "./modules/class/useCases/createClass/CreateClassController";
@@ -57,6 +58,7 @@ const createUserController = new CreateUserController();
 const findUserByUidController = new FindUserByUidController();
 const updateUserController = new UpdateUserController();
 const deleteUserController = new DeleteUserController();
+const findClassUserByUidController = new FindClassUserByUidController();
 const findMeByIdController = new FindMeByIdController();
 const listAllClassController = new ListAllClassController();
 const createClassController = new CreateClassController();
@@ -104,6 +106,11 @@ routes.delete(
   "/user/:uid_user",
   ensureAuthenticated,
   deleteUserController.handle
+);
+routes.get(
+  "/class-user/:class_uid",
+  ensureAuthenticated,
+  findClassUserByUidController.handle
 );
 routes.get("/me/", ensureAuthenticated, findMeByIdController.handle);
 routes.get("/class/", ensureAuthenticated, listAllClassController.handle);
