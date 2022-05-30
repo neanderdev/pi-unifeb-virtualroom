@@ -42,6 +42,7 @@ import { CreateActivityCommentController } from "./modules/privateComment/useCas
 import { ListThatWeekActivityController } from "./modules/activity/useCases/listThatWeekActivity/ListThatWeekActivityController";
 import { ListActivityAndUsersController } from "./modules/activity/useCases/listActivityAndUsers/ListActivityAndUsersController";
 import { GradeTheStudentController } from "./modules/detailActivity/gradeTheStudent/GradeTheStudentController";
+import { ListAllUserActivitiesController } from "./modules/activity/useCases/listAllUserActivities/ListAllUserActivitiesController";
 
 const routes = Router();
 
@@ -91,6 +92,7 @@ const createActivityCommentController = new CreateActivityCommentController();
 const listThatWeekActivityController = new ListThatWeekActivityController();
 const listActivityAndUsersController = new ListActivityAndUsersController();
 const gradeTheStudentController = new GradeTheStudentController();
+const listAllUserActivitiesController = new ListAllUserActivitiesController();
 
 routes.post("/login/", loginController.handle);
 routes.post("/refresh-token/", refreshTokenController.handle);
@@ -239,6 +241,11 @@ routes.post(
   "/grade-the-student/",
   ensureAuthenticated,
   gradeTheStudentController.handle
+);
+routes.get(
+  "/list-all-user-activities/:user_uid",
+  ensureAuthenticated,
+  listAllUserActivitiesController.handle
 );
 
 export { routes };

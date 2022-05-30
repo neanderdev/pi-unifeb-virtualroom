@@ -71,17 +71,19 @@ export class UploadMaterialActivityUseCase {
       }
     });
 
-    links.map(async (link) => {
-      if (JSON.parse(link)) {
-        await prisma.materialActivity.create({
-          data: {
-            link_material_activity: JSON.parse(link).link,
-            name_material_activity: JSON.parse(link).name,
-            size_material_activity: 0,
-            tipo_material_activity: "L",
-            activity_uid,
-          },
-        });
+    links.map(async (link: any) => {
+      if (link !== undefined && link !== null) {
+        if (JSON.parse(link)) {
+          await prisma.materialActivity.create({
+            data: {
+              link_material_activity: JSON.parse(link).link,
+              name_material_activity: JSON.parse(link).name,
+              size_material_activity: 0,
+              tipo_material_activity: "L",
+              activity_uid,
+            },
+          });
+        }
       }
     });
   }
