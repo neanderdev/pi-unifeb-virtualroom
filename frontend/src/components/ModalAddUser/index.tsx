@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Box, Button, Checkbox, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useToast, VStack } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 
+import { useFindClassUserByUid } from "../../services/hooks/useFindClassUserByUid";
+
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 
@@ -65,6 +67,20 @@ export function ModalAddUser({
     const { isOpen, onClose } = useModal();
     const toast = useToast();
 
+    const { data } = useFindClassUserByUid(class_uid);
+
+    const arrVerifyClassUser = users?.filter((user) => {
+        return data?.filter((classUser) => {
+            if (user.uid_user === classUser.user_uid) {
+                user.checked = true;
+            }
+
+            return {
+                ...user,
+            };
+        });
+    });
+
     const [usersArr, setUsersArr] = useState(users ?? []);
 
     const allChecked = usersArr?.every(user => user.checked);
@@ -77,7 +93,8 @@ export function ModalAddUser({
         return response;
     }, {
         onSuccess: () => {
-            queryClient.invalidateQueries('classUid')
+            queryClient.invalidateQueries('classUid');
+            queryClient.invalidateQueries('classUser');
         }
     });
 
