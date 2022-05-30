@@ -52,7 +52,7 @@ export function BoxHeaderActivity({ idCategory, title, tipoActivity }: BoxHeader
                             bg: "transparent",
                         }}
                         icon={<Icon as={IoAddSharp} fontSize={24} />}
-                        onClick={() => router.push(`${router.asPath}/${tipoActivity}/${idCategory}`)}
+                        onClick={() => router.push(`${router.asPath.split("#")[0]}/${tipoActivity}/${idCategory}`)}
                     />
                 </Can>
 

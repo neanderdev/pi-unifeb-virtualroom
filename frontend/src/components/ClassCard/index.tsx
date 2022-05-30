@@ -11,6 +11,8 @@ import { useModal } from "../../contexts/ModalContext";
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 
+import { Can } from "../Can";
+
 interface ClassCardProps {
     classUid: string;
     imageClass: string;
@@ -137,42 +139,46 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
                     />
 
                     {!isArchiveClass && (
+                        <Can roles={["admin"]}>
+                            <IconButton
+                                color="pink.500"
+                                colorScheme="transparent"
+                                aria-label="Adicionar usuário a esta turma"
+                                boxSize="15px"
+                                _focus={{ shadow: "none" }}
+                                icon={
+                                    <IoMdAdd size={28} />
+                                }
+                                onClick={(e) => {
+                                    e.preventDefault();
+
+                                    setClassUidSelectedIsModal(classUid);
+
+                                    onOpen();
+                                }}
+                                title="Adicionar usuário a esta turma"
+                            />
+                        </Can>
+                    )}
+
+                    <Can roles={["admin"]}>
                         <IconButton
                             color="pink.500"
                             colorScheme="transparent"
-                            aria-label="Adicionar usuário a esta turma"
+                            aria-label="Arquivar esta turma"
                             boxSize="15px"
                             _focus={{ shadow: "none" }}
                             icon={
-                                <IoMdAdd size={28} />
+                                isArchiveClass ? <BiArchiveOut size={28} /> : <BiArchiveIn size={28} />
                             }
                             onClick={(e) => {
                                 e.preventDefault();
 
-                                setClassUidSelectedIsModal(classUid);
-
-                                onOpen();
+                                handleArchiveClass(classUid);
                             }}
-                            title="Adicionar usuário a esta turma"
+                            title="Arquivar esta turma"
                         />
-                    )}
-
-                    <IconButton
-                        color="pink.500"
-                        colorScheme="transparent"
-                        aria-label="Arquivar esta turma"
-                        boxSize="15px"
-                        _focus={{ shadow: "none" }}
-                        icon={
-                            isArchiveClass ? <BiArchiveOut size={28} /> : <BiArchiveIn size={28} />
-                        }
-                        onClick={(e) => {
-                            e.preventDefault();
-
-                            handleArchiveClass(classUid);
-                        }}
-                        title="Arquivar esta turma"
-                    />
+                    </Can>
                 </Stack>
             </Box>
         </NextLink>

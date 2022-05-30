@@ -75,9 +75,9 @@ export default function ActivityId({
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar isCollapseSidebar />
+                    <Sidebar isCollapseSidebar uid_user={uid_user} />
 
-                    {isSmallScreen && <MobileSidebar />}
+                    {isSmallScreen && <MobileSidebar uid_user={uid_user} />}
 
                     <Box w="full">
                         <Box

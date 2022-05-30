@@ -5,6 +5,8 @@ import { FiPower, FiSettings } from "react-icons/fi";
 import { GiTeacher } from "react-icons/gi";
 import { IoSchoolOutline } from "react-icons/io5";
 
+import { useListAllUserActivities } from "../../services/hooks/useListAllUserActivities";
+
 import { useDrawer } from "../../contexts/DrawerContext";
 
 import { NavItem } from "./NavItem";
@@ -13,10 +15,13 @@ import { Can } from "../Can";
 
 interface SidebarProps {
     isCollapseSidebar?: boolean;
-}
+    uid_user: string;
+};
 
-export function Sidebar({ isCollapseSidebar = false }: SidebarProps) {
+export function Sidebar({ isCollapseSidebar = false, uid_user }: SidebarProps) {
     const { isOpen } = useDrawer();
+
+    const { data, isLoading } = useListAllUserActivities(uid_user);
 
     const NavAction = !isOpen && isCollapseSidebar ? CollapsedItem : isOpen && !isCollapseSidebar ? CollapsedItem : NavItem;
 
@@ -61,7 +66,7 @@ export function Sidebar({ isCollapseSidebar = false }: SidebarProps) {
                 href="/works"
                 name="Trabalhos"
                 icon={HiOutlineBookOpen}
-                count={2}
+                count={isLoading ? 0 : data.count}
             />
 
             <NavAction

@@ -6,8 +6,11 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
 
+import { getMe } from "../../services/hooks/useMe";
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from '../../services/queryClient';
+
+import { withSSRAuth } from "../../utils/withSSRAuth";
 
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
@@ -44,7 +47,11 @@ const createClassFormSchema = yup.object().shape({
         .test("type", "Aceita apenas os formatos: .png, .jpeg e .jpg", (value) => !value[0] || (value[0] && ["image/png", "image/jpeg", "image/jpg"].includes(value[0].type))),
 });
 
-export default function CreateRoom() {
+interface CreateRoomProps {
+    uid_user: string;
+};
+
+export default function CreateRoom({ uid_user }: CreateRoomProps) {
     const router = useRouter();
     const toast = useToast();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -131,9 +138,9 @@ export default function CreateRoom() {
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar />
+                    <Sidebar uid_user={uid_user} />
 
-                    {isSmallScreen && <MobileSidebar />}
+                    {isSmallScreen && <MobileSidebar uid_user={uid_user} />}
 
                     <Box w="full">
                         <Box
@@ -211,3 +218,13 @@ export default function CreateRoom() {
         </Box>
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const { me } = await getMe(ctx);
+
+    return {
+        props: {
+            uid_user: me.uid_user,
+        }
+    };
+})

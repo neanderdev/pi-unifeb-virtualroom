@@ -7,6 +7,7 @@ import { useMutation } from "react-query";
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 
+import { getMe } from "../../services/hooks/useMe";
 import { useUsers } from "../../services/hooks/useUsers";
 
 import { withSSRAuth } from "../../utils/withSSRAuth";
@@ -16,7 +17,11 @@ import { Sidebar } from "../../components/Sidebar";
 import { MobileSidebar } from "../../components/Sidebar/MobileSidebar";
 import { Pagination } from "../../components/Pagination";
 
-export default function Students() {
+interface StudentsProps {
+    uid_user: string;
+};
+
+export default function Students({ uid_user }: StudentsProps) {
     const toast = useToast();
     const [page, setPage] = useState(1);
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -78,9 +83,9 @@ export default function Students() {
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar />
+                    <Sidebar uid_user={uid_user} />
 
-                    {isSmallScreen && <MobileSidebar />}
+                    {isSmallScreen && <MobileSidebar uid_user={uid_user} />}
 
                     <Box w="full">
                         <Box flex='1' borderRadius={8} bg={useColorModeValue('gray.200', 'gray.800')} p='8'>
@@ -218,8 +223,12 @@ export default function Students() {
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const { me } = await getMe(ctx);
+
     return {
-        props: {}
+        props: {
+            uid_user: me.uid_user,
+        }
     };
 }, {
     roles: ['admin']

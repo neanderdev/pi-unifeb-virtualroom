@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
 import md5 from 'md5';
 
+import { getMe } from "../../services/hooks/useMe";
 import { getUserUid } from "../../services/hooks/useUserUid";
 
 import { setupAPIClient } from "../../services/api";
@@ -43,7 +44,7 @@ interface User {
     situacao_user: boolean;
     senha: string;
     confirmacao_senha: string;
-}
+};
 
 const updateUserFormSchema = yup.object().shape({
     ra_user: yup.number().typeError("RA é somente número").required('RA obrigatório'),
@@ -70,10 +71,11 @@ const updateUserFormSchema = yup.object().shape({
 });
 
 interface IStudent {
+    uid_user: string;
     user: User;
-}
+};
 
-export default function Student({ user }: IStudent) {
+export default function Student({ user, uid_user }: IStudent) {
     const router = useRouter();
     const toast = useToast();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -135,9 +137,9 @@ export default function Student({ user }: IStudent) {
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar />
+                    <Sidebar uid_user={uid_user} />
 
-                    {isSmallScreen && <MobileSidebar />}
+                    {isSmallScreen && <MobileSidebar uid_user={uid_user} />}
 
                     <Box w="full">
                         <Box
@@ -477,6 +479,7 @@ export default function Student({ user }: IStudent) {
 export const getServerSideProps = withSSRAuth(async (ctx) => {
     const uid_user = ctx.params.uid_user as string;
 
+    const { me } = await getMe(ctx);
     const { user } = await getUserUid(uid_user, ctx);
 
     user.dt_nascimento_user = formatterDateTimeForInput(new Date(user.dt_nascimento_user)).split("T")[0];
@@ -484,6 +487,7 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
 
     return {
         props: {
+            uid_user: me.uid_user,
             user,
         }
     };

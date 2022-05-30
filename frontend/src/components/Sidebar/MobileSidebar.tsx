@@ -5,14 +5,22 @@ import { FiPower, FiSettings } from "react-icons/fi";
 import { GiTeacher } from "react-icons/gi";
 import { IoSchoolOutline } from "react-icons/io5";
 
+import { useListAllUserActivities } from "../../services/hooks/useListAllUserActivities";
+
 import { useDrawer } from "../../contexts/DrawerContext";
 
 import { SearchBox } from "../Navbar/SearchBox";
 import { NavItem } from "./NavItem";
 import { Can } from "../Can";
 
-export function MobileSidebar() {
+interface MobileSidebarProps {
+    uid_user: string;
+}
+
+export function MobileSidebar({ uid_user }: MobileSidebarProps) {
     const { isOpen, onClose } = useDrawer();
+
+    const { data, isLoading } = useListAllUserActivities(uid_user);
 
     return (
         <Drawer isOpen={isOpen} onClose={onClose} placement="left">
@@ -48,7 +56,7 @@ export function MobileSidebar() {
                             href="/works"
                             name="Trabalhos"
                             icon={HiOutlineBookOpen}
-                            count={2}
+                            count={isLoading ? 0 : data.count}
                         />
 
                         <NavItem

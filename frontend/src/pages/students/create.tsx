@@ -8,9 +8,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
 import md5 from 'md5';
 
+import { getMe } from "../../services/hooks/useMe";
+
 import { setupAPIClient } from "../../services/api";
 import { queryClient } from '../../services/queryClient';
 
+import { withSSRAuth } from "../../utils/withSSRAuth";
 import { maskWhatsApp, maskCPFOrCNPJ, maskPhone, maskCEP } from "../../utils/masks";
 
 import { Navbar } from "../../components/Navbar";
@@ -40,7 +43,7 @@ interface CreateUserFormData {
     situacao_user: boolean;
     senha: string;
     confirmacao_senha: string;
-}
+};
 
 const createUserFormSchema = yup.object().shape({
     ra_user: yup.number().typeError("RA é somente número").required('RA obrigatório'),
@@ -66,7 +69,11 @@ const createUserFormSchema = yup.object().shape({
     ], 'As senhas precisam ser iguais'),
 });
 
-export default function CreateStudent() {
+interface CreateStudentProps {
+    uid_user: string;
+};
+
+export default function CreateStudent({ uid_user }: CreateStudentProps) {
     const router = useRouter();
     const toast = useToast();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -127,9 +134,9 @@ export default function CreateStudent() {
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar />
+                    <Sidebar uid_user={uid_user} />
 
-                    {isSmallScreen && <MobileSidebar />}
+                    {isSmallScreen && <MobileSidebar uid_user={uid_user} />}
 
                     <Box w="full">
                         <Box
@@ -464,3 +471,13 @@ export default function CreateStudent() {
         </Box>
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const { me } = await getMe(ctx);
+
+    return {
+        props: {
+            uid_user: me.uid_user,
+        }
+    };
+})

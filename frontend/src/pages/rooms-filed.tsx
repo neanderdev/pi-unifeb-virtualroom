@@ -33,9 +33,9 @@ export default function RoomsFiled({ me }: RoomsProps) {
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar />
+                    <Sidebar uid_user={me.uid_user} />
 
-                    {isSmallScreen && <MobileSidebar />}
+                    {isSmallScreen && <MobileSidebar uid_user={me.uid_user} />}
 
                     <Box w="full">
                         <SimpleGrid flex='1' gap='4' minChildWidth='320px' alignItems='flex-start'>

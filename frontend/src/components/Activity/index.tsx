@@ -10,7 +10,7 @@ import { BoxActivity } from "./BoxActivity";
 
 interface ActivityProps {
     class_uid: string;
-    isSmallScreen: boolean
+    isSmallScreen: boolean;
 }
 
 export function Activity({ class_uid, isSmallScreen }: ActivityProps) {

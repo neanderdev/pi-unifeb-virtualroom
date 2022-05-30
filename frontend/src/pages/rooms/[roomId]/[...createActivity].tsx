@@ -10,6 +10,8 @@ import { IoAddSharp } from "react-icons/io5";
 import { MdDeleteOutline } from "react-icons/md"
 import { useMutation } from 'react-query';
 
+import { getMe } from "../../../services/hooks/useMe";
+
 import { setupAPIClient } from "../../../services/api";
 import { queryClient } from '../../../services/queryClient';
 
@@ -42,12 +44,12 @@ interface Materiais {
     size: number;
     type: string;
     webkitRelativePath: string;
-}
+};
 
 interface Links {
     name_link: string;
     link: string;
-}
+};
 
 interface GetResponseCreateActivityFromClass {
     uid_activity: string;
@@ -83,7 +85,6 @@ const createActivityFormSchema = yup.object().shape({
     name_activity: yup.string().required("Nome da atividade obrigatório"),
     dt_entrega_activity: yup.date()
         .required("Data de entrega obrigatório")
-        .min(new Date(), "Não é possível incluir uma data antiga")
         .typeError("Data inválida"),
     isAcceptWithDelay_Activity: yup.boolean().required("Aceitar com atraso obrigatório"),
     nota_max_activity: yup.number()
@@ -131,7 +132,11 @@ const createActivityFormSchema = yup.object().shape({
         }),
 });
 
-export default function CreateActivity() {
+interface CreateActivityProps {
+    uid_user: string;
+};
+
+export default function CreateActivity({ uid_user }: CreateActivityProps) {
     const router = useRouter();
     const toast = useToast();
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -313,9 +318,9 @@ export default function CreateActivity() {
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar />
+                    <Sidebar uid_user={uid_user} />
 
-                    {isSmallScreen && <MobileSidebar />}
+                    {isSmallScreen && <MobileSidebar uid_user={uid_user} />}
 
                     <Box w="full">
                         <Box
@@ -822,8 +827,12 @@ export default function CreateActivity() {
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const { me } = await getMe(ctx);
+
     return {
-        props: {},
+        props: {
+            uid_user: me.uid_user,
+        },
     };
 }, {
     roles: ['admin', 'teacher', 'student']

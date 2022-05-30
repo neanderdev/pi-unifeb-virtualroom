@@ -6,9 +6,9 @@ import { getMe } from "../../services/hooks/useMe";
 import { useAllClass } from "../../services/hooks/useAllClass";
 import { useUsers } from "../../services/hooks/useUsers";
 
-import { useModal } from "../../contexts/ModalContext";
-
 import { withSSRAuth } from "../../utils/withSSRAuth";
+
+import { useModal } from "../../contexts/ModalContext";
 
 import { Navbar } from "../../components/Navbar";
 import { Sidebar } from "../../components/Sidebar";
@@ -55,9 +55,9 @@ export default function Rooms({ me }: RoomsProps) {
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
                 <Stack direction="row" spacing={{ md: 5 }}>
-                    <Sidebar />
+                    <Sidebar uid_user={me.uid_user} />
 
-                    {isSmallScreen && <MobileSidebar />}
+                    {isSmallScreen && <MobileSidebar uid_user={me.uid_user} />}
 
                     <Box w="full">
                         <Can roles={["admin"]}>
