@@ -4,6 +4,8 @@ import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { useToast } from '@chakra-ui/react';
 
 import { api } from '../services/apiClient';
+import { queryClient } from '../services/queryClient';
+import { AuthTokenError } from '../services/errors/AuthTokenError';
 
 interface User {
     ra_user: number;
@@ -32,14 +34,21 @@ export const AuthContext = createContext({} as AuthContextData);
 
 let authChannel: BroadcastChannel;
 
-export function signOut() {
+export function signOut(broadcast: boolean = true) {
+    queryClient.invalidateQueries();
+
     destroyCookie(undefined, 'nextauth.token');
     destroyCookie(undefined, 'nextauth.refreshToken');
 
-    authChannel.postMessage('signOut');
+    if (broadcast) authChannel.postMessage('signOut');
 
-    Router.push('/login');
+    if (process.browser) {
+        Router.push('/login');
+    } else {
+        return Promise.reject(new AuthTokenError());
+    };
 }
+
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>();
     const isAuthenticated = !!user;
@@ -52,7 +61,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         authChannel.onmessage = (message) => {
             switch (message.data) {
                 case 'signOut':
-                    signOut();
+                    signOut(false);
+                    // authChannel.close();
+                    break;
+                case "signIn":
+                    window.location.replace("http://localhost:3000/rooms");
                     break;
                 default:
                     break;
@@ -118,6 +131,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             });
 
             Router.push('/rooms');
+
+            authChannel.postMessage('signIn');
         } catch (error) {
             toast({
                 title: 'Falha ao fazer o login',

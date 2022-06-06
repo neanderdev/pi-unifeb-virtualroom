@@ -47,7 +47,8 @@ export function ModalNewCategory({ class_uid }: ModalNewCategoryProps) {
         return response;
     }, {
         onSuccess: () => {
-            queryClient.invalidateQueries('activities')
+            queryClient.invalidateQueries('allCategories')
+            queryClient.invalidateQueries('allActivities')
         },
     });
 

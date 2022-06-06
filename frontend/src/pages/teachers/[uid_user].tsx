@@ -89,6 +89,7 @@ export default function Teacher({ user, uid_user }: ITeacher) {
     }, {
         onSuccess: () => {
             queryClient.invalidateQueries('userUid')
+            queryClient.invalidateQueries('user')
         },
     });
 

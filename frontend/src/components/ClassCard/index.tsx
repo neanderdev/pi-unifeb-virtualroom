@@ -1,7 +1,7 @@
 import NextLink from "next/link";
 import { Dispatch, memo, SetStateAction } from "react";
 import { Avatar, Box, Flex, Heading, Stack, Text, Image, useColorModeValue, IconButton, useToast } from "@chakra-ui/react";
-import { FaTasks } from "react-icons/fa";
+import { FaRegCopy, FaTasks } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import { BiArchiveIn, BiArchiveOut } from "react-icons/bi";
 import { useMutation } from "react-query";
@@ -46,7 +46,7 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
 
     const handleArchiveClass = async (class_uid: string) => {
         try {
-            if (window.confirm("Você realmente deseja arquivar esta turma?")) {
+            if (window.confirm(`Você realmente deseja ${!isArchiveClass ? "arquivar" : "desarquivar"} esta turma?`)) {
                 await archiveClass.mutateAsync({ class_uid });
 
                 toast({
@@ -124,6 +124,25 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
                     <IconButton
                         color="pink.500"
                         colorScheme="transparent"
+                        aria-label="Copiar link da sala de aula"
+                        boxSize="15px"
+                        _focus={{ shadow: "none" }}
+                        icon={
+                            <FaRegCopy size={24} />
+                        }
+                        onClick={(e) => {
+                            e.preventDefault();
+
+                            navigator.clipboard.writeText(`http://localhost:3000/rooms/${classUid}`);
+
+                            alert("Link da sala de aula copiado para área de transferência");
+                        }}
+                        title="Copiar link da sala de aula"
+                    />
+
+                    <IconButton
+                        color="pink.500"
+                        colorScheme="transparent"
                         aria-label="Ver tarefas desta sala de aula"
                         boxSize="15px"
                         _focus={{ shadow: "none" }}
@@ -165,7 +184,7 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
                         <IconButton
                             color="pink.500"
                             colorScheme="transparent"
-                            aria-label="Arquivar esta turma"
+                            aria-label={!isArchiveClass ? "Arquivar esta turma" : "Desarquivar esta turma"}
                             boxSize="15px"
                             _focus={{ shadow: "none" }}
                             icon={
@@ -176,7 +195,7 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
 
                                 handleArchiveClass(classUid);
                             }}
-                            title="Arquivar esta turma"
+                            title={!isArchiveClass ? "Arquivar esta turma" : "Desarquivar esta turma"}
                         />
                     </Can>
                 </Stack>

@@ -21,6 +21,9 @@ interface Activity {
   category_activity: {
     tipo_category_activity: string;
   };
+  class: {
+    uid_class: string;
+  };
 }
 
 interface GetListAllUserActivitiesResponse {

@@ -89,6 +89,7 @@ export default function Student({ user, uid_user }: IStudent) {
     }, {
         onSuccess: () => {
             queryClient.invalidateQueries('userUid')
+            queryClient.invalidateQueries('user')
         },
     });
 

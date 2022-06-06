@@ -82,7 +82,11 @@ export function CardActivity({ uid_activity, nameTeacher, nameActivity, tipoActi
                         <PopoverContent w={24}>
                             <Text size='lg' m={2} cursor="pointer">
                                 <LinkOverlay
-                                    onClick={() => alert("Copiar link")}
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(`http://localhost:3000/rooms/${classUid}/${uid_activity}`);
+
+                                        alert("Link da atividade copiado para área de transferência");
+                                    }}
                                 >
                                     Copiar link
                                 </LinkOverlay>

@@ -8,16 +8,9 @@ import {
     Icon,
     Input,
     VStack,
-    Popover,
-    PopoverTrigger,
-    IconButton,
-    Portal,
-    PopoverContent,
-    LinkOverlay,
     useToast
 } from "@chakra-ui/react";
 import { BiSend } from "react-icons/bi";
-import { IoEllipsisVertical } from "react-icons/io5";
 import { useMutation } from 'react-query';
 
 import { setupAPIClient } from "../../services/api";
@@ -147,37 +140,6 @@ export function CommentNotice({ user_uid, classNoticeId, message, avatarTeacher,
                         <Text>{publicDateComment}</Text>
                     </VStack>
                 </Flex>
-
-                <Box ml="auto" mr={4}>
-                    <Popover>
-                        <PopoverTrigger>
-                            <IconButton
-                                aria-label="Opções"
-                                rounded="full"
-                                bg="transparent"
-                                _hover={{
-                                    bg: "transparent",
-                                }}
-                                _active={{
-                                    bg: "transparent",
-                                }}
-                                icon={<Icon as={IoEllipsisVertical} />}
-                            />
-                        </PopoverTrigger>
-
-                        <Portal>
-                            <PopoverContent w={24}>
-                                <Text size='lg' m={2} cursor="pointer">
-                                    <LinkOverlay
-                                        onClick={() => alert("Copiar link")}
-                                    >
-                                        Copiar link
-                                    </LinkOverlay>
-                                </Text>
-                            </PopoverContent>
-                        </Portal>
-                    </Popover>
-                </Box>
             </Box>
 
             <Box>

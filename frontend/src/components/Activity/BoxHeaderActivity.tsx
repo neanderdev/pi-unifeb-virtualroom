@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
-import { Box, Icon, IconButton, LinkOverlay, Popover, PopoverContent, PopoverTrigger, Portal, Text, useColorModeValue } from "@chakra-ui/react";
-import { IoAddSharp, IoEllipsisVertical } from "react-icons/io5";
+import { Box, Icon, IconButton, Text, useColorModeValue } from "@chakra-ui/react";
+import { IoAddSharp } from "react-icons/io5";
 
 import { Can } from "../Can";
 
@@ -55,35 +55,7 @@ export function BoxHeaderActivity({ idCategory, title, tipoActivity }: BoxHeader
                         onClick={() => router.push(`${router.asPath.split("#")[0]}/${tipoActivity}/${idCategory}`)}
                     />
                 </Can>
-
-                <Popover>
-                    <PopoverTrigger>
-                        <IconButton
-                            aria-label="Opções"
-                            rounded="full"
-                            bg="transparent"
-                            _hover={{
-                                bg: "transparent",
-                            }}
-                            _active={{
-                                bg: "transparent",
-                            }}
-                            icon={<Icon as={IoEllipsisVertical} />}
-                        />
-                    </PopoverTrigger>
-                    <Portal>
-                        <PopoverContent w={24}>
-                            <Text size='lg' m={2} cursor="pointer">
-                                <LinkOverlay
-                                    onClick={() => alert("Copiar link")}
-                                >
-                                    Copiar link
-                                </LinkOverlay>
-                            </Text>
-                        </PopoverContent>
-                    </Portal>
-                </Popover>
             </Box>
-        </Box>
+        </Box >
     );
 }

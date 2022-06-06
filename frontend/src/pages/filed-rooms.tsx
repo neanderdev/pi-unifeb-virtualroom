@@ -18,11 +18,11 @@ interface Me {
     roles: string;
 };
 
-interface RoomsProps {
+interface FiledRoomsProps {
     me: Me;
 };
 
-export default function RoomsFiled({ me }: RoomsProps) {
+export default function FiledRooms({ me }: FiledRoomsProps) {
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
 
     const { data, isLoading, error } = useAllClass("A");

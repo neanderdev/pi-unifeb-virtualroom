@@ -2,8 +2,9 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Box, Stack, useMediaQuery } from "@chakra-ui/react";
 
-import { getClassUid } from "../../../services/hooks/useClassUid";
 import { getMe } from "../../../services/hooks/useMe";
+import { getFindClassUserByUid } from "../../../services/hooks/useFindClassUserByUid";
+import { getClassUid } from "../../../services/hooks/useClassUid";
 import { getFindDetailActivityByUserUid } from "../../../services/hooks/useFindDetailActivityByUserUid";
 import { useFindByActivityUid } from "../../../services/hooks/useFindByActivityUid";
 import { useListAllActivityComment } from "../../../services/hooks/useListAllActivityComment";
@@ -112,8 +113,20 @@ export default function ActivityId({
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
-    const { classes } = await getClassUid(ctx.params.roomId as string, ctx);
     const { me } = await getMe(ctx);
+    const findClassUserByUid = await getFindClassUserByUid(ctx.params.roomId as string, ctx);
+
+    const isCheckUserIsInClass = findClassUserByUid.some((classUser) => classUser.user_uid === me.uid_user);
+    if (!isCheckUserIsInClass && me.roles !== "admin") {
+        return {
+            redirect: {
+                destination: "/rooms",
+                permanent: false,
+            },
+        };
+    }
+
+    const { classes } = await getClassUid(ctx.params.roomId as string, ctx);
     const data = await getFindDetailActivityByUserUid(ctx.params.activityId as string, me.uid_user, ctx);
 
     const materialDetailActivity = data?.MaterialDetailActivity?.map((materialDetailActivity) => {
@@ -132,11 +145,13 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
             name_matter: classes.name_matter_class,
             ra_user: me.ra_user,
             uid_user: me.uid_user,
-            name_user: classes.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0].user.name_user,
+            name_user: classes.ClassUser?.filter((user) => user.user.ra_user === me.ra_user).length > 0 && classes.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.name_user,
             roles: me.roles,
             dt_isEntrega_detail_acitivity: data?.dt_isEntrega_detail_acitivity ?? null,
             nota_user: data?.nota_user ?? null,
             MaterialDetailActivity: materialDetailActivity ?? [],
         }
     };
+}, {
+    roles: ['admin', 'teacher', 'student']
 })

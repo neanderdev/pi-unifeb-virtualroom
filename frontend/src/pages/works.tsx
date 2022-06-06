@@ -57,6 +57,8 @@ export default function Works({ uid_user }: WorksProps) {
                                             data?.activities?.map((activity) => (
                                                 <BoxBodyAcitivity
                                                     key={activity.uid_activity}
+                                                    uid_activity={activity.uid_activity}
+                                                    class_uid={activity.class.uid_class}
                                                     tipoActivity={activity.category_activity.tipo_category_activity}
                                                     name_activity={activity.name_activity}
                                                     dt_entrega_activity={activity.dt_entrega_activity_formatted}

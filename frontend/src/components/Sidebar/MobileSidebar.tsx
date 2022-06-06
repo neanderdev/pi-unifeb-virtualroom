@@ -60,7 +60,7 @@ export function MobileSidebar({ uid_user }: MobileSidebarProps) {
                         />
 
                         <NavItem
-                            href="/rooms-filed"
+                            href="/filed-rooms"
                             name="Turmas Arquivada"
                             icon={RiInboxArchiveLine}
                         />

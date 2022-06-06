@@ -11,6 +11,7 @@ import { MdDeleteOutline } from "react-icons/md"
 import { useMutation } from 'react-query';
 
 import { getMe } from "../../../services/hooks/useMe";
+import { getFindClassUserByUid } from "../../../services/hooks/useFindClassUserByUid";
 
 import { setupAPIClient } from "../../../services/api";
 import { queryClient } from '../../../services/queryClient';
@@ -151,7 +152,9 @@ export default function CreateActivity({ uid_user }: CreateActivityProps) {
         return response.data;
     }, {
         onSuccess: () => {
-            queryClient.invalidateQueries('class')
+            queryClient.invalidateQueries('allActivities')
+            queryClient.invalidateQueries('listThatWeekActivity')
+            queryClient.invalidateQueries('listActivityAndUsers')
         },
     });
 
@@ -172,7 +175,9 @@ export default function CreateActivity({ uid_user }: CreateActivityProps) {
         return response;
     }, {
         onSuccess: () => {
-            queryClient.invalidateQueries('class')
+            queryClient.invalidateQueries('allActivities')
+            queryClient.invalidateQueries('listThatWeekActivity')
+            queryClient.invalidateQueries('listActivityAndUsers')
         },
     });
 
@@ -828,6 +833,18 @@ export default function CreateActivity({ uid_user }: CreateActivityProps) {
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
     const { me } = await getMe(ctx);
+    const findClassUserByUid = await getFindClassUserByUid(ctx.params.roomId as string, ctx);
+
+    const isCheckUserIsInClass = findClassUserByUid.some((classUser) => classUser.user_uid === me.uid_user);
+    if (!isCheckUserIsInClass && me.roles !== "admin") {
+        return {
+            redirect: {
+                destination: "/rooms",
+                permanent: false,
+            },
+        };
+    }
+
 
     return {
         props: {
@@ -835,5 +852,5 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
         },
     };
 }, {
-    roles: ['admin', 'teacher', 'student']
+    roles: ['admin', 'teacher']
 })

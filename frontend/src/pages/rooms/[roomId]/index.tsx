@@ -29,10 +29,11 @@ import { useMutation } from "react-query";
 import { setupAPIClient } from "../../../services/api";
 import { queryClient } from "../../../services/queryClient";
 
-import { getClassUid } from "../../../services/hooks/useClassUid";
-import { getAllClassNotice } from "../../../services/hooks/useAllClassNotice";
-import { getListThatWeekActivity } from "../../../services/hooks/useListThatWeekActivity";
 import { getMe } from "../../../services/hooks/useMe";
+import { getFindClassUserByUid } from "../../../services/hooks/useFindClassUserByUid";
+import { getClassUid } from "../../../services/hooks/useClassUid";
+import { getListThatWeekActivity } from "../../../services/hooks/useListThatWeekActivity";
+import { useAllClassNotice } from "../../../services/hooks/useAllClassNotice";
 import { useListActivities } from "../../../services/hooks/useListActivities";
 
 import { withSSRAuth } from "../../../utils/withSSRAuth";
@@ -68,29 +69,6 @@ interface Class {
     ClassUser: ClassUser[];
 };
 
-interface User {
-    name_user: string;
-};
-
-interface ClassNoticeAnswer {
-    id_class_notice_answer: number;
-    message: string;
-    createdAt_class_notice_answer: Date | string;
-    user_uid: string;
-    class_notice_id: number;
-    user: User;
-};
-
-interface ClassNotice {
-    id_class_notice: number;
-    message: string;
-    createdAt_class_notice: Date | string;
-    user_uid: string;
-    class_uid: string;
-    ClassNoticeAnswer: ClassNoticeAnswer[];
-    user: User;
-};
-
 interface ThatWeekActivity {
     uid_activity: string;
     name_activity: string;
@@ -98,7 +76,6 @@ interface ThatWeekActivity {
 
 interface RoomIdProps {
     classes: Class;
-    classNotices: ClassNotice[];
     thatWeekActivity: ThatWeekActivity[];
     uid_user: string;
     ra_user: number;
@@ -125,7 +102,7 @@ const createClassFormSchema = yup.object().shape({
         .test("interface", "Aceita apenas os formatos: .png, .jpeg e .jpg", (value) => !value[0] || (value[0] && ["image/png", "image/jpeg", "image/jpg"].includes(value[0].type))),
 });
 
-export default function RoomId({ classes, classNotices, thatWeekActivity, uid_user, ra_user }: RoomIdProps) {
+export default function RoomId({ classes, thatWeekActivity, uid_user, ra_user }: RoomIdProps) {
     const toast = useToast();
 
     const [isSmallScreen] = useMediaQuery("(max-width: 768px)");
@@ -134,6 +111,7 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
 
     const [image, setImage] = useState(null);
 
+    const { data: classNotices, isLoading: isLoadingClassNotice, error: errorClassNotice } = useAllClassNotice(classes.uid_class);
     const { data, isLoading, error } = useListActivities(classes.uid_class);
 
     const { register, handleSubmit, formState } = useForm({
@@ -155,6 +133,7 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
     }, {
         onSuccess: () => {
             queryClient.invalidateQueries('classUid')
+            queryClient.invalidateQueries('class')
         },
     });
 
@@ -176,6 +155,7 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
     }, {
         onSuccess: () => {
             queryClient.invalidateQueries('classUid')
+            queryClient.invalidateQueries('class')
         },
     });
 
@@ -289,6 +269,8 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
                                                 nameClass={classes.name_class}
                                                 nameMatter={classes.name_matter_class}
                                                 classNotices={classNotices}
+                                                isLoadingClassNotice={isLoadingClassNotice}
+                                                errorClassNotice={errorClassNotice}
                                                 classNotice={classNotice}
                                                 setClassNotice={setClassNotice}
                                                 avatarStudent=""
@@ -410,15 +392,25 @@ export default function RoomId({ classes, classNotices, thatWeekActivity, uid_us
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
-    const { classes } = await getClassUid(ctx.params.roomId as string, ctx);
-    const dataAllClassNotice = await getAllClassNotice(ctx.params.roomId as string, ctx);
-    const dataListThatWeekActivity = await getListThatWeekActivity(ctx.params.roomId as string, ctx);
     const { me } = await getMe(ctx);
+    const findClassUserByUid = await getFindClassUserByUid(ctx.params.roomId as string, ctx);
+
+    const isCheckUserIsInClass = findClassUserByUid.some((classUser) => classUser.user_uid === me.uid_user);
+    if (!isCheckUserIsInClass && me.roles !== "admin") {
+        return {
+            redirect: {
+                destination: "/rooms",
+                permanent: false,
+            },
+        };
+    }
+
+    const { classes } = await getClassUid(ctx.params.roomId as string, ctx);
+    const dataListThatWeekActivity = await getListThatWeekActivity(ctx.params.roomId as string, ctx);
 
     return {
         props: {
             classes,
-            classNotices: dataAllClassNotice,
             thatWeekActivity: dataListThatWeekActivity,
             uid_user: me.uid_user,
             ra_user: me.ra_user,

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Flex, Text, useMediaQuery, VStack } from "@chakra-ui/react";
+import { Flex, Spinner, Text, useMediaQuery, VStack } from "@chakra-ui/react";
 
 import { HeaderWall } from "./HeaderWall";
 import { NextActivity } from "./NextActivity";
@@ -65,6 +65,8 @@ interface WallProps {
     nameMatter: string;
     nameClass: string;
     classNotices: ClassNotice[];
+    isLoadingClassNotice: boolean;
+    errorClassNotice: unknown;
     classNotice: string;
     setClassNotice: Dispatch<SetStateAction<string>>;
     avatarStudent: string;
@@ -80,6 +82,8 @@ export function Wall({
     nameMatter,
     nameClass,
     classNotices,
+    isLoadingClassNotice,
+    errorClassNotice,
     classNotice,
     setClassNotice,
     avatarStudent,
@@ -127,20 +131,30 @@ export function Wall({
                         </>
                     )}
 
-                    {classNotices.map((classNotice) => (
-                        <CommentNotice
-                            key={classNotice.id_class_notice}
-                            user_uid={user_uid}
-                            classNoticeId={classNotice.id_class_notice}
-                            avatarTeacher=""
-                            message={classNotice.message}
-                            nameTeacher={classNotice.user.name_user}
-                            publicDateComment={classNotice.createdAt_class_notice}
-                            classNoticeAnswer={classNotice.ClassNoticeAnswer}
-                            avatarStudent={avatarStudent}
-                            nameStudent={nameStudent}
-                        />
-                    ))}
+                    {isLoadingClassNotice ? (
+                        <Flex justify="center" alignItems="center">
+                            <Spinner color="red" size="xl" />
+                        </Flex>
+                    ) : errorClassNotice ? (
+                        <Flex justify="center" alignItems="center">
+                            <Text fontWeight="bold" fontSize="xl">Erro ao buscar as atividades desta turma</Text>
+                        </Flex>
+                    ) : (
+                        classNotices.map((classNotice) => (
+                            <CommentNotice
+                                key={classNotice.id_class_notice}
+                                user_uid={user_uid}
+                                classNoticeId={classNotice.id_class_notice}
+                                avatarTeacher=""
+                                message={classNotice.message}
+                                nameTeacher={classNotice.user.name_user}
+                                publicDateComment={classNotice.createdAt_class_notice}
+                                classNoticeAnswer={classNotice.ClassNoticeAnswer}
+                                avatarStudent={avatarStudent}
+                                nameStudent={nameStudent}
+                            />
+                        ))
+                    )}
                 </VStack>
             </Flex>
         </Flex>

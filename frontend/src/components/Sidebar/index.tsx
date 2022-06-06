@@ -33,6 +33,7 @@ export function Sidebar({ isCollapseSidebar = false, uid_user }: SidebarProps) {
             transition="width .4s ease-in-out"
             py={8}
             shadow="md"
+            h="max"
             minH="full"
             spacing={2}
             fontSize="sm"
@@ -70,7 +71,7 @@ export function Sidebar({ isCollapseSidebar = false, uid_user }: SidebarProps) {
             />
 
             <NavAction
-                href="/rooms-filed"
+                href="/filed-rooms"
                 name="Turmas Arquivada"
                 icon={RiInboxArchiveLine}
             />

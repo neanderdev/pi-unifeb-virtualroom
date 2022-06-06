@@ -45,7 +45,7 @@ export default function Students({ uid_user }: StudentsProps) {
     const { data, isLoading, isFetching, error } = useUsers(page, 'S');
 
     async function handlePrefetchUser(userId: string) {
-        await queryClient.prefetchQuery(['user', userId], async () => {
+        await queryClient.prefetchQuery(['userUid', userId], async () => {
             const apiClient = setupAPIClient();
             const response = await apiClient.get(`user/${userId}`);
 

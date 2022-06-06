@@ -135,4 +135,6 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
             me,
         }
     };
+}, {
+    roles: ['admin', 'teacher', 'student']
 })

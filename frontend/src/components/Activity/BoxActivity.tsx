@@ -13,13 +13,14 @@ interface Activity {
 
 
 interface BoxActivityProps {
+    class_uid: string;
     idCategory: number;
     title: string;
     tipoActivity: string;
     activity: Array<Activity>;
 }
 
-export function BoxActivity({ idCategory, title, tipoActivity, activity }: BoxActivityProps) {
+export function BoxActivity({ class_uid, idCategory, title, tipoActivity, activity }: BoxActivityProps) {
     return (
         <Flex
             ml={4}
@@ -43,6 +44,8 @@ export function BoxActivity({ idCategory, title, tipoActivity, activity }: BoxAc
             {activity.map((activity) => (
                 <BoxBodyAcitivity
                     key={activity.uid_activity}
+                    uid_activity={activity.uid_activity}
+                    class_uid={class_uid}
                     tipoActivity={tipoActivity}
                     name_activity={activity.name_activity}
                     dt_entrega_activity={activity.dt_entrega_activity}
