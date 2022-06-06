@@ -23,11 +23,26 @@ export class ListAllUserActivitiesUseCase {
             },
           },
         },
+        AND: {
+          category_activity: {
+            tipo_category_activity: "A",
+          },
+          AND: {
+            DetailActivity: {
+              none: {},
+            },
+          },
+        },
       },
       include: {
         category_activity: {
           select: {
             tipo_category_activity: true,
+          },
+        },
+        class: {
+          select: {
+            uid_class: true,
           },
         },
       },
