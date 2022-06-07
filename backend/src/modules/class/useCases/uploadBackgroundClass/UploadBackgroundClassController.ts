@@ -8,7 +8,10 @@ export class UploadBackgroundClassController {
     const background_class_file = request.file?.filename;
 
     const uploadBackgroundClassUseCase = new UploadBackgroundClassUseCase();
-    await uploadBackgroundClassUseCase.execute(uid_class,background_class_file);
+    await uploadBackgroundClassUseCase.execute(
+      uid_class,
+      background_class_file
+    );
 
     return response.status(204).send();
   }

@@ -30,6 +30,7 @@ model User {
   dt_matricula_user  DateTime
   situacao_user      Boolean  @default(true) @db.Boolean
   senha              String
+  avatar             String   @default("") @db.VarChar(180)
   tipo_user          String   @default("S") @db.Char(1)
   roles              Roles    @default(student)
 

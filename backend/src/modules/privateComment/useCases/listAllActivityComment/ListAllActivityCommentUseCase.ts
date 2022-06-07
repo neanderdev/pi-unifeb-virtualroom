@@ -22,6 +22,7 @@ export class ListAllActivityCommentUseCase {
         user: {
           select: {
             name_user: true,
+            avatar: true,
           },
         },
       },

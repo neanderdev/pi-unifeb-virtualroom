@@ -32,6 +32,7 @@ export class ListAllClassUseCase {
                 name_user: true,
                 email_user: true,
                 tipo_user: true,
+                avatar: true,
               },
             },
           },

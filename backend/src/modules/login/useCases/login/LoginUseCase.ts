@@ -83,6 +83,8 @@ export class LoginUseCase {
       ra_user: user.ra_user,
       email_user: user.email_user,
       cpf_cnpj_user: user.cpf_cnpj_user,
+      name_user: user.name_user,
+      avatar: user.avatar,
       tipo_user: user.tipo_user,
       roles: user.roles,
       token,

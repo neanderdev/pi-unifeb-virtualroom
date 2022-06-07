@@ -24,6 +24,7 @@ export class ListAllClassNoticeUseCase {
             user: {
               select: {
                 name_user: true,
+                avatar: true,
               },
             },
           },
@@ -31,6 +32,7 @@ export class ListAllClassNoticeUseCase {
         user: {
           select: {
             name_user: true,
+            avatar: true,
           },
         },
       },

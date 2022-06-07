@@ -12,8 +12,10 @@ import { CreateUserController } from "./modules/user/useCases/createUser/CreateU
 import { FindUserByUidController } from "./modules/user/useCases/findUserByUid/FindUserByUidController";
 import { UpdateUserController } from "./modules/user/useCases/updateUser/UpdateUserController";
 import { DeleteUserController } from "./modules/user/useCases/deleteUser/DeleteUserController";
+import { UploadAvatarUserController } from "./modules/user/useCases/uploadAvatarUser/UploadAvatarUserController";
 import { FindClassUserByUidController } from "./modules/classUser/useCases/findClassUserByUid/FindClassUserByUidController";
 import { FindMeByIdController } from "./modules/me/useCases/FindMeByIdController";
+import { UpdateMeController } from "./modules/me/useCases/updateMe/UpdateMeController";
 import { ListAllClassController } from "./modules/class/useCases/listAllClass/ListAllClassController";
 import { CreateClassController } from "./modules/class/useCases/createClass/CreateClassController";
 import { UploadBackgroundClassController } from "./modules/class/useCases/uploadBackgroundClass/UploadBackgroundClassController";
@@ -46,6 +48,7 @@ import { ListAllUserActivitiesController } from "./modules/activity/useCases/lis
 
 const routes = Router();
 
+const uploadAvatarUser = multer(upload.upload("./tmp/avatar"));
 const uploadClass = multer(upload.upload("./tmp/class"));
 const uploadMaterialActivity = multer(upload.upload("./tmp/materialActivity"));
 const uploadMaterialDetailActivity = multer(
@@ -59,8 +62,10 @@ const createUserController = new CreateUserController();
 const findUserByUidController = new FindUserByUidController();
 const updateUserController = new UpdateUserController();
 const deleteUserController = new DeleteUserController();
+const uploadAvatarUserController = new UploadAvatarUserController();
 const findClassUserByUidController = new FindClassUserByUidController();
 const findMeByIdController = new FindMeByIdController();
+const updateMeController = new UpdateMeController();
 const listAllClassController = new ListAllClassController();
 const createClassController = new CreateClassController();
 const uploadBackgroundController = new UploadBackgroundClassController();
@@ -109,12 +114,19 @@ routes.delete(
   ensureAuthenticated,
   deleteUserController.handle
 );
+routes.patch(
+  "/upload-avatar-user/:user_uid",
+  ensureAuthenticated,
+  uploadAvatarUser.single("avatar"),
+  uploadAvatarUserController.handle
+);
 routes.get(
   "/class-user/:class_uid",
   ensureAuthenticated,
   findClassUserByUidController.handle
 );
 routes.get("/me/", ensureAuthenticated, findMeByIdController.handle);
+routes.put("/me/", ensureAuthenticated, updateMeController.handle);
 routes.get("/class/", ensureAuthenticated, listAllClassController.handle);
 routes.post("/class/", ensureAuthenticated, createClassController.handle);
 routes.patch(
