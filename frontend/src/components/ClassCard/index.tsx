@@ -1,7 +1,7 @@
 import NextLink from "next/link";
 import { Dispatch, memo, SetStateAction } from "react";
 import { Avatar, Box, Flex, Heading, Stack, Text, Image, useColorModeValue, IconButton, useToast } from "@chakra-ui/react";
-import { FaRegCopy, FaTasks } from "react-icons/fa";
+import { FaRegCopy } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import { BiArchiveIn, BiArchiveOut } from "react-icons/bi";
 import { useMutation } from "react-query";
@@ -91,7 +91,7 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
                 <Flex justify="center" mt={-12}>
                     <Avatar
                         size="xl"
-                        src={imageStudent}
+                        src={`http://localhost:8000/files${imageStudent}`}
                         name={nameStudent}
                         css={{
                             border: '2px solid white',
@@ -138,23 +138,6 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
                             alert("Link da sala de aula copiado para área de transferência");
                         }}
                         title="Copiar link da sala de aula"
-                    />
-
-                    <IconButton
-                        color="pink.500"
-                        colorScheme="transparent"
-                        aria-label="Ver tarefas desta sala de aula"
-                        boxSize="15px"
-                        _focus={{ shadow: "none" }}
-                        icon={
-                            <FaTasks size={24} />
-                        }
-                        onClick={(e) => {
-                            e.preventDefault();
-
-                            alert(nameClass);
-                        }}
-                        title="Ver tarefas desta sala de aula"
                     />
 
                     {!isArchiveClass && (

@@ -9,6 +9,7 @@ interface User {
         name_user: string;
         email_user: string;
         tipo_user: string;
+        avatar: string;
     }
 }
 
@@ -31,10 +32,10 @@ export function BoxTeacher({ teachers }: BoxTeacherProps) {
                 </Flex>
             ) : (
                 <>
-                    {teachers.map(teacher => (
+                    {teachers.map((teacher) => (
                         <BoxBodyTeacher
                             key={teacher.user.ra_user}
-                            avatarTeacher=""
+                            avatarTeacher={teacher.user.avatar}
                             nameTeacher={teacher.user.name_user}
                         />
                     ))}

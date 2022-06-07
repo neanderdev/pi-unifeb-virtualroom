@@ -32,6 +32,7 @@ interface Acitivities {
 
 interface User {
     name_user: string;
+    avatar: string;
 };
 
 interface ClassNoticeAnswer {
@@ -145,7 +146,7 @@ export function Wall({
                                 key={classNotice.id_class_notice}
                                 user_uid={user_uid}
                                 classNoticeId={classNotice.id_class_notice}
-                                avatarTeacher=""
+                                avatarTeacher={classNotice.user.avatar}
                                 message={classNotice.message}
                                 nameTeacher={classNotice.user.name_user}
                                 publicDateComment={classNotice.createdAt_class_notice}

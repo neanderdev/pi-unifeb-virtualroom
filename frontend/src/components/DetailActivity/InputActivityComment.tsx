@@ -84,7 +84,7 @@ export function InputActivityComment({ uid_user, uid_activity, avatarStudent, na
         >
             <Avatar
                 size="sm"
-                src={avatarStudent}
+                src={avatarStudent === "" ? "" : `http://localhost:8000/files${avatarStudent}`}
                 name={nameStudent}
                 bg="pink.200"
             />

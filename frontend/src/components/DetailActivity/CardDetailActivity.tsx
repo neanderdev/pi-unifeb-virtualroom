@@ -97,7 +97,9 @@ export function CardDetailActivity({
                 </Text>
             </Box>
 
-            <Divider mt={2} />
+            {materiais.length > 0 && (
+                <Divider mt={2} />
+            )}
 
             <SimpleGrid
                 flex="1"

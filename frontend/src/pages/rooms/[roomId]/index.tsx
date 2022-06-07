@@ -55,6 +55,7 @@ interface ClassUser {
         name_user: string;
         email_user: string;
         tipo_user: string;
+        avatar: string;
     };
 };
 
@@ -273,7 +274,7 @@ export default function RoomId({ classes, thatWeekActivity, uid_user, ra_user }:
                                                 errorClassNotice={errorClassNotice}
                                                 classNotice={classNotice}
                                                 setClassNotice={setClassNotice}
-                                                avatarStudent=""
+                                                avatarStudent={classes.ClassUser?.filter((user) => user.user.ra_user === ra_user)[0]?.user.avatar}
                                                 nameStudent={classes.ClassUser?.filter((user) => user.user.ra_user === ra_user)[0]?.user.name_user}
                                                 activities={data}
                                                 thatWeekActivity={thatWeekActivity}

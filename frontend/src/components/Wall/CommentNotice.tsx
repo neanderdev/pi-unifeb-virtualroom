@@ -20,6 +20,7 @@ import { Comment } from "./Comment";
 
 interface User {
     name_user: string;
+    avatar: string;
 };
 
 interface ClassNoticeAnswer {
@@ -129,7 +130,7 @@ export function CommentNotice({ user_uid, classNoticeId, message, avatarTeacher,
                     >
                         <Avatar
                             size="md"
-                            src={avatarTeacher}
+                            src={avatarTeacher === "" ? "" : `http://localhost:8000/files${avatarTeacher}`}
                             name={nameTeacher}
                             bg="gray"
                         />
@@ -148,7 +149,6 @@ export function CommentNotice({ user_uid, classNoticeId, message, avatarTeacher,
                     ml="12px"
                 >
                     <Text>{message}</Text>
-
                 </Box>
 
                 <Divider orientation='horizontal' />
@@ -156,7 +156,7 @@ export function CommentNotice({ user_uid, classNoticeId, message, avatarTeacher,
                 {classNoticeAnswer.map((answerClassNotice) => (
                     <Comment
                         key={answerClassNotice.id_class_notice_answer}
-                        avatarStudent=""
+                        avatarStudent={answerClassNotice.user.avatar === "" ? "" : `http://localhost:8000/files${answerClassNotice.user.avatar}`}
                         nameStudent={answerClassNotice.user.name_user}
                         commentStudent={answerClassNotice.message}
                     />
@@ -170,7 +170,7 @@ export function CommentNotice({ user_uid, classNoticeId, message, avatarTeacher,
                 >
                     <Avatar
                         size="sm"
-                        src={avatarStudent}
+                        src={avatarStudent === "" ? "" : `http://localhost:8000/files${avatarStudent}`}
                         name={nameStudent}
                         bg="pink.200"
                     />

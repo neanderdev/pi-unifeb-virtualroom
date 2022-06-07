@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useContext } from "react";
 import {
     Avatar,
     AvatarBadge,
     HStack,
     Stack,
     Icon,
-    Link,
     IconButton,
     Popover,
     PopoverTrigger,
@@ -14,42 +14,29 @@ import {
     PopoverCloseButton,
     Box,
     Text,
-    Spinner,
 } from "@chakra-ui/react";
 import { IoIosArrowDown, IoIosSchool, } from "react-icons/io";
 import { GoGear, } from "react-icons/go";
+import { FiPower } from "react-icons/fi";
 
-import { useMe } from "../../services/hooks/useMe";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export function Profile() {
-    const { data, isLoading, isFetching, error } = useMe();
-
-    if (isLoading) {
-        return <Spinner />;
-    }
-
-    if (isFetching) {
-        return <Spinner />;
-    }
-
-    if (error) {
-        return (
-            <Text>Falha ao obter dados do usuários.</Text>
-        );
-    }
+    const { user } = useContext(AuthContext);
 
     return (
         <HStack alignItems="center">
             <Box mr="4" textAlign="right">
-                <Text>{data.me.ra_user}</Text>
+                <Text>{user?.name_user}</Text>
+
                 <Text color="gray.500" fontSize="small">
-                    {data.me.email_user}
+                    {user?.email_user}
                 </Text>
             </Box>
 
             <Avatar
-                name="Neander de Souza"
-                src=""
+                name={user?.name_user}
+                src={user?.avatar !== "" ? `http://localhost:8000/files${user?.avatar}` : ""}
                 size="sm"
             >
                 <AvatarBadge boxSize="1.25em" bg="green.500" />
@@ -65,27 +52,53 @@ export function Profile() {
                     <PopoverCloseButton />
 
                     <Stack spacing={4}>
-                        <Stack
-                            direction="row"
-                            cursor="pointer"
-                            spacing={2}
-                            alignItems="center"
-                        >
-                            <Icon as={IoIosSchool} fontSize="xl" />
+                        <Link href="/rooms" passHref>
+                            <Stack
+                                direction="row"
+                                cursor="pointer"
+                                spacing={2}
+                                alignItems="center"
+                                _hover={{
+                                    color: "gray.500"
+                                }}
+                            >
+                                <Icon as={IoIosSchool} fontSize="xl" />
 
-                            <Link href="/rooms">Turmas</Link>
-                        </Stack>
+                                <Text>Turmas</Text>
+                            </Stack>
+                        </Link>
 
-                        <Stack
-                            direction="row"
-                            cursor="pointer"
-                            spacing={2}
-                            alignItems="center"
-                        >
-                            <Icon as={GoGear} fontSize="xl" />
+                        <Link href="/setting" passHref>
+                            <Stack
+                                direction="row"
+                                cursor="pointer"
+                                spacing={2}
+                                alignItems="center"
+                                _hover={{
+                                    color: "gray.500"
+                                }}
+                            >
+                                <Icon as={GoGear} fontSize="xl" />
 
-                            <Link href="/configurations">Configuração</Link>
-                        </Stack>
+                                <Text>Configuração</Text>
+                            </Stack>
+                        </Link>
+
+                        <Link href="/logout" passHref>
+                            <Stack
+                                direction="row"
+                                cursor="pointer"
+                                spacing={2}
+                                alignItems="center"
+                                _hover={{
+                                    color: "gray.500"
+                                }}
+                            >
+                                <Icon as={FiPower} fontSize="xl" />
+
+                                <Text>Logout</Text>
+                            </Stack>
+                        </Link>
                     </Stack>
                 </PopoverContent>
             </Popover>

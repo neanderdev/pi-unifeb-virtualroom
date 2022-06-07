@@ -61,7 +61,7 @@ export default function FiledRooms({ me }: FiledRoomsProps) {
                                         hrefClass={`/rooms/${turma.uid_class}`}
                                         nameTeacherClass={turma.ClassUser?.filter((user) => user.user.tipo_user === 'T')[0]?.user.name_user}
                                         nameStudent={turma.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.name_user}
-                                        imageStudent=""
+                                        imageStudent={turma.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.avatar}
                                         isArchiveClass={true}
                                     />
                                 ))

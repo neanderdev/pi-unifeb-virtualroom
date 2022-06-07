@@ -7,6 +7,7 @@ import { InputActivityComment } from "./InputActivityComment";
 
 interface User {
     name_user: string;
+    avatar: string;
 };
 
 interface ActivityComment {
@@ -50,7 +51,7 @@ export function CardActivityComment({ activityComments, uid_user, uid_activity, 
             {activityComments.map((comment) => (
                 <ActivityComment
                     key={comment.id_private_comment}
-                    avatarStudent=""
+                    avatarStudent={comment.user.avatar}
                     nameStudent={comment.user.name_user}
                     message={comment.message}
                 />

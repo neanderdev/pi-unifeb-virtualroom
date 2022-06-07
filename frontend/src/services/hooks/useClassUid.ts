@@ -9,6 +9,7 @@ interface ClassUser {
     name_user: string;
     email_user: string;
     tipo_user: string;
+    avatar: string;
   };
 }
 

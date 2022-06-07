@@ -11,7 +11,7 @@ function BoxBodyStudentComponent({ avatarStudent, nameStudent }: BoxBodyStudentP
         <Box display="flex" alignItems="center">
             <Avatar
                 size="md"
-                src={avatarStudent}
+                src={avatarStudent === "" ? "" : `http://localhost:8000/files${avatarStudent}`}
                 name={nameStudent}
                 bg="gray"
                 color="white"

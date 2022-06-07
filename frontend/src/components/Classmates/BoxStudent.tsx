@@ -9,6 +9,7 @@ interface User {
         name_user: string;
         email_user: string;
         tipo_user: string;
+        avatar: string;
     }
 }
 
@@ -36,7 +37,7 @@ export function BoxStudent({ students }: BoxStudentProps) {
                         {students.map((student) => (
                             <BoxBodyStudent
                                 key={student.user.ra_user}
-                                avatarStudent=""
+                                avatarStudent={student.user.avatar}
                                 nameStudent={student.user.name_user}
                             />
                         ))}

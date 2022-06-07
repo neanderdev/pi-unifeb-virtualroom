@@ -17,7 +17,7 @@ function ActivityCommentComponent({ avatarStudent, nameStudent, message }: Activ
         >
             <Avatar
                 size="sm"
-                src={avatarStudent}
+                src={avatarStudent === "" ? "" : `http://localhost:8000/files${avatarStudent}`}
                 name={nameStudent}
                 bg="pink.200"
             />

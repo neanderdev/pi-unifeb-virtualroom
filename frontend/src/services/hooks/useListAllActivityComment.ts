@@ -5,6 +5,7 @@ import { setupAPIClient } from "../api";
 
 interface User {
   name_user: string;
+  avatar: string;
 }
 
 interface ActivityComment {

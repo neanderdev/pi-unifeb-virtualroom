@@ -12,7 +12,7 @@ function BoxBodyTeacherComponent({ avatarTeacher, nameTeacher }: BoxBodyTeacherP
             <Box display="flex" alignItems="center">
                 <Avatar
                     size="md"
-                    src={avatarTeacher}
+                    src={avatarTeacher === "" ? "" : `http://localhost:8000/files${avatarTeacher}`}
                     name={nameTeacher}
                     bg="gray"
                     color="white"

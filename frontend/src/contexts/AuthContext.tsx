@@ -11,6 +11,8 @@ interface User {
     ra_user: number;
     email_user: string;
     cpf_cnpj_user: string;
+    name_user: string;
+    avatar: string;
     roles: string;
 };
 
@@ -79,9 +81,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         if (token) {
             api.get('/me').then(response => {
-                const { ra_user, email_user, cpf_cnpj_user, roles } = response.data;
+                const { ra_user, email_user, cpf_cnpj_user, roles, avatar, name_user } = response.data;
 
-                setUser({ ra_user, email_user, cpf_cnpj_user, roles });
+                setUser({ ra_user, email_user, cpf_cnpj_user, roles, avatar, name_user });
             }).catch(() => {
                 signOut();
             });
@@ -94,7 +96,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 ra, senha
             });
 
-            const { ra_user, email_user, cpf_cnpj_user, roles, token, refresh_token } = response.data;
+            const { ra_user, email_user, cpf_cnpj_user, roles, token, refresh_token, avatar, name_user } = response.data;
 
             setCookie(
                 undefined,
@@ -116,7 +118,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             );
 
             setUser({
-                ra_user, email_user, cpf_cnpj_user, roles
+                ra_user, email_user, cpf_cnpj_user, roles, avatar, name_user
             });
 
             api.defaults.headers['Authorization'] = `Beared ${token}`;

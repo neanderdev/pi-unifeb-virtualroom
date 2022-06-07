@@ -34,6 +34,7 @@ interface ActivityIdProps {
     ra_user: number;
     uid_user: string;
     name_user: string;
+    avatar: string;
     roles: any;
     dt_isEntrega_detail_acitivity: Date | string;
     nota_user: number;
@@ -46,6 +47,7 @@ export default function ActivityId({
     ra_user,
     uid_user,
     name_user,
+    avatar,
     roles,
     dt_isEntrega_detail_acitivity,
     nota_user,
@@ -95,7 +97,7 @@ export default function ActivityId({
                                 dt_isEntrega_detail_acitivity={dt_isEntrega_detail_acitivity}
                                 nota_user={nota_user}
                                 MaterialDetailActivity={MaterialDetailActivity}
-                                avatarActivityComment=""
+                                avatarActivityComment={avatar}
                                 nameActivityComment={name_user}
                                 commentActivity={commentActivity}
                                 setCommentActivity={setCommentActivity}
@@ -145,6 +147,7 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
             name_matter: classes.name_matter_class,
             ra_user: me.ra_user,
             uid_user: me.uid_user,
+            avatar: me.avatar,
             name_user: classes.ClassUser?.filter((user) => user.user.ra_user === me.ra_user).length > 0 && classes.ClassUser?.filter((user) => user.user.ra_user === me.ra_user)[0]?.user.name_user,
             roles: me.roles,
             dt_isEntrega_detail_acitivity: data?.dt_isEntrega_detail_acitivity ?? null,
