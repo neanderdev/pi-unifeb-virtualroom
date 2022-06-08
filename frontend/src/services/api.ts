@@ -50,12 +50,14 @@ export function setupAPIClient(ctx = undefined) {
                 const { token_atual, refresh_token } = response.data;
 
                 setCookie(ctx, "nextauth.token", token_atual, {
-                  maxAge: 60 * 60 * 15, // 15 hours
+                  maxAge: 60 * 60 * 2, // 2 hours
                   path: "/",
+                  sameSite: "strict",
                 });
                 setCookie(ctx, "nextauth.refreshToken", refresh_token, {
-                  maxAge: 60 * 60 * 24 * 30, // 30 days
+                  maxAge: 60 * 60 * 24 * 1, // 1 days
                   path: "/",
+                  sameSite: "strict",
                 });
 
                 api.defaults.headers["Authorization"] = `Beared ${token_atual}`;
