@@ -37,6 +37,21 @@ export class LoginUseCase {
       throw new AppError("RA ou senha incorreto", 401);
     }
 
+    // // Se o usuário conseguiu fazer login, apagar todos os refresh token que tiver
+    // const userTokens = await prisma.userToken.findMany({
+    //   where: {
+    //     user_uid: user.uid_user,
+    //   },
+    // });
+
+    // if (userTokens.length > 0) {
+    //   await prisma.userToken.deleteMany({
+    //     where: {
+    //       user_uid: user.uid_user,
+    //     },
+    //   });
+    // }
+
     const token = jwt.sign(
       {
         uid_user: user.uid_user,
@@ -48,7 +63,7 @@ export class LoginUseCase {
       "febroom2022",
       {
         subject: user.uid_user,
-        expiresIn: "15h",
+        expiresIn: "2h",
       }
     );
 
@@ -63,12 +78,12 @@ export class LoginUseCase {
       "febroom2022",
       {
         subject: user.uid_user,
-        expiresIn: "30d",
+        expiresIn: "1d",
       }
     );
 
     let dateAtual = new Date();
-    dateAtual.setDate(dateAtual.getDate() + 30);
+    dateAtual.setDate(dateAtual.getDate() + 1);
 
     await prisma.userToken.create({
       data: {

@@ -35,14 +35,18 @@ export class RefreshTokenUseCase {
     });
 
     if (!userToken) {
-      throw new AppError("Refresh Token does not exists!");
+      throw new AppError(
+        "Refresh Token does not exists!",
+        401,
+        "refresh_token.deleted"
+      );
     }
 
-    await prisma.userToken.delete({
-      where: {
-        uid_user_token: userToken.uid_user_token,
-      },
-    });
+    // await prisma.userToken.delete({
+    //   where: {
+    //     uid_user_token: userToken.uid_user_token,
+    //   },
+    // });
 
     const token_atual = jwt.sign(
       {
@@ -55,24 +59,27 @@ export class RefreshTokenUseCase {
       "febroom2022",
       {
         subject: user_uid,
-        expiresIn: "15h",
+        expiresIn: "2h",
       }
     );
 
     const refresh_token = jwt.sign(
       {
+        uid_user: uid_user,
         ra_user: ra_user,
         email_user: email_user,
+        tipo_user: tipo_user,
+        roles: roles,
       },
       "febroom2022",
       {
         subject: user_uid,
-        expiresIn: "30d",
+        expiresIn: "1d",
       }
     );
 
     let dateAtual = new Date();
-    dateAtual.setDate(dateAtual.getDate() + 30);
+    dateAtual.setDate(dateAtual.getDate() + 1);
 
     await prisma.userToken.create({
       data: {
