@@ -7,9 +7,11 @@ import { ThemeToggle } from "./ThemeToggle";
 export function ActionsList(props: StackProps) {
     return (
         <Stack direction="row" alignItems="center" spacing={[2, , 6]} {...props}>
-            <ThemeToggle />
+            <Stack direction="row" alignItems="center" spacing={[2, , 6]}>
+                <ThemeToggle />
 
-            <Notifications />
+                <Notifications />
+            </Stack>
 
             <Profile />
         </Stack>

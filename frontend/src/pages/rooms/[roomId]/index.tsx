@@ -221,6 +221,7 @@ export default function RoomId({ classes, thatWeekActivity, uid_user, ra_user }:
                 isRoom
                 nameClass={classes.name_class}
                 nameMatter={classes.name_matter_class}
+                classUid={classes.uid_class}
             />
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>

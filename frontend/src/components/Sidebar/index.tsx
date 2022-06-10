@@ -63,12 +63,14 @@ export function Sidebar({ isCollapseSidebar = false, uid_user }: SidebarProps) {
             </Can>
 
 
-            <NavAction
-                href="/works"
-                name="Trabalhos"
-                icon={HiOutlineBookOpen}
-                count={isLoading ? 0 : data.count}
-            />
+            <Can roles={["teacher", "student"]}>
+                <NavAction
+                    href="/works"
+                    name="Trabalhos"
+                    icon={HiOutlineBookOpen}
+                    count={isLoading ? 0 : data.count}
+                />
+            </Can>
 
             <NavAction
                 href="/filed-rooms"

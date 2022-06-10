@@ -37,20 +37,24 @@ export function SidebarActivity({ categories, isLoadingCategories, errorCategori
 
     return (
         <VStack spacing={2} alignItems="start">
-            <LinkCategorieActivity
-                href="#all-categories"
-                nameCategorieActivity="Todos as categorias"
-                isActive={router.asPath.split("#").length === 1 ? true : router.asPath.split("#")[1] === "all-categories" ? true : false}
-            />
+            {categories.length > 0 && (
+                <>
+                    <LinkCategorieActivity
+                        href="#all-categories"
+                        nameCategorieActivity="Todos as categorias"
+                        isActive={router.asPath.split("#").length === 1 ? true : router.asPath.split("#")[1] === "all-categories" ? true : false}
+                    />
 
-            {categories.map((categorie) => (
-                <LinkCategorieActivity
-                    key={categorie.id_category_activity}
-                    href={`#${categorie.id_category_activity.toString()}`}
-                    nameCategorieActivity={categorie.name_category_activity}
-                    isActive={router.asPath.split("#")[1] === `${categorie.id_category_activity.toString()}` ? true : false}
-                />
-            ))}
+                    {categories.map((categorie) => (
+                        <LinkCategorieActivity
+                            key={categorie.id_category_activity}
+                            href={`#${categorie.id_category_activity.toString()}`}
+                            nameCategorieActivity={categorie.name_category_activity}
+                            isActive={router.asPath.split("#")[1] === `${categorie.id_category_activity.toString()}` ? true : false}
+                        />
+                    ))}
+                </>
+            )}
         </VStack>
     );
 }

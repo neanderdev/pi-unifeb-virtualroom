@@ -51,13 +51,14 @@ export function MobileSidebar({ uid_user }: MobileSidebarProps) {
                             />
                         </Can>
 
-
-                        <NavItem
-                            href="/works"
-                            name="Trabalhos"
-                            icon={HiOutlineBookOpen}
-                            count={isLoading ? 0 : data.count}
-                        />
+                        <Can roles={["teacher", "student"]}>
+                            <NavItem
+                                href="/works"
+                                name="Trabalhos"
+                                icon={HiOutlineBookOpen}
+                                count={isLoading ? 0 : data.count}
+                            />
+                        </Can>
 
                         <NavItem
                             href="/filed-rooms"

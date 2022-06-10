@@ -31,6 +31,7 @@ interface MaterialDetailActivity {
 interface ActivityIdProps {
     name_class: string;
     name_matter: string;
+    uid_class: string;
     ra_user: number;
     uid_user: string;
     name_user: string;
@@ -44,6 +45,7 @@ interface ActivityIdProps {
 export default function ActivityId({
     name_class,
     name_matter,
+    uid_class,
     ra_user,
     uid_user,
     name_user,
@@ -74,6 +76,7 @@ export default function ActivityId({
                 isRoom
                 nameClass={name_class}
                 nameMatter={name_matter}
+                classUid={uid_class}
             />
 
             <Box pos="relative" h="max-content" m={[2, , 5]}>
@@ -145,6 +148,7 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
         props: {
             name_class: classes.name_class,
             name_matter: classes.name_matter_class,
+            uid_class: classes.uid_class,
             ra_user: me.ra_user,
             uid_user: me.uid_user,
             avatar: me.avatar,

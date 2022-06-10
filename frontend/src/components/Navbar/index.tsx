@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import { Flex, HStack, Icon, IconButton, Spacer, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { CgClose, CgMenu } from "react-icons/cg";
 
@@ -12,9 +13,10 @@ interface NavbarProps {
     nameMatter?: string;
     nameClass?: string;
     isRoom?: boolean
+    classUid?: string;
 }
 
-export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarProps) {
+export function Navbar({ title, isRoom = false, nameMatter, nameClass, classUid }: NavbarProps) {
     const { onToggle, isOpen } = useDrawer();
 
     const icon = isOpen ? CgClose : CgMenu;
@@ -73,8 +75,13 @@ export function Navbar({ title, isRoom = false, nameMatter, nameClass }: NavbarP
                             fontSize="lg"
                             fontWeight="semibold"
                             isTruncated
+                            _hover={{
+                                textDecoration: "underline",
+                            }}
                         >
-                            {nameMatter}
+                            <NextLink href={`/rooms/${classUid}`} passHref>
+                                {nameMatter}
+                            </NextLink>
 
                             <Text
                                 as="p"
