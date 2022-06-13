@@ -124,7 +124,7 @@ export default function CreateTeacher({ uid_user }: CreateTeacherProps) {
         } catch (err) {
             toast({
                 title: 'Erro ao criar professor',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 2000,
                 isClosable: true,

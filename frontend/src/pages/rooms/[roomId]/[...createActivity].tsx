@@ -240,11 +240,9 @@ export default function CreateActivity({ uid_user }: CreateActivityProps) {
 
             router.push(`/rooms/${router.query.roomId}`);
         } catch (err) {
-            console.log(err);
-
             toast({
                 title: 'Erro ao criar atividade',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

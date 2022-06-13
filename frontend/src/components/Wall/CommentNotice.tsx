@@ -93,11 +93,9 @@ export function CommentNotice({ user_uid, classNoticeId, message, avatarTeacher,
 
             setClassComment("");
         } catch (err) {
-            console.log(err);
-
             toast({
                 title: 'Erro ao criar comentário do aviso',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

@@ -60,11 +60,9 @@ export function NoticeClass({ classUid, user_uid, classNotice, setClassNotice }:
 
             setClassNotice("");
         } catch (err) {
-            console.log(err);
-
             toast({
                 title: 'Erro ao criar aviso',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

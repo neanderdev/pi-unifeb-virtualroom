@@ -187,7 +187,7 @@ export default function Setting({ me }: ISettingProps) {
         } catch (err) {
             toast({
                 title: 'Erro ao atualizar configuração',
-                description: `Erro: ${err.response?.data?.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

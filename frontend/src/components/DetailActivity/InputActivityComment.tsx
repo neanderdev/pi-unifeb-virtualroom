@@ -63,11 +63,9 @@ export function InputActivityComment({ uid_user, uid_activity, avatarStudent, na
 
             setCommentActivity("");
         } catch (err) {
-            console.log(err);
-
             toast({
                 title: 'Erro ao criar comentário da atividade',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

@@ -125,11 +125,9 @@ export function ModalAddUser({
                             isClosable: true,
                         });
                     } catch (error) {
-                        console.log(error);
-
                         toast({
                             title: 'Erro ao adicionar usuário a turma',
-                            description: `Erro: ${error.response?.data?.message}`,
+                            description: `Erro: ${error.response?.data?.message ?? error.message}`,
                             status: 'error',
                             duration: 1500,
                             isClosable: true,
@@ -150,11 +148,9 @@ export function ModalAddUser({
                 });
             }
         } catch (error) {
-            console.log(error);
-
             toast({
                 title: 'Erro ao adicionar usuário a turma',
-                description: `Erro: ${error.message}`,
+                description: `Erro: ${error.response?.data?.message ?? error.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

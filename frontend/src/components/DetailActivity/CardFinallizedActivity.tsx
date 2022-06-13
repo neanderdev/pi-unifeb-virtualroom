@@ -158,11 +158,9 @@ export function CardFinallizedActivity({
                 isClosable: true,
             });
         } catch (err) {
-            console.log(err);
-
             toast({
                 title: 'Erro ao enviar tarefa',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,
@@ -190,11 +188,9 @@ export function CardFinallizedActivity({
                 isClosable: true,
             });
         } catch (err) {
-            console.log(err);
-
             toast({
                 title: 'Erro ao cancelar a tarefa',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

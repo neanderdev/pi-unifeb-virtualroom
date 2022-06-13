@@ -81,11 +81,9 @@ export function StudentGradesDetail({ activity_uid, id_detail_activity, uid_user
                 isClosable: true,
             });
         } catch (err) {
-            console.log(err);
-
             toast({
                 title: 'Erro ao dar nota ao aluno',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

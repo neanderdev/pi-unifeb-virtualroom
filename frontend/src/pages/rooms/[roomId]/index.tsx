@@ -186,11 +186,9 @@ export default function RoomId({ classes, thatWeekActivity, uid_user, ra_user }:
                 await uploadBackgroundClass.mutateAsync({ uid_class: classes.uid_class, formData });
             }
         } catch (err) {
-            console.log(err);
-
             toast({
                 title: 'Erro ao atualizar a turma',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,
@@ -362,6 +360,7 @@ export default function RoomId({ classes, thatWeekActivity, uid_user, ra_user }:
                                                                     <Image
                                                                         src={!image ? `http://localhost:8000/files${classes.background_class}` : image}
                                                                         alt='Background da turma'
+                                                                        fallbackSrc="/no_image.jpg"
                                                                         h="120px"
                                                                         w="full"
                                                                     />

@@ -76,7 +76,7 @@ export function ModalNewCategory({ class_uid }: ModalNewCategoryProps) {
         } catch (err) {
             toast({
                 title: 'Erro ao criar categoria',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 2000,
                 isClosable: true,

@@ -69,7 +69,7 @@ export default function Teachers({ uid_user }: TeachersProps) {
         } catch (err) {
             toast({
                 title: 'Erro ao excluir professor',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,

@@ -58,11 +58,9 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
                 });
             }
         } catch (error) {
-            console.log(error);
-
             toast({
                 title: 'Erro ao arquivar a turma',
-                description: `Erro: ${error.message}`,
+                description: `Erro: ${error.response?.data?.message ?? error.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,
@@ -84,8 +82,9 @@ function ClassCardComponent({ classUid, imageClass, hrefClass, nameClass, nameTe
                 <Image
                     h="120px"
                     w="full"
-                    src={imageClass}
                     objectFit="cover"
+                    src={imageClass}
+                    fallbackSrc="/no_image.jpg"
                     alt={nameClass}
                 />
                 <Flex justify="center" mt={-12}>

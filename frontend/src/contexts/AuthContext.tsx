@@ -39,6 +39,27 @@ let authChannel: BroadcastChannel;
 export function signOut(broadcast: boolean = true) {
     queryClient.invalidateQueries();
 
+    setCookie(
+        undefined,
+        'nextauth.token',
+        '',
+        {
+            maxAge: 0, // 0 second
+            path: '/',
+            sameSite: 'strict',
+        }
+    );
+    setCookie(
+        undefined,
+        'nextauth.refreshToken',
+        '',
+        {
+            maxAge: 0, // 0 second
+            path: '/',
+            sameSite: 'strict',
+        }
+    );
+
     destroyCookie(undefined, 'nextauth.token');
     destroyCookie(undefined, 'nextauth.refreshToken');
 
@@ -140,14 +161,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         } catch (error) {
             toast({
                 title: 'Falha ao fazer o login',
-                description: `${error.response?.data?.message}`,
+                description: `${error.response?.data?.message ?? error.message}`,
                 status: 'error',
                 duration: 1500,
                 isClosable: true,
                 position: "top-right",
             });
-
-            // console.log(error);
         }
     }
 

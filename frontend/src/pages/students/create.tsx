@@ -120,7 +120,7 @@ export default function CreateStudent({ uid_user }: CreateStudentProps) {
         } catch (err) {
             toast({
                 title: 'Erro ao criar aluno',
-                description: `Erro: ${err.message}`,
+                description: `Erro: ${err.response?.data?.message ?? err.message}`,
                 status: 'error',
                 duration: 2000,
                 isClosable: true,
