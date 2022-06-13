@@ -1,7 +1,10 @@
-node_modules
+# dependencies
+/node_modules
+
 # Keep environment variables out of version control
 .env
 
+# images
 /tmp/avatar/*
 !*/tmp/class/background-class-padrao.png 
 /tmp/class/*
