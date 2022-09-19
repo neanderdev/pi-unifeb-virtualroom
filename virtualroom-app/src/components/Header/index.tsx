@@ -1,7 +1,15 @@
 import React from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import { Container, HeaderContent, Menu, MenuButton, TitleHeader, AvatarButton, Avatar } from './styles';
+import {
+    Container,
+    HeaderContent,
+    Menu,
+    MenuButton,
+    TitleHeader,
+    AvatarButton,
+    Avatar
+} from './styles';
 
 export function Header() {
     return (

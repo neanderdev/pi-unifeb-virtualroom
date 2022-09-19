@@ -1,5 +1,8 @@
+import 'react-native-gesture-handler';
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import {
@@ -49,15 +52,17 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <View
-        onLayout={onLayoutRootView}
-        style={{
-          flex: 1
-        }}
-      >
-        <Home />
-      </View>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider theme={theme}>
+        <View
+          onLayout={onLayoutRootView}
+          style={{
+            flex: 1
+          }}
+        >
+          <Home />
+        </View>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }

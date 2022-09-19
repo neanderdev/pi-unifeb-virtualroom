@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import { BorderlessButton } from "react-native-gesture-handler";
 import { RFValue } from "react-native-responsive-fontsize";
 
 export const Container = styled.View`
@@ -20,7 +21,7 @@ export const Menu = styled.View`
   align-items: center;
 `;
 
-export const MenuButton = styled.TouchableOpacity`
+export const MenuButton = styled(BorderlessButton)`
   padding-right: 12px;
 `;
 
@@ -30,7 +31,7 @@ export const TitleHeader = styled.Text`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-export const AvatarButton = styled.TouchableOpacity``;
+export const AvatarButton = styled(BorderlessButton)``;
 
 export const Avatar = styled.Image`
   width: ${RFValue(30)}px;
