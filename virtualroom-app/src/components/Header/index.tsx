@@ -11,7 +11,11 @@ import {
     Avatar
 } from './styles';
 
-export function Header() {
+interface Props {
+    title?: string;
+}
+
+export function Header({ title = 'Febroom' }: Props) {
     return (
         <Container>
             <HeaderContent>
@@ -25,7 +29,7 @@ export function Header() {
                     </MenuButton>
 
                     <TitleHeader>
-                        Febroom
+                        {title}
                     </TitleHeader>
                 </Menu>
 
