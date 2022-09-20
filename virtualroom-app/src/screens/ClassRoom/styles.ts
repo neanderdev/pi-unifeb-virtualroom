@@ -15,3 +15,7 @@ export const ActivityList = styled(FlatList).attrs({
   },
   showsVerticalScrollIndicator: false,
 })``;
+
+export const ClassNoticeList = styled(FlatList).attrs({
+  showsVerticalScrollIndicator: false,
+})``;

@@ -50,7 +50,7 @@ export function InputComment({
                 {...rest}
             />
 
-            <BorderlessButton onPress={onPressSend}>
+            <BorderlessButton onPress={onPressSend} enabled={!!value}>
                 <IconContainer isFocused={isFocused}>
                     <Icon
                         name='send'
