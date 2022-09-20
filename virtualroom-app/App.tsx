@@ -13,7 +13,7 @@ import {
 } from '@expo-google-fonts/roboto';
 import { ThemeProvider } from 'styled-components';
 
-import { ClassRoom } from './src/screens/ClassRoom';
+import { Activity } from './src/screens/Activity';
 
 import theme from './src/styles/theme';
 
@@ -60,7 +60,7 @@ export default function App() {
             flex: 1
           }}
         >
-          <ClassRoom />
+          <Activity />
         </View>
       </ThemeProvider>
     </GestureHandlerRootView>
