@@ -10,5 +10,8 @@ export const ActivityList = styled(FlatList).attrs({
   contentContainerStyle: {
     padding: 24,
   },
+  ListHeaderComponentStyle: {
+    marginBottom: 16,
+  },
   showsVerticalScrollIndicator: false,
 })``;
