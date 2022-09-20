@@ -13,7 +13,7 @@ import {
 } from '@expo-google-fonts/roboto';
 import { ThemeProvider } from 'styled-components';
 
-import { Peoples } from './src/screens/Peoples';
+import { SignIn } from './src/screens/SignIn';
 
 import theme from './src/styles/theme';
 
@@ -60,7 +60,7 @@ export default function App() {
             flex: 1
           }}
         >
-          <Peoples />
+          <SignIn />
         </View>
       </ThemeProvider>
     </GestureHandlerRootView>
