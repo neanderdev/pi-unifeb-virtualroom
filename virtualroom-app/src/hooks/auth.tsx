@@ -2,9 +2,11 @@ import React, {
     createContext,
     useState,
     useContext,
+    useEffect,
     ReactNode,
 } from 'react';
 import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { api } from '../services/api';
 
@@ -53,6 +55,9 @@ function AuthProvider({ children }: AuthProviderProps) {
 
             const { ra_user, email_user, cpf_cnpj_user, roles, token, refresh_token, avatar, name_user } = response.data;
 
+            await AsyncStorage.setItem('@token', token);
+            await AsyncStorage.setItem('@refresh_token', refresh_token);
+
             setData({
                 ra_user,
                 email_user,
@@ -79,6 +84,9 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     async function signOut() {
         try {
+            await AsyncStorage.removeItem('@token');
+            await AsyncStorage.removeItem('@refresh_token');
+
             setData({} as User);
         } catch (error: any) {
             console.log(error);
@@ -89,6 +97,38 @@ function AuthProvider({ children }: AuthProviderProps) {
             )
         }
     }
+
+    useEffect(() => {
+        async function getMe() {
+            const token = await AsyncStorage.getItem('@refresh_token');
+
+            if (token) {
+                api.get('/me').then(response => {
+                    const {
+                        ra_user,
+                        email_user,
+                        cpf_cnpj_user,
+                        roles,
+                        avatar,
+                        name_user,
+                    } = response.data;
+
+                    setData({
+                        ra_user,
+                        email_user,
+                        cpf_cnpj_user,
+                        roles,
+                        avatar,
+                        name_user,
+                    });
+                }).catch(() => {
+                    signOut();
+                });
+            }
+        }
+
+        getMe();
+    }, []);
 
     return (
         <AuthContext.Provider
