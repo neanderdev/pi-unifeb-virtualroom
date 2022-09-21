@@ -2,6 +2,8 @@ import React from 'react';
 import { BorderlessButtonProps } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
 
+import { ClassResponse } from '../../dtos/ClassesDTO';
+
 import {
     Container,
     DetailClass,
@@ -10,13 +12,8 @@ import {
     OptionClass,
 } from './styles';
 
-interface ClassProps {
-    nameClass: string;
-    nameMatterClass: string;
-};
-
 interface Props extends BorderlessButtonProps {
-    data: ClassProps;
+    data: ClassResponse;
 };
 
 export function Class({ data, ...rest }: Props) {
@@ -24,11 +21,11 @@ export function Class({ data, ...rest }: Props) {
         <Container {...rest}>
             <DetailClass>
                 <MatterClass numberOfLines={1}>
-                    {data.nameClass}
+                    {data.name_matter_class}
                 </MatterClass>
 
                 <NameClass numberOfLines={1}>
-                    {data.nameMatterClass}
+                    {data.name_class}
                 </NameClass>
             </DetailClass>
 
