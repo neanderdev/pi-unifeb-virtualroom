@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, LogBox } from 'react-native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -13,9 +13,13 @@ import {
 } from '@expo-google-fonts/roboto';
 import { ThemeProvider } from 'styled-components';
 
-import { SignIn } from './src/screens/SignIn';
+import { Routes } from "./src/routes";
 
 import theme from './src/styles/theme';
+
+LogBox.ignoreLogs([
+  'Found screens with the same name nested inside one another. Check:'
+])
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -60,7 +64,7 @@ export default function App() {
             flex: 1
           }}
         >
-          <SignIn />
+          <Routes />
         </View>
       </ThemeProvider>
     </GestureHandlerRootView>

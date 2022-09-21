@@ -7,11 +7,10 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.background_primary};
 `;
 
-export const PeoplesContainer = styled.View`
-  padding: 24px;
-`;
-
 export const TeacherList = styled(FlatList).attrs({
+  contentContainerStyle: {
+    padding: 24,
+  },
   showsVerticalScrollIndicator: false,
 })``;
 

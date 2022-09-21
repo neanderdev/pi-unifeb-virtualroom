@@ -5,7 +5,6 @@ import { Header } from '../../components/Header';
 
 import {
     Container,
-    PeoplesContainer,
     TeacherList,
     StudentList,
     HeaderPeople,
@@ -28,62 +27,60 @@ export function Peoples() {
                 title='Sistemas Operacionais'
             />
 
-            <PeoplesContainer>
-                <TeacherList
-                    data={[1, 2]}
-                    keyExtractor={item => String(item)}
-                    renderItem={({ item }) => (
-                        <PeopleContent>
-                            <AvatarPeople
-                                source={{ uri: 'https://github.com/neanderdev.png' }}
-                                resizeMode="cover"
-                            />
-
-                            <NamePeople>
-                                Alexandre Salvatierra
-                            </NamePeople>
-                        </PeopleContent>
-                    )}
-                    ListHeaderComponent={
-                        <>
-                            <HeaderPeople>
-                                Professores
-                            </HeaderPeople>
-
-                            <Separator />
-                        </>
-                    }
-                    ItemSeparatorComponent={() => <Separator />}
-                    ListFooterComponent={
-                        <StudentList
-                            data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-                            keyExtractor={item => String(item)}
-                            renderItem={({ item }) => (
-                                <PeopleContent>
-                                    <AvatarPeople
-                                        source={{ uri: 'https://github.com/neanderdev.png' }}
-                                        resizeMode="cover"
-                                    />
-
-                                    <NamePeople>
-                                        Neander de Souza Faria
-                                    </NamePeople>
-                                </PeopleContent>
-                            )}
-                            ListHeaderComponent={
-                                <>
-                                    <HeaderPeople>
-                                        Alunos
-                                    </HeaderPeople>
-
-                                    <Separator />
-                                </>
-                            }
-                            ItemSeparatorComponent={() => <Separator />}
+            <TeacherList
+                data={[1, 2]}
+                keyExtractor={item => String(item)}
+                renderItem={({ item }) => (
+                    <PeopleContent>
+                        <AvatarPeople
+                            source={{ uri: 'https://github.com/neanderdev.png' }}
+                            resizeMode="cover"
                         />
-                    }
-                />
-            </PeoplesContainer>
+
+                        <NamePeople>
+                            Alexandre Salvatierra
+                        </NamePeople>
+                    </PeopleContent>
+                )}
+                ListHeaderComponent={
+                    <>
+                        <HeaderPeople>
+                            Professores
+                        </HeaderPeople>
+
+                        <Separator />
+                    </>
+                }
+                ItemSeparatorComponent={() => <Separator />}
+                ListFooterComponent={
+                    <StudentList
+                        data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+                        keyExtractor={item => String(item)}
+                        renderItem={({ item }) => (
+                            <PeopleContent>
+                                <AvatarPeople
+                                    source={{ uri: 'https://github.com/neanderdev.png' }}
+                                    resizeMode="cover"
+                                />
+
+                                <NamePeople>
+                                    Neander de Souza Faria
+                                </NamePeople>
+                            </PeopleContent>
+                        )}
+                        ListHeaderComponent={
+                            <>
+                                <HeaderPeople>
+                                    Alunos
+                                </HeaderPeople>
+
+                                <Separator />
+                            </>
+                        }
+                        ItemSeparatorComponent={() => <Separator />}
+                    />
+                }
+            />
         </Container>
     );
 }
