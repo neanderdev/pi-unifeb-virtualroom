@@ -3,15 +3,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Splash } from '../screens/Splash';
 
+import { useAuth } from '../hooks/auth';
+
 import { AppStackRoutes } from './app.stack.routes';
 import { AuthRoutes } from './auth.routes';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
 export function SplashRoutes() {
-    const user: { id: string } = {
-        id: 'id-user',
-    }
+    const { user } = useAuth();
 
     return (
         <Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
@@ -21,7 +21,7 @@ export function SplashRoutes() {
             />
             <Screen
                 name="Home"
-                component={user.id ? AppStackRoutes : AuthRoutes}
+                component={user.ra_user ? AppStackRoutes : AuthRoutes}
             />
         </Navigator>
     )

@@ -7,10 +7,13 @@ import {
     Alert
 } from 'react-native';
 import * as Yup from 'yup';
+import md5 from 'md5';
 
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { PasswordInput } from '../../components/PasswordInput';
+
+import { useAuth } from '../../hooks/auth';
 
 import theme from '../../styles/theme';
 
@@ -27,6 +30,8 @@ export function SignIn() {
     const [ra, setRa] = useState('');
     const [password, setPassword] = useState('');
 
+    const { signIn, isLogging } = useAuth();
+
     async function handleSignIn() {
         try {
             const schema = Yup.object().shape({
@@ -36,9 +41,7 @@ export function SignIn() {
 
             await schema.validate({ ra, password });
 
-            Alert.alert('Tudo certo');
-
-            // Fazer login.
+            await signIn({ ra: Number(ra), senha: md5(password) });
         } catch (error) {
             if (error instanceof Yup.ValidationError) {
                 return Alert.alert('Error', error.message);
@@ -97,8 +100,8 @@ export function SignIn() {
                             <Button
                                 title="Login"
                                 onPress={handleSignIn}
-                            // enabled={!isLogging}
-                            // loading={isLogging}
+                                enabled={!isLogging}
+                                loading={isLogging}
                             />
 
                             <Button

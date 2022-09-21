@@ -18,6 +18,7 @@
     "expo-font": "~10.2.0",
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
+    "md5": "^2.3.0",
     "react": "18.0.0",
     "react-native": "0.69.5",
     "react-native-gesture-handler": "~2.5.0",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/plugin-proposal-decorators": "^7.19.1",
+    "@types/md5": "^2.3.2",
     "@types/react": "^18.0.19",
     "@types/react-native": "^0.70.0",
     "@types/styled-components-react-native": "^5.1.3",
