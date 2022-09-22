@@ -28,7 +28,7 @@ export function Header({ title = 'Febroom' }: Props) {
                         />
                     </MenuButton>
 
-                    <TitleHeader>
+                    <TitleHeader numberOfLines={1}>
                         {title}
                     </TitleHeader>
                 </Menu>

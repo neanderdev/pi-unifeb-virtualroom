@@ -1,6 +1,10 @@
 import React from 'react';
 import { BorderlessButtonProps } from "react-native-gesture-handler";
-import { MaterialIcons } from '@expo/vector-icons';
+import { Fontisto, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+
+import { IResponseAcitivities } from '../../dtos/ActivitiesByClassUidDTO';
+
+import { formatterDate } from '../../utils/formatterDate';
 
 import {
     Container,
@@ -11,14 +15,8 @@ import {
     DatePublishedActivity,
 } from './styles';
 
-interface Activity {
-    id: string;
-    name: string;
-    dataPublished: string;
-};
-
 interface Props extends BorderlessButtonProps {
-    data: Activity;
+    data: IResponseAcitivities;
 };
 
 export function ActivityClass({ data, ...rest }: Props) {
@@ -26,20 +24,34 @@ export function ActivityClass({ data, ...rest }: Props) {
         <Container {...rest}>
             <ActivityContent>
                 <IconContainer>
-                    <MaterialIcons
-                        name="menu"
-                        size={24}
-                        color="#FFF"
-                    />
+                    {
+                        data.category_activity.tipo_category_activity === 'C'
+                            ? <Fontisto
+                                name="checkbox-active"
+                                size={24}
+                                color="#FFF"
+                            />
+                            : data.category_activity.tipo_category_activity === 'M'
+                                ? <MaterialIcons
+                                    name="note-add"
+                                    size={24}
+                                    color="#FFF"
+                                />
+                                : <MaterialCommunityIcons
+                                    name="bag-personal-outline"
+                                    size={24}
+                                    color="#FFF"
+                                />
+                    }
                 </IconContainer>
 
                 <DetailActivity>
                     <TitleActivity numberOfLines={1}>
-                        {data.name}
+                        {data.name_activity}
                     </TitleActivity>
 
                     <DatePublishedActivity numberOfLines={1}>
-                        Data de postagem: {data.dataPublished}
+                        Data de postagem: {formatterDate(data.createdAt_activity)}
                     </DatePublishedActivity>
                 </DetailActivity>
             </ActivityContent>

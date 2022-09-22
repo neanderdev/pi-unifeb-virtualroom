@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { formatterDate } from '../../utils/formatterDate';
+
+import { ClassNoticeAnswer } from '../../dtos/ClassNoticeByClassUidDTO';
+
 import {
     Container,
     SeparatorClassNotice,
@@ -11,17 +15,9 @@ import {
     CommentNoticeClass,
 } from './styles';
 
-interface Comment {
-    id: string;
-    name: string;
-    message: string;
-    urlImage: string;
-    dataPublished: string;
-}
-
 interface Props {
-    data: Comment;
-}
+    data: ClassNoticeAnswer;
+};
 
 export function Comment({ data }: Props) {
     return (
@@ -29,17 +25,17 @@ export function Comment({ data }: Props) {
             <SeparatorClassNotice>
                 <HeaderCommentClassNotice>
                     <AvatarCommentNoticeClass
-                        source={{ uri: data.urlImage }}
+                        source={{ uri: data.user.avatar === '' ? null : data.user.avatar }}
                         resizeMode="cover"
                     />
 
                     <CommentNoticeClassDetail>
                         <TitleCommentNoticeClass numberOfLines={1}>
-                            {data.name}
+                            {data.user.name_user}
                         </TitleCommentNoticeClass>
 
                         <DatePublishedCommentNoticeClass numberOfLines={1}>
-                            {data.dataPublished}
+                            {formatterDate(data.createdAt_class_notice_answer)}
                         </DatePublishedCommentNoticeClass>
                     </CommentNoticeClassDetail>
                 </HeaderCommentClassNotice>

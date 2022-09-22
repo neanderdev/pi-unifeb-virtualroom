@@ -1,20 +1,26 @@
 import styled from "styled-components/native";
-import { FlatList } from "react-native";
+import { FlatList, FlatListProps } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
+
+import { ClassUser } from "../../dtos/ClassByUidDTO";
 
 export const Container = styled.View`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.background_primary};
 `;
 
-export const TeacherList = styled(FlatList).attrs({
+export const TeacherList = styled(
+  FlatList as new (props: FlatListProps<ClassUser>) => FlatList<ClassUser>
+).attrs({
   contentContainerStyle: {
     padding: 24,
   },
   showsVerticalScrollIndicator: false,
 })``;
 
-export const StudentList = styled(FlatList).attrs({
+export const StudentList = styled(
+  FlatList as new (props: FlatListProps<ClassUser>) => FlatList<ClassUser>
+).attrs({
   showsVerticalScrollIndicator: false,
 })``;
 
@@ -55,4 +61,16 @@ export const Separator = styled.View`
 
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.text_detail};
+`;
+
+export const ContentIsEmpty = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const TextIsEmpty = styled.Text`
+  font-size: ${RFValue(16)}px;
+  font-family: ${({ theme }) => theme.fonts.primary_700};
+  color: ${({ theme }) => theme.colors.shape_dark};
 `;

@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import { BorderlessButton } from "react-native-gesture-handler";
-import { RFValue } from "react-native-responsive-fontsize";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 export const Container = styled.View`
   width: 100%;
@@ -26,6 +26,8 @@ export const MenuButton = styled(BorderlessButton)`
 `;
 
 export const TitleHeader = styled.Text`
+  width: ${RFPercentage(35)}px;
+
   font-size: ${RFValue(16)}px;
   font-family: ${({ theme }) => theme.fonts.primary_700};
   color: ${({ theme }) => theme.colors.text};

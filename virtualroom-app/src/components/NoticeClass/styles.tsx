@@ -1,6 +1,8 @@
 import styled from 'styled-components/native';
-import { FlatList } from 'react-native';
+import { FlatList, FlatListProps } from 'react-native';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
+
+import { ClassNoticeAnswer } from '../../dtos/ClassNoticeByClassUidDTO';
 
 export const Container = styled.View``;
 
@@ -58,7 +60,11 @@ export const MessageNoticeClass = styled.Text`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-export const CommentNoticeClassList = styled(FlatList).attrs({
+export const CommentNoticeClassList = styled(
+  FlatList as new (
+    props: FlatListProps<ClassNoticeAnswer>
+  ) => FlatList<ClassNoticeAnswer>
+).attrs({
   showsVerticalScrollIndicator: false,
 })``;
 

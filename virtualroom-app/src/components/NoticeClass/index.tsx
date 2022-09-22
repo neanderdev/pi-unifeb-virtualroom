@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import { Comment } from '../Comment';
 import { InputComment } from '../InputComment';
 
+import { formatterDate } from '../../utils/formatterDate';
+
+import { IResponseClassNotice } from '../../dtos/ClassNoticeByClassUidDTO';
+
 import {
     Container,
     NoticeClassContent,
@@ -16,28 +20,12 @@ import {
     ContainerInputComment,
 } from './styles';
 
-interface NoticeClass {
-    id: string;
-    name: string;
-    message: string;
-    urlImage: string;
-    dataPublished: string;
-}
-
 interface Props {
-    data: NoticeClass;
-}
+    data: IResponseClassNotice;
+};
 
 export function NoticeClass({ data }: Props) {
     const [comment, setComment] = useState('');
-
-    const commentNoticeClass = {
-        id: 'id',
-        name: 'Dudu Buch',
-        message: 'Boa noite professor, tmj.',
-        urlImage: 'https://github.com/neanderdev.png',
-        dataPublished: '17 de Setembro de 2022',
-    }
 
     async function handleSendComment() {
         console.log(comment)
@@ -48,17 +36,17 @@ export function NoticeClass({ data }: Props) {
             <NoticeClassContent>
                 <HeaderClassNotice>
                     <AvatarNoticeClass
-                        source={{ uri: data.urlImage }}
+                        source={{ uri: data.user.avatar === '' ? null : data.user.avatar }}
                         resizeMode="cover"
                     />
 
                     <NoticeClassDetail>
                         <TitleNoticeClass numberOfLines={1}>
-                            {data.name}
+                            {data.user.name_user}
                         </TitleNoticeClass>
 
                         <DatePublishedNoticeClass numberOfLines={1}>
-                            {data.dataPublished}
+                            {formatterDate(data.createdAt_class_notice)}
                         </DatePublishedNoticeClass>
                     </NoticeClassDetail>
                 </HeaderClassNotice>
@@ -68,9 +56,9 @@ export function NoticeClass({ data }: Props) {
                 </MessageNoticeClass>
 
                 <CommentNoticeClassList
-                    data={[1]}
-                    keyExtractor={item => String(item)}
-                    renderItem={({ item }) => <Comment data={commentNoticeClass} />}
+                    data={data.ClassNoticeAnswer}
+                    keyExtractor={item => String(item.id_class_notice_answer)}
+                    renderItem={({ item }) => <Comment data={item} />}
                 />
 
                 <ContainerInputComment>

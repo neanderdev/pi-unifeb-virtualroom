@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'react-native';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Header } from '../../components/Header';
 import { Load } from '../../components/Load';
@@ -15,6 +17,8 @@ export function Home() {
   const [classes, setClasses] = useState<ClassResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
   async function fetchClasses() {
     try {
       const response = await api.get('class', {
@@ -29,6 +33,11 @@ export function Home() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleClassRoom(uid_class: string) {
+    await AsyncStorage.setItem('@uid_class', uid_class);
+    navigation.navigate('ClassRoom');
   }
 
   useEffect(() => {
@@ -58,7 +67,10 @@ export function Home() {
         : <ClassList
           data={classes}
           keyExtractor={item => item.uid_class}
-          renderItem={({ item }) => <Class data={item} />}
+          renderItem={({ item }) => <Class
+            data={item}
+            onPress={() => handleClassRoom(item.uid_class)}
+          />}
         />
       }
     </Container>
