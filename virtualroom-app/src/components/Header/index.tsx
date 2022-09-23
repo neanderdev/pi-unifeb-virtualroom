@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 
 import { PopoverHeader } from '../PopoverHeader';
 
@@ -8,7 +7,6 @@ import {
     Container,
     HeaderContent,
     Menu,
-    MenuButton,
     TitleHeader,
     AvatarButton,
     Avatar
@@ -37,14 +35,6 @@ export function Header({ title = 'Febroom' }: Props) {
         <Container>
             <HeaderContent>
                 <Menu>
-                    <MenuButton>
-                        <MaterialIcons
-                            name="menu"
-                            size={24}
-                            color="#FFF"
-                        />
-                    </MenuButton>
-
                     <TitleHeader numberOfLines={1}>
                         {title}
                     </TitleHeader>

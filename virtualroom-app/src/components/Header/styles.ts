@@ -21,10 +21,6 @@ export const Menu = styled.View`
   align-items: center;
 `;
 
-export const MenuButton = styled(BorderlessButton)`
-  padding-right: 12px;
-`;
-
 export const TitleHeader = styled.Text`
   width: ${RFPercentage(35)}px;
 
