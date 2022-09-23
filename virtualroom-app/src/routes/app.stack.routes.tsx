@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../screens/Home';
+import { AllActivities } from '../screens/AllActivities';
 
 import { AppTabRoutes } from './app.tab.routes';
 
@@ -29,6 +30,11 @@ export function AppStackRoutes() {
                     component={AppTabRoutes}
                 />
             </Group>
+
+            <Screen
+                name="AllActivities"
+                component={AllActivities}
+            />
         </Navigator>
     )
 }
