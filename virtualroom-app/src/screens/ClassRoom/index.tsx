@@ -61,6 +61,12 @@ export function ClassRoom() {
         }
     }
 
+    async function handleActivity(uid_activity: string) {
+        await AsyncStorage.setItem('@uid_activity', uid_activity);
+
+        navigation.navigate('ActivityByUid');
+    }
+
     useEffect(() => {
         let isMounted = true;
 
@@ -96,7 +102,7 @@ export function ClassRoom() {
                     : <ActivityList
                         data={activities}
                         keyExtractor={item => String(item.uid_activity)}
-                        renderItem={({ item }) => <CardActivity data={item} />}
+                        renderItem={({ item }) => <CardActivity data={item} onPress={() => handleActivity(item.uid_activity)} />}
                         ListHeaderComponent={
                             <InputComment
                                 placeholder="Compartilhar com a turma..."

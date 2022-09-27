@@ -27,6 +27,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-splash-screen"]
+    "plugins": ["expo-splash-screen", "expo-document-picker"]
   }
 }

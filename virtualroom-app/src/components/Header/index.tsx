@@ -3,6 +3,8 @@ import { Animated, Easing } from 'react-native';
 
 import { PopoverHeader } from '../PopoverHeader';
 
+import { useAuth } from '../../hooks/auth';
+
 import {
     Container,
     HeaderContent,
@@ -17,6 +19,8 @@ interface Props {
 };
 
 export function Header({ title = 'Febroom' }: Props) {
+    const { user } = useAuth();
+
     const [visible, setVisible] = useState(false);
     const scale = useRef(new Animated.Value(0)).current;
 
@@ -42,7 +46,7 @@ export function Header({ title = 'Febroom' }: Props) {
 
                 <AvatarButton onPress={() => resizeBox(1)}>
                     <Avatar
-                        source={{ uri: 'https://github.com/neanderdev.png' }}
+                        source={{ uri: `http://192.168.1.11:8000/files${user.avatar}` }}
                         resizeMode="cover"
                     />
                 </AvatarButton>

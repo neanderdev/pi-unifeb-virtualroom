@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../screens/Home';
 import { AllActivities } from '../screens/AllActivities';
+import { ActivityByUid } from '../screens/ActivityByUid';
 
 import { AppTabRoutes } from './app.tab.routes';
 
@@ -28,6 +29,10 @@ export function AppStackRoutes() {
                 <Screen
                     name="Peoples"
                     component={AppTabRoutes}
+                />
+                <Screen
+                    name="ActivityByUid"
+                    component={ActivityByUid}
                 />
             </Group>
 

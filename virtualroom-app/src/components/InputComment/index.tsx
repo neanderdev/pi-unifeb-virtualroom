@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { TextInputProps } from 'react-native';
 import { BorderlessButton } from 'react-native-gesture-handler';
 
+import { useAuth } from '../../hooks/auth';
+
 import {
     Container,
     IconContainer,
@@ -20,6 +22,8 @@ export function InputComment({
     onPressSend,
     ...rest
 }: Props) {
+    const { user } = useAuth();
+
     const [isFocused, setIsFocused] = useState(false);
     const [isFilled, setIsFilled] = useState(false);
 
@@ -37,7 +41,7 @@ export function InputComment({
             <IconContainer isFocused={isFocused}>
                 <Avatar
                     isFocused={(isFocused || isFilled) ? true : false}
-                    source={{ uri: 'https://github.com/neanderdev.png' }}
+                    source={{ uri: `http://192.168.1.11:8000/files${user.avatar}` }}
                     resizeMode="cover"
                 />
             </IconContainer>
