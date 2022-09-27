@@ -1,8 +1,8 @@
-import styled from 'styled-components/native';
-import { FlatList, FlatListProps } from 'react-native';
-import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
+import styled from "styled-components/native";
+import { FlatList, FlatListProps } from "react-native";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
-import { ClassNoticeAnswer } from '../../dtos/ClassNoticeByClassUidDTO';
+import { ClassNoticeAnswer } from "../../dtos/ClassNoticeByClassUidDTO";
 
 export const Container = styled.View``;
 

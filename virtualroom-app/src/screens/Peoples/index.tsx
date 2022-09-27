@@ -86,7 +86,7 @@ export function Peoples() {
                     renderItem={({ item }) => (
                         <PeopleContent>
                             <AvatarPeople
-                                source={{ uri: item.user.avatar === '' ? null : item.user.avatar }}
+                                source={{ uri: `http://192.168.1.11:8000/files${item.user.avatar}` }}
                                 resizeMode="cover"
                             />
 
@@ -120,7 +120,7 @@ export function Peoples() {
                             renderItem={({ item }) => (
                                 <PeopleContent>
                                     <AvatarPeople
-                                        source={{ uri: item.user.avatar === '' ? null : item.user.avatar }}
+                                        source={{ uri: `http://192.168.1.11:8000/files${item.user.avatar}` }}
                                         resizeMode="cover"
                                     />
 

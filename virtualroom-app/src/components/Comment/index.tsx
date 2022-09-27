@@ -25,7 +25,7 @@ export function Comment({ data }: Props) {
             <SeparatorClassNotice>
                 <HeaderCommentClassNotice>
                     <AvatarCommentNoticeClass
-                        source={{ uri: data.user.avatar === '' ? null : data.user.avatar }}
+                        source={{ uri: `http://192.168.1.11:8000/files${data.user.avatar}` }}
                         resizeMode="cover"
                     />
 

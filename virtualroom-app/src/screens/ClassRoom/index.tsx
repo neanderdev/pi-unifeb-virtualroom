@@ -9,6 +9,7 @@ import { InputComment } from '../../components/InputComment';
 import { NoticeClass } from '../../components/NoticeClass';
 import { Load } from '../../components/Load';
 
+import { IResponseMe } from '../../dtos/MeDTO';
 import { IResponseClassByUid } from '../../dtos/ClassByUidDTO';
 import { IResponseAcitivities } from '../../dtos/ActivitiesByClassUidDTO';
 import { IResponseClassNotice } from '../../dtos/ClassNoticeByClassUidDTO';
@@ -24,6 +25,7 @@ import {
 } from './styles';
 
 export function ClassRoom() {
+    const [uidUser, setUserUid] = useState<string | null>('');
     const [uidClass, setUidClass] = useState<string | null>('');
     const [nameMatterClass, setNameMatterClass] = useState('');
     const [activities, setActivities] = useState<IResponseAcitivities[]>([]);
@@ -34,7 +36,19 @@ export function ClassRoom() {
     const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
     async function handleSendNoticeClass() {
-        console.log(noticeClass)
+        try {
+            const createClassNoticeFormData = {
+                message: noticeClass,
+                user_uid: uidUser,
+                class_uid: uidClass,
+            };
+
+            await api.post('class-notice', createClassNoticeFormData);
+
+            setNoticeClass('');
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async function fetchClasseByUid() {
@@ -47,10 +61,12 @@ export function ClassRoom() {
         setUidClass(uidClass);
 
         try {
+            const responseMe = await api.get<IResponseMe>('/me');
             const responseClassByUid = await api.get<IResponseClassByUid>(`/class/${uidClass}`);
             const responseAllActivitiesByClassUid = await api.get<IResponseAcitivities[]>(`/activity/${uidClass}`);
             const responseClassNoticeByClassUid = await api.get<IResponseClassNotice[]>(`/list-all-class-notice/${uidClass}`);
 
+            setUserUid(responseMe.data.uid_user);
             setNameMatterClass(responseClassByUid.data.name_matter_class);
             setActivities(responseAllActivitiesByClassUid.data);
             setClassNotice(responseClassNoticeByClassUid.data);
@@ -115,7 +131,7 @@ export function ClassRoom() {
                             <ClassNoticeList
                                 data={classNotice}
                                 keyExtractor={item => String(item.id_class_notice)}
-                                renderItem={({ item }) => <NoticeClass data={item} />}
+                                renderItem={({ item }) => <NoticeClass data={item} uid_user={uidUser} />}
                             />
                         }
                     />
