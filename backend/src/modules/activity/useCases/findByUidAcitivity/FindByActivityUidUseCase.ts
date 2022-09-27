@@ -18,6 +18,11 @@ export class FindByActivityUidUseCase {
             tipo_material_activity: true,
           },
         },
+        category_activity: {
+          select: {
+            tipo_category_activity: true,
+          },
+        },
       },
     });
 
